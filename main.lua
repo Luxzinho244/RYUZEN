@@ -1,4 +1,4 @@
---// Ryuzen Hub | Clean Version
+--// Ryuzen Hub V2 | Stable & Clean
 
 if game.CoreGui:FindFirstChild("RyuzenHub") then
     game.CoreGui.RyuzenHub:Destroy()
@@ -9,14 +9,15 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
 -- GUI
-local gui = Instance.new("ScreenGui", game.CoreGui)
+local gui = Instance.new("ScreenGui")
 gui.Name = "RyuzenHub"
 gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
 
--- Botão abrir
+-- OPEN BUTTON
 local open = Instance.new("TextButton", gui)
-open.Size = UDim2.new(0,130,0,36)
-open.Position = UDim2.new(0,20,0.5,-18)
+open.Size = UDim2.new(0,140,0,38)
+open.Position = UDim2.new(0,20,0.5,-19)
 open.Text = "RYUZEN"
 open.Font = Enum.Font.GothamBold
 open.TextSize = 14
@@ -26,53 +27,76 @@ open.BorderSizePixel = 0
 open.Active = true
 open.Draggable = true
 
--- Main
+Instance.new("UICorner", open).CornerRadius = UDim.new(0,18)
+
+-- MAIN
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0,500,0,320)
-main.Position = UDim2.new(0.5,-250,0.5,-160)
-main.BackgroundColor3 = Color3.fromRGB(18,18,18)
+main.Size = UDim2.new(0,520,0,340)
+main.Position = UDim2.new(0.5,-260,0.5,-170)
+main.BackgroundColor3 = Color3.fromRGB(16,16,16)
 main.Visible = true
 main.Active = true
 main.Draggable = true
 main.BorderSizePixel = 0
 
--- Top
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,20)
+
+-- TOP
 local top = Instance.new("Frame", main)
-top.Size = UDim2.new(1,0,0,42)
-top.BackgroundColor3 = Color3.fromRGB(110,0,0)
+top.Size = UDim2.new(1,0,0,44)
+top.BackgroundColor3 = Color3.fromRGB(120,0,0)
 top.BorderSizePixel = 0
+Instance.new("UICorner", top).CornerRadius = UDim.new(0,20)
 
 local title = Instance.new("TextLabel", top)
 title.Size = UDim2.new(1,0,1,0)
-title.Text = "RYUZEN HUB"
+title.Text = "🩸 R Y U Z E N  H U B"
 title.Font = Enum.Font.GothamBold
 title.TextSize = 16
 title.TextColor3 = Color3.new(1,1,1)
 title.BackgroundTransparency = 1
 
--- Content
+-- MENU
+local menu = Instance.new("Frame", main)
+menu.Size = UDim2.new(0,150,1,-44)
+menu.Position = UDim2.new(0,0,0,44)
+menu.BackgroundColor3 = Color3.fromRGB(20,20,20)
+menu.BorderSizePixel = 0
+Instance.new("UICorner", menu).CornerRadius = UDim.new(0,18)
+
+-- CONTENT
 local content = Instance.new("Frame", main)
-content.Position = UDim2.new(0,140,0,42)
-content.Size = UDim2.new(1,-140,1,-42)
+content.Position = UDim2.new(0,150,0,44)
+content.Size = UDim2.new(1,-150,1,-44)
 content.BackgroundTransparency = 1
 
--- Menu
-local menu = Instance.new("Frame", main)
-menu.Size = UDim2.new(0,140,1,-42)
-menu.Position = UDim2.new(0,0,0,42)
-menu.BackgroundColor3 = Color3.fromRGB(22,22,22)
-
--- Clear
+-- CLEAR
 local function clear()
     for _,v in pairs(content:GetChildren()) do
         v:Destroy()
     end
 end
 
--- Toggle Function
-local function createToggle(text, y, callback)
+-- TAB BUTTON
+local function createTab(text, y, callback)
+    local btn = Instance.new("TextButton", menu)
+    btn.Size = UDim2.new(1,-20,0,40)
+    btn.Position = UDim2.new(0,10,0,y)
+    btn.Text = text
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 13
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.BackgroundColor3 = Color3.fromRGB(35,0,0)
+    btn.BorderSizePixel = 0
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,16)
+
+    btn.MouseButton1Click:Connect(callback)
+end
+
+-- TOGGLE
+local function createToggle(text, y, func)
     local holder = Instance.new("Frame", content)
-    holder.Size = UDim2.new(0,260,0,40)
+    holder.Size = UDim2.new(0,300,0,44)
     holder.Position = UDim2.new(0,20,0,y)
     holder.BackgroundTransparency = 1
 
@@ -85,89 +109,86 @@ local function createToggle(text, y, callback)
     label.BackgroundTransparency = 1
 
     local toggle = Instance.new("Frame", holder)
-    toggle.Size = UDim2.new(0,50,0,22)
-    toggle.Position = UDim2.new(1,-60,0.5,-11)
-    toggle.BackgroundColor3 = Color3.fromRGB(80,0,0)
+    toggle.Size = UDim2.new(0,54,0,26)
+    toggle.Position = UDim2.new(1,-64,0.5,-13)
+    toggle.BackgroundColor3 = Color3.fromRGB(90,0,0)
     toggle.BorderSizePixel = 0
-    toggle.ClipsDescendants = true
+    Instance.new("UICorner", toggle).CornerRadius = UDim.new(1,0)
 
     local ball = Instance.new("Frame", toggle)
-    ball.Size = UDim2.new(0,20,0,20)
-    ball.Position = UDim2.new(0,1,0.5,-10)
+    ball.Size = UDim2.new(0,22,0,22)
+    ball.Position = UDim2.new(0,2,0.5,-11)
     ball.BackgroundColor3 = Color3.new(1,1,1)
     ball.BorderSizePixel = 0
+    Instance.new("UICorner", ball).CornerRadius = UDim.new(1,0)
 
-    local on = false
+    local button = Instance.new("TextButton", toggle)
+    button.Size = UDim2.new(1,0,1,0)
+    button.Text = ""
+    button.BackgroundTransparency = 1
 
-    toggle.InputBegan:Connect(function(i)
-        if i.UserInputType == Enum.UserInputType.MouseButton1 then
-            on = not on
-            TweenService:Create(toggle, TweenInfo.new(0.2),
-                {BackgroundColor3 = on and Color3.fromRGB(0,170,0) or Color3.fromRGB(80,0,0)}
-            ):Play()
-            TweenService:Create(ball, TweenInfo.new(0.2),
-                {Position = on and UDim2.new(1,-21,0.5,-10) or UDim2.new(0,1,0.5,-10)}
-            ):Play()
-            callback(on)
-        end
+    local state = false
+
+    button.MouseButton1Click:Connect(function()
+        state = not state
+
+        TweenService:Create(toggle, TweenInfo.new(0.2), {
+            BackgroundColor3 = state and Color3.fromRGB(0,170,0) or Color3.fromRGB(90,0,0)
+        }):Play()
+
+        TweenService:Create(ball, TweenInfo.new(0.2), {
+            Position = state and UDim2.new(1,-24,0.5,-11) or UDim2.new(0,2,0.5,-11)
+        }):Play()
+
+        func(state)
     end)
 end
 
--- Tabs
-local function tab(name, y, func)
-    local b = Instance.new("TextButton", menu)
-    b.Size = UDim2.new(1,0,0,40)
-    b.Position = UDim2.new(0,0,0,y)
-    b.Text = name
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 13
-    b.TextColor3 = Color3.new(1,1,1)
-    b.BackgroundColor3 = Color3.fromRGB(30,0,0)
-    b.BorderSizePixel = 0
-    b.MouseButton1Click:Connect(func)
-end
-
--- MENU
-tab("🏠 Menu",0,function()
+-- TABS
+createTab("🏠 Menu",10,function()
     clear()
 end)
 
--- UNIVERSAL
-tab("⚡ Universal",40,function()
+createTab("⚡ Universal",60,function()
     clear()
 
     createToggle("Speed Safe",0,function(v)
-        local hum = player.Character and player.Character:FindFirstChild("Humanoid")
-        if hum then
-            hum.WalkSpeed = v and 32 or 16
-        end
+        local h = player.Character and player.Character:FindFirstChild("Humanoid")
+        if h then h.WalkSpeed = v and 28 or 16 end
     end)
 
     createToggle("Jump Safe",50,function(v)
-        local hum = player.Character and player.Character:FindFirstChild("Humanoid")
-        if hum then
-            hum.UseJumpPower = true
-            hum.JumpPower = v and 80 or 50
-        end
+        local h = player.Character and player.Character:FindFirstChild("Humanoid")
+        if h then h.JumpPower = v and 75 or 50 end
+    end)
+
+    createToggle("Infinite Jump",100,function(v)
+        _G.infJump = v
     end)
 end)
 
--- PLAYER
-tab("👤 Player",80,function()
+createTab("👤 Player",110,function()
     clear()
 
     createToggle("No Ragdoll",0,function(v)
-        local hum = player.Character and player.Character:FindFirstChild("Humanoid")
-        if hum then
-            hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, not v)
-            hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, not v)
+        local h = player.Character and player.Character:FindFirstChild("Humanoid")
+        if h then
+            h:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, not v)
+            h:SetStateEnabled(Enum.HumanoidStateType.FallingDown, not v)
         end
     end)
 end)
 
--- FECHAR
-tab("❌ Fechar",120,function()
+createTab("❌ Fechar",160,function()
     main.Visible = false
+end)
+
+-- INFINITE JUMP
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if _G.infJump then
+        local h = player.Character and player.Character:FindFirstChild("Humanoid")
+        if h then h:ChangeState(Enum.HumanoidStateType.Jumping) end
+    end
 end)
 
 open.MouseButton1Click:Connect(function()
