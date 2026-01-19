@@ -9,26 +9,31 @@ getgenv().RYUZEN_LOADED = true
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- VARIÁVEIS GLOBAIS PARA FUNCIONALIDADES
+local noclip = false
+local flying = false
+local speedHack = false
+local speedValue = 50
+local infJump = false
+local antiAfk = false
+local espEnabled = false
+local rainbowMode = false
+local aimbotEnabled = false
 
 -- CONFIGURAÇÕES RYUZEN
 local CONFIG = {
     Theme = {
-        Primary = Color3.fromRGB(10, 10, 10),      -- Preto profundo
-        Secondary = Color3.fromRGB(20, 20, 20),    -- Preto médio
-        Accent = Color3.fromRGB(180, 0, 0),        -- Vermelho sangue
-        Highlight = Color3.fromRGB(220, 0, 0),     -- Vermelho brilhante
-        Danger = Color3.fromRGB(255, 50, 50),      -- Vermelho alerta
-        Text = Color3.fromRGB(240, 240, 240),      -- Branco gelo
-        DarkText = Color3.fromRGB(150, 150, 150)   -- Cinza
-    },
-    Symbols = {
-        Dragon = "🐉",
-        Sword = "⚔️",
-        Shield = "🛡️",
-        Fire = "🔥",
-        Skull = "💀",
-        Warning = "⚠️"
+        Primary = Color3.fromRGB(10, 10, 10),
+        Secondary = Color3.fromRGB(20, 20, 20),
+        Accent = Color3.fromRGB(180, 0, 0),
+        Highlight = Color3.fromRGB(220, 0, 0),
+        Danger = Color3.fromRGB(255, 50, 50),
+        Text = Color3.fromRGB(240, 240, 240),
+        DarkText = Color3.fromRGB(150, 150, 150)
     }
 }
 
@@ -40,9 +45,9 @@ gui.IgnoreGuiInset = true
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- MAIN FRAME (ESTILO SAMURAI) - ALTURA REDUZIDA
+-- MAIN FRAME
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 600, 0, 350)  -- Altura reduzida de 450 para 350
+main.Size = UDim2.new(0, 600, 0, 350)
 main.Position = UDim2.new(0.5, -300, 0.5, -175)
 main.BackgroundColor3 = CONFIG.Theme.Primary
 main.BorderSizePixel = 0
@@ -50,82 +55,84 @@ main.Active = true
 main.Draggable = true
 main.ZIndex = 10
 
--- BORDA VERMELHA (ESTILO SAMURAI)
 local stroke = Instance.new("UIStroke", main)
 stroke.Color = CONFIG.Theme.Accent
 stroke.Thickness = 3
-stroke.LineJoinMode = Enum.LineJoinMode.Miter
 
--- CANTOS RETOS (ESTILO MILITAR)
-local corner = Instance.new("UICorner", main)
-corner.CornerRadius = UDim.new(0, 2)
-
--- HEADER COM AVISO
+-- HEADER
 local header = Instance.new("Frame", main)
-header.Size = UDim2.new(1, 0, 0, 50)  -- Altura reduzida
-header.BackgroundColor3 = Color3.fromRGB(15, 0, 0) -- Vermelho escuro
+header.Size = UDim2.new(1, 0, 0, 50)
+header.BackgroundColor3 = Color3.fromRGB(15, 0, 0)
 header.BorderSizePixel = 0
 
--- TÍTULO RYUZEN
 local title = Instance.new("TextLabel", header)
 title.Size = UDim2.new(0.6, 0, 1, 0)
 title.Position = UDim2.new(0, 15, 0, 0)
 title.Text = "🐉 RYUZEN HUB V4.5 🐉"
 title.Font = Enum.Font.GothamBlack
-title.TextSize = 22  -- Tamanho reduzido
+title.TextSize = 22
 title.TextColor3 = CONFIG.Theme.Highlight
 title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 
--- AVISO DE METEOROS (IGUAL FOTO)
+-- AVISO DE METEOROS
 local warningFrame = Instance.new("Frame", header)
-warningFrame.Size = UDim2.new(0.35, 0, 0, 25)  -- Altura reduzida
+warningFrame.Size = UDim2.new(0.35, 0, 0, 25)
 warningFrame.Position = UDim2.new(0.65, 0, 0.5, -12.5)
 warningFrame.BackgroundColor3 = CONFIG.Theme.Danger
 warningFrame.BorderSizePixel = 0
 
-local warningCorner = Instance.new("UICorner", warningFrame)
-warningCorner.CornerRadius = UDim.new(0, 4)
-
 local warningText = Instance.new("TextLabel", warningFrame)
 warningText.Size = UDim2.new(1, 0, 1, 0)
-warningText.Text = CONFIG.Symbols.Warning .. " CHUVA DE METEOROS! " .. CONFIG.Symbols.Warning
+warningText.Text = "⚠️ CHUVA DE METEOROS! ⚠️"
 warningText.Font = Enum.Font.GothamBold
-warningText.TextSize = 11  -- Tamanho reduzido
+warningText.TextSize = 11
 warningText.TextColor3 = Color3.fromRGB(255, 255, 200)
 warningText.BackgroundTransparency = 1
 
 -- ANIMAÇÃO PISCANTE DO AVISO
-local warningVisible = true
 spawn(function()
     while true do
-        warningVisible = not warningVisible
-        warningFrame.Visible = warningVisible
+        warningFrame.Visible = not warningFrame.Visible
         task.wait(0.6)
     end
 end)
 
--- BOTÃO FECHAR (ESTILO MILITAR)
-local close = Instance.new("TextButton", header)
-close.Size = UDim2.new(0, 35, 0, 35)  -- Tamanho reduzido
-close.Position = UDim2.new(1, -45, 0.5, -17.5)
-close.Text = "✕"
-close.Font = Enum.Font.GothamBlack
-close.TextSize = 18  -- Tamanho reduzido
-close.TextColor3 = CONFIG.Theme.Danger
-close.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-close.BorderSizePixel = 1
-close.BorderColor3 = CONFIG.Theme.Accent
-close.AutoButtonColor = false
+-- BOTÃO FECHAR COM IMAGEM (X VERMELHO)
+local closeBtn = Instance.new("ImageButton", header)
+closeBtn.Size = UDim2.new(0, 35, 0, 35)
+closeBtn.Position = UDim2.new(1, -45, 0.5, -17.5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+closeBtn.BorderSizePixel = 1
+closeBtn.BorderColor3 = CONFIG.Theme.Accent
+closeBtn.AutoButtonColor = false
+closeBtn.Image = "rbxassetid://3926305904"
+closeBtn.ImageRectSize = Vector2.new(24, 24)
+closeBtn.ImageRectOffset = Vector2.new(924, 724)
+closeBtn.ScaleType = Enum.ScaleType.Fit
 
--- SIDEBAR (MENU LATERAL - IGUAL FOTO)
+-- EFEITO HOVER NO BOTÃO FECHAR
+closeBtn.MouseEnter:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2), {
+        BackgroundColor3 = Color3.fromRGB(50, 0, 0),
+        Rotation = 90
+    }):Play()
+end)
+
+closeBtn.MouseLeave:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2), {
+        BackgroundColor3 = Color3.fromRGB(30, 0, 0),
+        Rotation = 0
+    }):Play()
+end)
+
+-- SIDEBAR
 local sidebar = Instance.new("Frame", main)
-sidebar.Position = UDim2.new(0, 0, 0, 50)  -- Ajustado para nova altura do header
-sidebar.Size = UDim2.new(0, 200, 1, -50)  -- Ajustado para nova altura
+sidebar.Position = UDim2.new(0, 0, 0, 50)
+sidebar.Size = UDim2.new(0, 200, 1, -50)
 sidebar.BackgroundColor3 = CONFIG.Theme.Secondary
 sidebar.BorderSizePixel = 0
 
--- SEPARADOR VERMELHO
 local separator = Instance.new("Frame", sidebar)
 separator.Size = UDim2.new(0, 2, 1, 0)
 separator.Position = UDim2.new(1, -2, 0, 0)
@@ -134,22 +141,22 @@ separator.BorderSizePixel = 0
 
 -- ÁREA DE CONTEÚDO
 local content = Instance.new("Frame", main)
-content.Position = UDim2.new(0, 200, 0, 50)  -- Ajustado
-content.Size = UDim2.new(1, -200, 1, -50)  -- Ajustado
+content.Position = UDim2.new(0, 200, 0, 50)
+content.Size = UDim2.new(1, -200, 1, -50)
 content.BackgroundColor3 = CONFIG.Theme.Primary
 content.BorderSizePixel = 0
 
--- SISTEMA DE ABAS (IGUAL FOTO)
+-- SISTEMA DE ABAS
 local tabs = {}
 local activeTab = nil
 
 local function createTab(name, icon)
     local btn = Instance.new("TextButton", sidebar)
-    btn.Size = UDim2.new(1, -10, 0, 35)  -- Altura reduzida
-    btn.Position = UDim2.new(0, 5, 0, (#tabs * 40) + 10)  -- Espaço reduzido
+    btn.Size = UDim2.new(1, -10, 0, 35)
+    btn.Position = UDim2.new(0, 5, 0, (#tabs * 40) + 10)
     btn.Text = icon .. "  " .. name:upper()
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 12  -- Tamanho reduzido
+    btn.TextSize = 12
     btn.TextColor3 = CONFIG.Theme.DarkText
     btn.BackgroundColor3 = CONFIG.Theme.Secondary
     btn.BorderSizePixel = 1
@@ -170,7 +177,7 @@ local function createTab(name, icon)
     frame.Visible = false
     
     local frameLayout = Instance.new("UIListLayout", frame)
-    frameLayout.Padding = UDim.new(0, 8)  -- Espaço reduzido
+    frameLayout.Padding = UDim.new(0, 8)
     frameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     frameLayout.SortOrder = Enum.SortOrder.LayoutOrder
     
@@ -217,7 +224,7 @@ local function createTab(name, icon)
     return frame
 end
 
--- CRIAR ABAS (IGUAL FOTO QUE VOCÊ DESCREVEU)
+-- CRIAR ABAS (IGUAL FOTO)
 local funTab = createTab("Fun", "🎮")
 local avatarTab = createTab("Avatar", "👤")
 local houseTab = createTab("House", "🏠")
@@ -228,13 +235,13 @@ local musicAllTab = createTab("Music All", "🎵")
 local musicTab = createTab("Music", "🎶")
 local trollTab = createTab("Troll", "😈")
 
--- FUNÇÃO PARA CRIAR BOTÕES ESTILO RYUZEN
-local function createRyButton(parent, text, icon)
+-- FUNÇÃO PARA CRIAR BOTÕES FUNCIONAIS
+local function createFunctionalButton(parent, text, icon, callback)
     local btn = Instance.new("TextButton", parent)
-    btn.Size = UDim2.new(0.9, 0, 0, 40)  -- Altura reduzida
+    btn.Size = UDim2.new(0.9, 0, 0, 40)
     btn.Text = icon .. "  " .. text:upper()
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 13  -- Tamanho reduzido
+    btn.TextSize = 13
     btn.TextColor3 = CONFIG.Theme.Text
     btn.BackgroundColor3 = CONFIG.Theme.Secondary
     btn.BorderSizePixel = 1
@@ -270,27 +277,176 @@ local function createRyButton(parent, text, icon)
         TweenService:Create(btn, TweenInfo.new(0.1), {
             BackgroundColor3 = CONFIG.Theme.Secondary
         }):Play()
+        
+        if callback then
+            pcall(callback)
+        end
     end)
     
     return btn
 end
 
--- CONTEÚDO DA ABA FUN (EXEMPLO)
+-- FUNÇÕES DOS BOTÕES
+
+-- FUNÇÃO FLY
+local function toggleFly()
+    flying = not flying
+    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    
+    if not humanoid or not rootPart then 
+        warn("Character not found!")
+        return 
+    end
+    
+    if flying then
+        local bodyVelocity = Instance.new("BodyVelocity", rootPart)
+        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+        bodyVelocity.MaxForce = Vector3.new(0, math.huge, 0)
+        
+        spawn(function()
+            while flying and wait() do
+                if humanoid then
+                    local cam = workspace.CurrentCamera
+                    local moveDir = Vector3.new(0, 0, 0)
+                    
+                    if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                        moveDir = moveDir + cam.CFrame.LookVector
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                        moveDir = moveDir - cam.CFrame.LookVector
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                        moveDir = moveDir + cam.CFrame.RightVector
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                        moveDir = moveDir - cam.CFrame.RightVector
+                    end
+                    
+                    bodyVelocity.Velocity = moveDir.Unit * 100
+                end
+            end
+        end)
+    else
+        for _, v in pairs(rootPart:GetChildren()) do
+            if v:IsA("BodyVelocity") then
+                v:Destroy()
+            end
+        end
+    end
+end
+
+-- FUNÇÃO NO CLIP
+local function toggleNoclip()
+    noclip = not noclip
+    if player.Character then
+        for _, part in pairs(player.Character:GetDescendants()) do
+            if part:IsA("BasePart") and part.CanCollide then
+                part.CanCollide = not noclip
+            end
+        end
+    end
+end
+
+-- FUNÇÃO SPEED HACK
+local function toggleSpeed()
+    speedHack = not speedHack
+    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        if speedHack then
+            humanoid.WalkSpeed = speedValue
+        else
+            humanoid.WalkSpeed = 16
+        end
+    end
+end
+
+-- FUNÇÃO INFINITE JUMP
+local function toggleInfJump()
+    infJump = not infJump
+    if infJump then
+        player.Character:WaitForChild("Humanoid").JumpPower = 50
+        UserInputService.JumpRequest:Connect(function()
+            if infJump then
+                player.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end)
+    else
+        player.Character:WaitForChild("Humanoid").JumpPower = 50
+    end
+end
+
+-- FUNÇÃO ANTI-AFK
+local function toggleAntiAFK()
+    antiAfk = not antiAfk
+    if antiAfk then
+        local virtualUser = game:GetService('VirtualUser')
+        spawn(function()
+            while antiAfk do
+                virtualUser:CaptureController()
+                virtualUser:ClickButton2(Vector2.new())
+                wait(30)
+            end
+        end)
+    end
+end
+
+-- FUNÇÃO ESP (WALLHACK)
+local function toggleESP()
+    espEnabled = not espEnabled
+    
+    if espEnabled then
+        for _, plr in pairs(Players:GetPlayers()) do
+            if plr ~= player and plr.Character then
+                local highlight = Instance.new("Highlight")
+                highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                highlight.OutlineColor = Color3.fromRGB(255, 100, 100)
+                highlight.Parent = plr.Character
+                highlight.Adornee = plr.Character
+            end
+        end
+    else
+        for _, plr in pairs(Players:GetPlayers()) do
+            if plr.Character then
+                for _, obj in pairs(plr.Character:GetChildren()) do
+                    if obj:IsA("Highlight") then
+                        obj:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- FUNÇÃO COPY DISCORD
+local function copyDiscord()
+    setclipboard("https://discord.gg/zdDKdGbsZT")
+    return "Discord link copiado!"
+end
+
+-- FUNÇÃO COPY TIKTOK
+local function copyTikTok()
+    setclipboard("@lolyta")
+    return "TikTok @ copiado!"
+end
+
+-- BOTÕES NA ABA FUN
 local funTitle = Instance.new("TextLabel", funTab)
-funTitle.Size = UDim2.new(1, 0, 0, 40)  -- Altura reduzida
-funTitle.Text = "🎮 FUNCTIONS"
+funTitle.Size = UDim2.new(1, 0, 0, 40)
+funTitle.Text = "🎮 FUNÇÕES PRINCIPAIS"
 funTitle.Font = Enum.Font.GothamBlack
-funTitle.TextSize = 18  -- Tamanho reduzido
+funTitle.TextSize = 18
 funTitle.TextColor3 = CONFIG.Theme.Highlight
 funTitle.BackgroundTransparency = 1
 funTitle.LayoutOrder = 1
 
--- BOTÕES EXEMPLO PARA ABA FUN
-createRyButton(funTab, "Fly", "🕊️")
-createRyButton(funTab, "Speed", "⚡")
-createRyButton(funTab, "Noclip", "👻")
-createRyButton(funTab, "Infinite Jump", "⬆️")
-createRyButton(funTab, "Anti-AFK", "🛡️")
+-- BOTÕES QUE FUNCIONAM
+createFunctionalButton(funTab, "Fly Hack", "🕊️", toggleFly)
+createFunctionalButton(funTab, "Noclip", "👻", toggleNoclip)
+createFunctionalButton(funTab, "Speed Hack", "⚡", toggleSpeed)
+createFunctionalButton(funTab, "Infinite Jump", "⬆️", toggleInfJump)
+createFunctionalButton(funTab, "Anti-AFK", "🛡️", toggleAntiAFK)
+createFunctionalButton(funTab, "ESP (Wallhack)", "👁️", toggleESP)
 
 -- ÁREA DE CRÉDITOS
 local creditsFrame = Instance.new("Frame", content)
@@ -299,88 +455,56 @@ creditsFrame.BackgroundTransparency = 1
 creditsFrame.Visible = false
 
 local creditsLayout = Instance.new("UIListLayout", creditsFrame)
-creditsLayout.Padding = UDim.new(0, 15)  -- Espaço reduzido
+creditsLayout.Padding = UDim.new(0, 15)
 creditsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 creditsLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- TÍTULO CRÉDITOS
 local creditsTitle = Instance.new("TextLabel", creditsFrame)
-creditsTitle.Size = UDim2.new(1, 0, 0, 40)  -- Altura reduzida
+creditsTitle.Size = UDim2.new(1, 0, 0, 40)
 creditsTitle.Text = "🐉 RYUZEN CREDITS 🐉"
 creditsTitle.Font = Enum.Font.GothamBlack
-creditsTitle.TextSize = 22  -- Tamanho reduzido
+creditsTitle.TextSize = 22
 creditsTitle.TextColor3 = CONFIG.Theme.Highlight
 creditsTitle.BackgroundTransparency = 1
 creditsTitle.LayoutOrder = 1
 
 -- INFORMAÇÕES DA EQUIPE
 local teamInfo = Instance.new("TextLabel", creditsFrame)
-teamInfo.Size = UDim2.new(0.9, 0, 0, 60)  -- Altura reduzida
-teamInfo.Text = "CREATED BY:\nCOFFEE ☕ & FROST ❄️\n\nRYUZEN TEAM"
+teamInfo.Size = UDim2.new(0.9, 0, 0, 60)
+teamInfo.Text = "CRIADO POR:\nCOFFEE ☕ & FROST ❄️\n\nEQUIPE RYUZEN"
 teamInfo.Font = Enum.Font.GothamBold
-teamInfo.TextSize = 16  -- Tamanho reduzido
+teamInfo.TextSize = 16
 teamInfo.TextColor3 = CONFIG.Theme.Text
 teamInfo.BackgroundTransparency = 1
 teamInfo.TextYAlignment = Enum.TextYAlignment.Top
 teamInfo.LayoutOrder = 2
 
--- DISCORD BUTTON (ESTILO DARK)
-local discordBtn = Instance.new("TextButton", creditsFrame)
-discordBtn.Size = UDim2.new(0.85, 0, 0, 45)  -- Altura reduzida
-discordBtn.Text = "DISCORD: https://discord.gg/zdDKdGbsZT"
-discordBtn.Font = Enum.Font.GothamBold
-discordBtn.TextSize = 13  -- Tamanho reduzido
-discordBtn.TextColor3 = CONFIG.Theme.Text
-discordBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-discordBtn.BorderSizePixel = 1
-discordBtn.BorderColor3 = Color3.fromRGB(88, 101, 242)
-discordBtn.AutoButtonColor = false
+-- DISCORD BUTTON
+local discordBtn = createFunctionalButton(creditsFrame, "Discord Server", "💬", copyDiscord)
 discordBtn.LayoutOrder = 3
 
-discordBtn.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/zdDKdGbsZT")
-    discordBtn.Text = "✅ LINK COPIED!"
-    task.wait(1.5)
-    discordBtn.Text = "DISCORD: https://discord.gg/zdDKdGbsZT"
-end)
-
--- STUDIO BUTTON
-local studioBtn = Instance.new("TextButton", creditsFrame)
-studioBtn.Size = UDim2.new(0.85, 0, 0, 45)  -- Altura reduzida
-studioBtn.Text = "RYUZEN STUDIO"
-studioBtn.Font = Enum.Font.GothamBold
-studioBtn.TextSize = 13  -- Tamanho reduzido
-studioBtn.TextColor3 = CONFIG.Theme.Text
-studioBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-studioBtn.BorderSizePixel = 1
-studioBtn.BorderColor3 = CONFIG.Theme.Accent
-studioBtn.AutoButtonColor = false
-studioBtn.LayoutOrder = 4
-
-studioBtn.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/zdDKdGbsZT")
-    studioBtn.Text = "✅ LINK COPIED!"
-    task.wait(1.5)
-    studioBtn.Text = "RYUZEN STUDIO"
-end)
+-- TIKTOK BUTTON
+local tiktokBtn = createFunctionalButton(creditsFrame, "Copiar TikTok @lolyta", "📱", copyTikTok)
+tiktokBtn.LayoutOrder = 4
 
 -- VERSÃO
 local versionLabel = Instance.new("TextLabel", creditsFrame)
-versionLabel.Size = UDim2.new(0.9, 0, 0, 25)  -- Altura reduzida
-versionLabel.Text = "VERSION: HUB 4.5"
+versionLabel.Size = UDim2.new(0.9, 0, 0, 25)
+versionLabel.Text = "VERSÃO: HUB 4.5"
 versionLabel.Font = Enum.Font.GothamBold
-versionLabel.TextSize = 14  -- Tamanho reduzido
+versionLabel.TextSize = 14
 versionLabel.TextColor3 = CONFIG.Theme.DarkText
 versionLabel.BackgroundTransparency = 1
 versionLabel.LayoutOrder = 5
 
 -- BOTÃO CRÉDITOS NA SIDEBAR
 local creditsBtn = Instance.new("TextButton", sidebar)
-creditsBtn.Size = UDim2.new(1, -10, 0, 35)  -- Altura reduzida
-creditsBtn.Position = UDim2.new(0, 5, 1, -45)  -- Posição ajustada
+creditsBtn.Size = UDim2.new(1, -10, 0, 35)
+creditsBtn.Position = UDim2.new(0, 5, 1, -45)
 creditsBtn.Text = "⭐  CREDITS"
 creditsBtn.Font = Enum.Font.GothamBold
-creditsBtn.TextSize = 12  -- Tamanho reduzido
+creditsBtn.TextSize = 12
 creditsBtn.TextColor3 = CONFIG.Theme.DarkText
 creditsBtn.BackgroundColor3 = CONFIG.Theme.Secondary
 creditsBtn.BorderSizePixel = 1
@@ -430,42 +554,63 @@ for _, tab in pairs(tabs) do
     end
 end
 
--- BOTÃO PARA ABRIR (ESTILO RYUZEN) - AGORA COM FUNCIONALIDADE
-local openBtn = Instance.new("TextButton", gui)
-openBtn.Size = UDim2.new(0, 140, 0, 40)  -- Tamanho reduzido
-openBtn.Position = UDim2.new(0, 20, 0, 20)  -- Posição no canto superior esquerdo
-openBtn.Text = "🐉 RYUZEN HUB"
-openBtn.Font = Enum.Font.GothamBlack
-openBtn.TextSize = 14
-openBtn.TextColor3 = CONFIG.Theme.Text
+-- BOTÃO PARA ABRIR COM IMAGEM (X VERMELHO)
+local openBtn = Instance.new("ImageButton", gui)
+openBtn.Size = UDim2.new(0, 50, 0, 50)
+openBtn.Position = UDim2.new(0, 20, 0, 20)
 openBtn.BackgroundColor3 = CONFIG.Theme.Accent
 openBtn.BorderSizePixel = 1
 openBtn.BorderColor3 = CONFIG.Theme.Highlight
-openBtn.Visible = false  -- Começa invisível
 openBtn.AutoButtonColor = false
+openBtn.Visible = false
+openBtn.Image = "rbxassetid://3926305904"
+openBtn.ImageRectSize = Vector2.new(36, 36)
+openBtn.ImageRectOffset = Vector2.new(4, 964) -- Ícone de espada
+openBtn.ScaleType = Enum.ScaleType.Fit
 
--- EFEITO PULSO NO BOTÃO ABRIR
+-- EFEITO HOVER NO BOTÃO ABRIR
+openBtn.MouseEnter:Connect(function()
+    TweenService:Create(openBtn, TweenInfo.new(0.2), {
+        BackgroundColor3 = Color3.fromRGB(150, 0, 0),
+        Rotation = 10,
+        Size = UDim2.new(0, 55, 0, 55)
+    }):Play()
+end)
+
+openBtn.MouseLeave:Connect(function()
+    TweenService:Create(openBtn, TweenInfo.new(0.2), {
+        BackgroundColor3 = CONFIG.Theme.Accent,
+        Rotation = 0,
+        Size = UDim2.new(0, 50, 0, 50)
+    }):Play()
+end)
+
+-- EFEITO DE PULSAÇÃO NO BOTÃO ABRIR
 spawn(function()
     while true do
-        TweenService:Create(openBtn, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-        }):Play()
+        if openBtn.Visible then
+            TweenService:Create(openBtn, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+            }):Play()
+        end
         task.wait(1)
-        TweenService:Create(openBtn, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            BackgroundColor3 = CONFIG.Theme.Accent
-        }):Play()
+        if openBtn.Visible then
+            TweenService:Create(openBtn, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                BackgroundColor3 = CONFIG.Theme.Accent
+            }):Play()
+        end
         task.wait(1)
     end
 end)
 
 -- FUNÇÃO FECHAR (COM BOTÃO ABRIR)
-close.MouseButton1Click:Connect(function()
+closeBtn.MouseButton1Click:Connect(function()
     TweenService:Create(main, TweenInfo.new(0.3), {
         Position = UDim2.new(0.5, -300, -1, 0)
     }):Play()
     task.wait(0.3)
     main.Visible = false
-    openBtn.Visible = true  -- Mostra o botão de abrir
+    openBtn.Visible = true -- Mostra o botão de abrir (imagem)
 end)
 
 -- FUNÇÃO ABRIR
@@ -482,7 +627,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
     if input.KeyCode == Enum.KeyCode.F1 then
         if main.Visible then
-            close.MouseButton1Click:Fire()
+            closeBtn.MouseButton1Click:Fire()
         else
             openBtn.MouseButton1Click:Fire()
         end
@@ -496,8 +641,8 @@ openBtn.Visible = false
 -- MENSAGEM NO CONSOLE
 print("=======================================")
 print("🐉 RYUZEN HUB V4.5 LOADED 🐉")
-print("CREATED BY: COFFEE ☕ & FROST ❄️")
-print("PRESS F1 TO TOGGLE MENU")
+print("CRIADO POR: COFFEE ☕ & FROST ❄️")
+print("PRESSIONE F1 PARA ABRIR/FECHAR")
 print("=======================================")
 
 return gui
