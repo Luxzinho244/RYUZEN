@@ -1,4 +1,5 @@
---// Ryuzen Hub | Premium Build v3
+-- ⛩️ RYUZEN HUB | MENU COM ABAS
+-- Dark + Red | Mobile + PC | Estável
 
 if game.CoreGui:FindFirstChild("RyuzenHub") then
     game.CoreGui.RyuzenHub:Destroy()
@@ -7,21 +8,15 @@ end
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
-local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 
--- ===== BLUR =====
-local blur = Instance.new("BlurEffect")
-blur.Size = 0
-blur.Parent = Lighting
-TweenService:Create(blur, TweenInfo.new(0.4), {Size = 18}):Play()
-
--- ===== GUI =====
+-- GUI
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "RyuzenHub"
 gui.ResetOnSpawn = false
 
--- ===== OPEN BUTTON =====
+-- OPEN BUTTON
 local open = Instance.new("TextButton", gui)
 open.Size = UDim2.new(0,150,0,40)
 open.Position = UDim2.new(0,20,0.5,-20)
@@ -35,102 +30,98 @@ open.Active = true
 open.Draggable = true
 Instance.new("UICorner", open).CornerRadius = UDim.new(1,0)
 
--- ===== MAIN =====
+-- MAIN
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0,560,0,360)
 main.Position = UDim2.new(0.5,-280,0.5,-180)
-main.BackgroundColor3 = Color3.fromRGB(14,14,14)
+main.BackgroundColor3 = Color3.fromRGB(15,15,15)
 main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
-Instance.new("UICorner", main).CornerRadius = UDim.new(0,26)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,24)
 
--- ===== SHADOW =====
-local shadow = Instance.new("ImageLabel", main)
-shadow.Size = UDim2.new(1,40,1,40)
-shadow.Position = UDim2.new(0,-20,0,-20)
-shadow.Image = "rbxassetid://1316045217"
-shadow.ImageColor3 = Color3.fromRGB(120,0,0)
-shadow.ImageTransparency = 0.6
-shadow.BackgroundTransparency = 1
-shadow.ZIndex = 0
-
--- ===== TOP =====
+-- TOP
 local top = Instance.new("Frame", main)
 top.Size = UDim2.new(1,0,0,48)
 top.BackgroundColor3 = Color3.fromRGB(120,0,0)
 top.BorderSizePixel = 0
-Instance.new("UICorner", top).CornerRadius = UDim.new(0,26)
+Instance.new("UICorner", top).CornerRadius = UDim.new(0,24)
 
 local title = Instance.new("TextLabel", top)
 title.Size = UDim2.new(1,0,1,0)
-title.Text = "🩸 R Y U Z E N  •  PREMIUM"
+title.Text = "⛩️ RYUZEN HUB | MENU COM ABAS"
 title.Font = Enum.Font.GothamBold
-title.TextSize = 16
+title.TextSize = 15
 title.TextColor3 = Color3.new(1,1,1)
 title.BackgroundTransparency = 1
 
--- ===== MENU =====
+-- MENU
 local menu = Instance.new("Frame", main)
 menu.Size = UDim2.new(0,170,1,-48)
 menu.Position = UDim2.new(0,0,0,48)
 menu.BackgroundColor3 = Color3.fromRGB(18,18,18)
 menu.BorderSizePixel = 0
-Instance.new("UICorner", menu).CornerRadius = UDim.new(0,22)
+Instance.new("UICorner", menu).CornerRadius = UDim.new(0,20)
 
--- ===== CONTENT =====
+-- CONTENT
 local content = Instance.new("Frame", main)
 content.Position = UDim2.new(0,170,0,48)
 content.Size = UDim2.new(1,-170,1,-48)
 content.BackgroundTransparency = 1
 
--- ===== UTILS =====
+-- UTILS
 local function clear()
     for _,v in pairs(content:GetChildren()) do
         v:Destroy()
     end
 end
 
--- ===== TAB BUTTON =====
-local function tab(text,y,callback)
-    local b = Instance.new("TextButton", menu)
-    b.Size = UDim2.new(1,-20,0,42)
-    b.Position = UDim2.new(0,10,0,y)
-    b.Text = text
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 13
-    b.TextColor3 = Color3.new(1,1,1)
-    b.BackgroundColor3 = Color3.fromRGB(35,0,0)
-    b.BorderSizePixel = 0
-    Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
-    b.MouseButton1Click:Connect(callback)
+-- CARD
+local function createCard(titleText, y, height)
+    local card = Instance.new("Frame", content)
+    card.Size = UDim2.new(0,360,0,height)
+    card.Position = UDim2.new(0,20,0,y)
+    card.BackgroundColor3 = Color3.fromRGB(22,22,22)
+    card.BorderSizePixel = 0
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0,18)
+
+    local stroke = Instance.new("UIStroke", card)
+    stroke.Color = Color3.fromRGB(120,0,0)
+    stroke.Transparency = 0.5
+
+    local t = Instance.new("TextLabel", card)
+    t.Size = UDim2.new(1,-20,0,30)
+    t.Position = UDim2.new(0,10,0,8)
+    t.Text = titleText
+    t.Font = Enum.Font.GothamBold
+    t.TextSize = 14
+    t.TextColor3 = Color3.new(1,1,1)
+    t.BackgroundTransparency = 1
+
+    return card
 end
 
--- ===== TOGGLE =====
-local function toggle(text,y,func)
-    local h = Instance.new("Frame", content)
-    h.Size = UDim2.new(0,330,0,46)
-    h.Position = UDim2.new(0,20,0,y)
-    h.BackgroundTransparency = 1
+-- TOGGLE
+local function toggle(text, parent, y, callback)
+    local label = Instance.new("TextLabel", parent)
+    label.Size = UDim2.new(0.6,0,0,30)
+    label.Position = UDim2.new(0,15,0,y)
+    label.Text = text
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 13
+    label.TextColor3 = Color3.new(1,1,1)
+    label.BackgroundTransparency = 1
 
-    local l = Instance.new("TextLabel", h)
-    l.Size = UDim2.new(0.65,0,1,0)
-    l.Text = text
-    l.TextColor3 = Color3.new(1,1,1)
-    l.Font = Enum.Font.Gotham
-    l.TextSize = 14
-    l.BackgroundTransparency = 1
-
-    local t = Instance.new("Frame", h)
-    t.Size = UDim2.new(0,56,0,26)
-    t.Position = UDim2.new(1,-66,0.5,-13)
+    local t = Instance.new("Frame", parent)
+    t.Size = UDim2.new(0,52,0,24)
+    t.Position = UDim2.new(1,-70,0,y+3)
     t.BackgroundColor3 = Color3.fromRGB(90,0,0)
     t.BorderSizePixel = 0
     Instance.new("UICorner", t).CornerRadius = UDim.new(1,0)
 
     local b = Instance.new("Frame", t)
-    b.Size = UDim2.new(0,22,0,22)
-    b.Position = UDim2.new(0,2,0.5,-11)
+    b.Size = UDim2.new(0,20,0,20)
+    b.Position = UDim2.new(0,2,0.5,-10)
     b.BackgroundColor3 = Color3.new(1,1,1)
     b.BorderSizePixel = 0
     Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
@@ -141,21 +132,35 @@ local function toggle(text,y,func)
     btn.BackgroundTransparency = 1
 
     local state = false
-
     btn.MouseButton1Click:Connect(function()
         state = not state
-        TweenService:Create(t, TweenInfo.new(0.25), {
-            BackgroundColor3 = state and Color3.fromRGB(0,180,0) or Color3.fromRGB(90,0,0)
+        TweenService:Create(t,TweenInfo.new(0.2),{
+            BackgroundColor3 = state and Color3.fromRGB(0,170,0) or Color3.fromRGB(90,0,0)
         }):Play()
-        TweenService:Create(b, TweenInfo.new(0.25), {
-            Position = state and UDim2.new(1,-24,0.5,-11) or UDim2.new(0,2,0.5,-11)
+        TweenService:Create(b,TweenInfo.new(0.2),{
+            Position = state and UDim2.new(1,-22,0.5,-10) or UDim2.new(0,2,0.5,-10)
         }):Play()
-        func(state)
+        callback(state)
     end)
 end
 
--- ===== FEATURES =====
-local infJump, noclip, noFall = false,false,false
+-- TAB BUTTON
+local function tab(text,y,func)
+    local b = Instance.new("TextButton", menu)
+    b.Size = UDim2.new(1,-20,0,42)
+    b.Position = UDim2.new(0,10,0,y)
+    b.Text = text
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 13
+    b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(35,0,0)
+    b.BorderSizePixel = 0
+    Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
+    b.MouseButton1Click:Connect(func)
+end
+
+-- FEATURES
+local infJump, noclip = false,false
 
 UIS.JumpRequest:Connect(function()
     if infJump then
@@ -164,7 +169,7 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
-game:GetService("RunService").Stepped:Connect(function()
+RunService.Stepped:Connect(function()
     if noclip and player.Character then
         for _,v in pairs(player.Character:GetDescendants()) do
             if v:IsA("BasePart") then v.CanCollide = false end
@@ -172,51 +177,52 @@ game:GetService("RunService").Stepped:Connect(function()
     end
 end)
 
--- ===== TABS =====
-tab("🏠 Home",10,function()
+-- HOME
+tab("🏠 Menu",10,function()
     clear()
+    local c = createCard("Informações",0,120)
+
+    local info = Instance.new("TextLabel", c)
+    info.Size = UDim2.new(1,-20,0,70)
+    info.Position = UDim2.new(0,10,0,40)
+    info.Text = "Status: Ativo\nVersão: Premium\nCompatível: Mobile + PC\nLoader: OK"
+    info.TextWrapped = true
+    info.TextYAlignment = Top
+    info.Font = Enum.Font.Gotham
+    info.TextSize = 13
+    info.TextColor3 = Color3.fromRGB(200,200,200)
+    info.BackgroundTransparency = 1
 end)
 
+-- UNIVERSAL
 tab("⚡ Universal",60,function()
     clear()
 
-    toggle("Speed Safe",0,function(v)
+    local move = createCard("Movimentação",0,150)
+
+    toggle("Speed Safe",move,40,function(v)
         local h = player.Character and player.Character:FindFirstChild("Humanoid")
         if h then h.WalkSpeed = v and 30 or 16 end
     end)
 
-    toggle("Jump Safe",55,function(v)
+    toggle("Jump Safe",move,80,function(v)
         local h = player.Character and player.Character:FindFirstChild("Humanoid")
         if h then h.JumpPower = v and 80 or 50 end
     end)
 
-    toggle("Infinite Jump",110,function(v)
+    local misc = createCard("Extras",170,130)
+
+    toggle("Infinite Jump",misc,40,function(v)
         infJump = v
     end)
 
-    toggle("No Fall Damage",165,function(v)
-        noFall = v
-    end)
-end)
-
-tab("👤 Player",120,function()
-    clear()
-
-    toggle("No Ragdoll",0,function(v)
-        local h = player.Character and player.Character:FindFirstChild("Humanoid")
-        if h then
-            h:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, not v)
-            h:SetStateEnabled(Enum.HumanoidStateType.FallingDown, not v)
-        end
-    end)
-
-    toggle("Noclip",55,function(v)
+    toggle("Noclip",misc,80,function(v)
         noclip = v
     end)
 end)
 
-tab("❌ Close",180,function()
-    TweenService:Create(blur, TweenInfo.new(0.3), {Size = 0}):Play()
+-- CLOSE
+tab("❌ Fechar",120,function()
     main.Visible = false
 end)
 
