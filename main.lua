@@ -40,10 +40,10 @@ gui.IgnoreGuiInset = true
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- MAIN FRAME (ESTILO SAMURAI)
+-- MAIN FRAME (ESTILO SAMURAI) - ALTURA REDUZIDA
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 600, 0, 450)
-main.Position = UDim2.new(0.5, -300, 0.5, -225)
+main.Size = UDim2.new(0, 600, 0, 350)  -- Altura reduzida de 450 para 350
+main.Position = UDim2.new(0.5, -300, 0.5, -175)
 main.BackgroundColor3 = CONFIG.Theme.Primary
 main.BorderSizePixel = 0
 main.Active = true
@@ -60,22 +60,9 @@ stroke.LineJoinMode = Enum.LineJoinMode.Miter
 local corner = Instance.new("UICorner", main)
 corner.CornerRadius = UDim.new(0, 2)
 
--- SOMBRA VERMELHA
-local shadow = Instance.new("ImageLabel", main)
-shadow.Name = "Shadow"
-shadow.Size = UDim2.new(1, 10, 1, 10)
-shadow.Position = UDim2.new(0, -5, 0, -5)
-shadow.BackgroundTransparency = 1
-shadow.Image = "rbxassetid://1316045217"
-shadow.ImageColor3 = Color3.fromRGB(80, 0, 0)
-shadow.ImageTransparency = 0.3
-shadow.ScaleType = Enum.ScaleType.Slice
-shadow.SliceCenter = Rect.new(10, 10, 118, 118)
-shadow.ZIndex = 9
-
 -- HEADER COM AVISO
 local header = Instance.new("Frame", main)
-header.Size = UDim2.new(1, 0, 0, 60)
+header.Size = UDim2.new(1, 0, 0, 50)  -- Altura reduzida
 header.BackgroundColor3 = Color3.fromRGB(15, 0, 0) -- Vermelho escuro
 header.BorderSizePixel = 0
 
@@ -85,15 +72,15 @@ title.Size = UDim2.new(0.6, 0, 1, 0)
 title.Position = UDim2.new(0, 15, 0, 0)
 title.Text = "🐉 RYUZEN HUB V4.5 🐉"
 title.Font = Enum.Font.GothamBlack
-title.TextSize = 24
+title.TextSize = 22  -- Tamanho reduzido
 title.TextColor3 = CONFIG.Theme.Highlight
 title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 
 -- AVISO DE METEOROS (IGUAL FOTO)
 local warningFrame = Instance.new("Frame", header)
-warningFrame.Size = UDim2.new(0.35, 0, 0, 30)
-warningFrame.Position = UDim2.new(0.65, 0, 0.5, -15)
+warningFrame.Size = UDim2.new(0.35, 0, 0, 25)  -- Altura reduzida
+warningFrame.Position = UDim2.new(0.65, 0, 0.5, -12.5)
 warningFrame.BackgroundColor3 = CONFIG.Theme.Danger
 warningFrame.BorderSizePixel = 0
 
@@ -104,7 +91,7 @@ local warningText = Instance.new("TextLabel", warningFrame)
 warningText.Size = UDim2.new(1, 0, 1, 0)
 warningText.Text = CONFIG.Symbols.Warning .. " CHUVA DE METEOROS! " .. CONFIG.Symbols.Warning
 warningText.Font = Enum.Font.GothamBold
-warningText.TextSize = 12
+warningText.TextSize = 11  -- Tamanho reduzido
 warningText.TextColor3 = Color3.fromRGB(255, 255, 200)
 warningText.BackgroundTransparency = 1
 
@@ -120,31 +107,21 @@ end)
 
 -- BOTÃO FECHAR (ESTILO MILITAR)
 local close = Instance.new("TextButton", header)
-close.Size = UDim2.new(0, 40, 0, 40)
-close.Position = UDim2.new(1, -50, 0.5, -20)
+close.Size = UDim2.new(0, 35, 0, 35)  -- Tamanho reduzido
+close.Position = UDim2.new(1, -45, 0.5, -17.5)
 close.Text = "✕"
 close.Font = Enum.Font.GothamBlack
-close.TextSize = 20
+close.TextSize = 18  -- Tamanho reduzido
 close.TextColor3 = CONFIG.Theme.Danger
 close.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
 close.BorderSizePixel = 1
 close.BorderColor3 = CONFIG.Theme.Accent
 close.AutoButtonColor = false
 
--- EFEITO FECHAR
-close.MouseButton1Click:Connect(function()
-    TweenService:Create(main, TweenInfo.new(0.3), {
-        Position = UDim2.new(0.5, -300, -1, 0)
-    }):Play()
-    task.wait(0.3)
-    main.Visible = false
-    openBtn.Visible = true
-end)
-
 -- SIDEBAR (MENU LATERAL - IGUAL FOTO)
 local sidebar = Instance.new("Frame", main)
-sidebar.Position = UDim2.new(0, 0, 0, 60)
-sidebar.Size = UDim2.new(0, 200, 1, -60)
+sidebar.Position = UDim2.new(0, 0, 0, 50)  -- Ajustado para nova altura do header
+sidebar.Size = UDim2.new(0, 200, 1, -50)  -- Ajustado para nova altura
 sidebar.BackgroundColor3 = CONFIG.Theme.Secondary
 sidebar.BorderSizePixel = 0
 
@@ -157,8 +134,8 @@ separator.BorderSizePixel = 0
 
 -- ÁREA DE CONTEÚDO
 local content = Instance.new("Frame", main)
-content.Position = UDim2.new(0, 200, 0, 60)
-content.Size = UDim2.new(1, -200, 1, -60)
+content.Position = UDim2.new(0, 200, 0, 50)  -- Ajustado
+content.Size = UDim2.new(1, -200, 1, -50)  -- Ajustado
 content.BackgroundColor3 = CONFIG.Theme.Primary
 content.BorderSizePixel = 0
 
@@ -168,11 +145,11 @@ local activeTab = nil
 
 local function createTab(name, icon)
     local btn = Instance.new("TextButton", sidebar)
-    btn.Size = UDim2.new(1, -10, 0, 40)
-    btn.Position = UDim2.new(0, 5, 0, (#tabs * 45) + 10)
+    btn.Size = UDim2.new(1, -10, 0, 35)  -- Altura reduzida
+    btn.Position = UDim2.new(0, 5, 0, (#tabs * 40) + 10)  -- Espaço reduzido
     btn.Text = icon .. "  " .. name:upper()
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 13
+    btn.TextSize = 12  -- Tamanho reduzido
     btn.TextColor3 = CONFIG.Theme.DarkText
     btn.BackgroundColor3 = CONFIG.Theme.Secondary
     btn.BorderSizePixel = 1
@@ -181,7 +158,7 @@ local function createTab(name, icon)
     btn.TextXAlignment = Enum.TextXAlignment.Left
     
     local padding = Instance.new("UIPadding", btn)
-    padding.PaddingLeft = UDim.new(0, 15)
+    padding.PaddingLeft = UDim.new(0, 12)
     
     local frame = Instance.new("ScrollingFrame", content)
     frame.Size = UDim2.new(1, 0, 1, 0)
@@ -193,7 +170,7 @@ local function createTab(name, icon)
     frame.Visible = false
     
     local frameLayout = Instance.new("UIListLayout", frame)
-    frameLayout.Padding = UDim.new(0, 10)
+    frameLayout.Padding = UDim.new(0, 8)  -- Espaço reduzido
     frameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     frameLayout.SortOrder = Enum.SortOrder.LayoutOrder
     
@@ -254,10 +231,10 @@ local trollTab = createTab("Troll", "😈")
 -- FUNÇÃO PARA CRIAR BOTÕES ESTILO RYUZEN
 local function createRyButton(parent, text, icon)
     local btn = Instance.new("TextButton", parent)
-    btn.Size = UDim2.new(0.9, 0, 0, 45)
+    btn.Size = UDim2.new(0.9, 0, 0, 40)  -- Altura reduzida
     btn.Text = icon .. "  " .. text:upper()
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14
+    btn.TextSize = 13  -- Tamanho reduzido
     btn.TextColor3 = CONFIG.Theme.Text
     btn.BackgroundColor3 = CONFIG.Theme.Secondary
     btn.BorderSizePixel = 1
@@ -266,7 +243,7 @@ local function createRyButton(parent, text, icon)
     btn.LayoutOrder = #parent:GetChildren()
     
     local padding = Instance.new("UIPadding", btn)
-    padding.PaddingLeft = UDim.new(0, 20)
+    padding.PaddingLeft = UDim.new(0, 15)
     btn.TextXAlignment = Enum.TextXAlignment.Left
     
     -- EFEITO HOVER
@@ -300,10 +277,10 @@ end
 
 -- CONTEÚDO DA ABA FUN (EXEMPLO)
 local funTitle = Instance.new("TextLabel", funTab)
-funTitle.Size = UDim2.new(1, 0, 0, 50)
+funTitle.Size = UDim2.new(1, 0, 0, 40)  -- Altura reduzida
 funTitle.Text = "🎮 FUNCTIONS"
 funTitle.Font = Enum.Font.GothamBlack
-funTitle.TextSize = 20
+funTitle.TextSize = 18  -- Tamanho reduzido
 funTitle.TextColor3 = CONFIG.Theme.Highlight
 funTitle.BackgroundTransparency = 1
 funTitle.LayoutOrder = 1
@@ -322,26 +299,26 @@ creditsFrame.BackgroundTransparency = 1
 creditsFrame.Visible = false
 
 local creditsLayout = Instance.new("UIListLayout", creditsFrame)
-creditsLayout.Padding = UDim.new(0, 20)
+creditsLayout.Padding = UDim.new(0, 15)  -- Espaço reduzido
 creditsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 creditsLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- TÍTULO CRÉDITOS
 local creditsTitle = Instance.new("TextLabel", creditsFrame)
-creditsTitle.Size = UDim2.new(1, 0, 0, 60)
+creditsTitle.Size = UDim2.new(1, 0, 0, 40)  -- Altura reduzida
 creditsTitle.Text = "🐉 RYUZEN CREDITS 🐉"
 creditsTitle.Font = Enum.Font.GothamBlack
-creditsTitle.TextSize = 24
+creditsTitle.TextSize = 22  -- Tamanho reduzido
 creditsTitle.TextColor3 = CONFIG.Theme.Highlight
 creditsTitle.BackgroundTransparency = 1
 creditsTitle.LayoutOrder = 1
 
 -- INFORMAÇÕES DA EQUIPE
 local teamInfo = Instance.new("TextLabel", creditsFrame)
-teamInfo.Size = UDim2.new(0.9, 0, 0, 80)
+teamInfo.Size = UDim2.new(0.9, 0, 0, 60)  -- Altura reduzida
 teamInfo.Text = "CREATED BY:\nCOFFEE ☕ & FROST ❄️\n\nRYUZEN TEAM"
 teamInfo.Font = Enum.Font.GothamBold
-teamInfo.TextSize = 18
+teamInfo.TextSize = 16  -- Tamanho reduzido
 teamInfo.TextColor3 = CONFIG.Theme.Text
 teamInfo.BackgroundTransparency = 1
 teamInfo.TextYAlignment = Enum.TextYAlignment.Top
@@ -349,10 +326,10 @@ teamInfo.LayoutOrder = 2
 
 -- DISCORD BUTTON (ESTILO DARK)
 local discordBtn = Instance.new("TextButton", creditsFrame)
-discordBtn.Size = UDim2.new(0.85, 0, 0, 50)
+discordBtn.Size = UDim2.new(0.85, 0, 0, 45)  -- Altura reduzida
 discordBtn.Text = "DISCORD: https://discord.gg/zdDKdGbsZT"
 discordBtn.Font = Enum.Font.GothamBold
-discordBtn.TextSize = 14
+discordBtn.TextSize = 13  -- Tamanho reduzido
 discordBtn.TextColor3 = CONFIG.Theme.Text
 discordBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 discordBtn.BorderSizePixel = 1
@@ -369,10 +346,10 @@ end)
 
 -- STUDIO BUTTON
 local studioBtn = Instance.new("TextButton", creditsFrame)
-studioBtn.Size = UDim2.new(0.85, 0, 0, 50)
+studioBtn.Size = UDim2.new(0.85, 0, 0, 45)  -- Altura reduzida
 studioBtn.Text = "RYUZEN STUDIO"
 studioBtn.Font = Enum.Font.GothamBold
-studioBtn.TextSize = 14
+studioBtn.TextSize = 13  -- Tamanho reduzido
 studioBtn.TextColor3 = CONFIG.Theme.Text
 studioBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 studioBtn.BorderSizePixel = 1
@@ -389,21 +366,21 @@ end)
 
 -- VERSÃO
 local versionLabel = Instance.new("TextLabel", creditsFrame)
-versionLabel.Size = UDim2.new(0.9, 0, 0, 30)
+versionLabel.Size = UDim2.new(0.9, 0, 0, 25)  -- Altura reduzida
 versionLabel.Text = "VERSION: HUB 4.5"
 versionLabel.Font = Enum.Font.GothamBold
-versionLabel.TextSize = 16
+versionLabel.TextSize = 14  -- Tamanho reduzido
 versionLabel.TextColor3 = CONFIG.Theme.DarkText
 versionLabel.BackgroundTransparency = 1
 versionLabel.LayoutOrder = 5
 
 -- BOTÃO CRÉDITOS NA SIDEBAR
 local creditsBtn = Instance.new("TextButton", sidebar)
-creditsBtn.Size = UDim2.new(1, -10, 0, 40)
-creditsBtn.Position = UDim2.new(0, 5, 1, -50)
+creditsBtn.Size = UDim2.new(1, -10, 0, 35)  -- Altura reduzida
+creditsBtn.Position = UDim2.new(0, 5, 1, -45)  -- Posição ajustada
 creditsBtn.Text = "⭐  CREDITS"
 creditsBtn.Font = Enum.Font.GothamBold
-creditsBtn.TextSize = 13
+creditsBtn.TextSize = 12  -- Tamanho reduzido
 creditsBtn.TextColor3 = CONFIG.Theme.DarkText
 creditsBtn.BackgroundColor3 = CONFIG.Theme.Secondary
 creditsBtn.BorderSizePixel = 1
@@ -412,7 +389,7 @@ creditsBtn.AutoButtonColor = false
 creditsBtn.TextXAlignment = Enum.TextXAlignment.Left
 
 local creditsPadding = Instance.new("UIPadding", creditsBtn)
-creditsPadding.PaddingLeft = UDim.new(0, 15)
+creditsPadding.PaddingLeft = UDim.new(0, 12)
 
 -- FUNÇÃO PARA MOSTRAR CRÉDITOS
 creditsBtn.MouseButton1Click:Connect(function()
@@ -453,10 +430,10 @@ for _, tab in pairs(tabs) do
     end
 end
 
--- BOTÃO PARA ABRIR (ESTILO RYUZEN)
+-- BOTÃO PARA ABRIR (ESTILO RYUZEN) - AGORA COM FUNCIONALIDADE
 local openBtn = Instance.new("TextButton", gui)
-openBtn.Size = UDim2.new(0, 140, 0, 45)
-openBtn.Position = UDim2.new(0, 20, 0.5, -22.5)
+openBtn.Size = UDim2.new(0, 140, 0, 40)  -- Tamanho reduzido
+openBtn.Position = UDim2.new(0, 20, 0, 20)  -- Posição no canto superior esquerdo
 openBtn.Text = "🐉 RYUZEN HUB"
 openBtn.Font = Enum.Font.GothamBlack
 openBtn.TextSize = 14
@@ -464,7 +441,7 @@ openBtn.TextColor3 = CONFIG.Theme.Text
 openBtn.BackgroundColor3 = CONFIG.Theme.Accent
 openBtn.BorderSizePixel = 1
 openBtn.BorderColor3 = CONFIG.Theme.Highlight
-openBtn.Visible = false
+openBtn.Visible = false  -- Começa invisível
 openBtn.AutoButtonColor = false
 
 -- EFEITO PULSO NO BOTÃO ABRIR
@@ -481,12 +458,22 @@ spawn(function()
     end
 end)
 
+-- FUNÇÃO FECHAR (COM BOTÃO ABRIR)
+close.MouseButton1Click:Connect(function()
+    TweenService:Create(main, TweenInfo.new(0.3), {
+        Position = UDim2.new(0.5, -300, -1, 0)
+    }):Play()
+    task.wait(0.3)
+    main.Visible = false
+    openBtn.Visible = true  -- Mostra o botão de abrir
+end)
+
 -- FUNÇÃO ABRIR
 openBtn.MouseButton1Click:Connect(function()
     openBtn.Visible = false
     main.Visible = true
     TweenService:Create(main, TweenInfo.new(0.3), {
-        Position = UDim2.new(0.5, -300, 0.5, -225)
+        Position = UDim2.new(0.5, -300, 0.5, -175)
     }):Play()
 end)
 
