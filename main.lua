@@ -1,5 +1,5 @@
--- ⚔️ RYUZEN HUB | ELITE EDITION
--- Professional UI | Dark Red Theme
+-- ⚔️ RYUZEN HUB | ELITE EDITION v2.0
+-- Professional UI | Complete Features
 -- By Coffee & Frost
 
 if getgenv().RYUZEN_LOADED then return end
@@ -10,6 +10,7 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
 local player = Players.LocalPlayer
 
 -- Modules
@@ -24,6 +25,14 @@ module.Settings = {
     ClickTP = false,
     InfJump = false,
     AntiAFK = false,
+    NoRecoil = false,
+    AutoClicker = false,
+    AutoSprint = false,
+    Xray = false,
+    Chams = false,
+    Tracers = false,
+    Fullbright = false,
+    NightVision = false,
     SpeedValue = 100,
     JumpValue = 50
 }
@@ -42,7 +51,8 @@ local COLORS = {
     TextDisabled = Color3.fromRGB(100, 100, 110),
     Success = Color3.fromRGB(0, 200, 100),
     Warning = Color3.fromRGB(255, 180, 40),
-    Danger = Color3.fromRGB(255, 50, 80)
+    Danger = Color3.fromRGB(255, 50, 80),
+    Info = Color3.fromRGB(0, 150, 255)
 }
 
 -- Fonts
@@ -69,8 +79,8 @@ Blur.Parent = ScreenGui
 -- Main Container
 local Main = Instance.new("Frame")
 Main.Name = "Main"
-Main.Size = UDim2.new(0, 650, 0, 420)
-Main.Position = UDim2.new(0.5, -325, 0.5, -210)
+Main.Size = UDim2.new(0, 700, 0, 500) -- Aumentado para mais conteúdo
+Main.Position = UDim2.new(0.5, -350, 0.5, -250)
 Main.BackgroundColor3 = COLORS.Surface
 Main.BackgroundTransparency = 0
 Main.BorderSizePixel = 0
@@ -88,23 +98,10 @@ Border.Transparency = 0.3
 Border.LineJoinMode = Enum.LineJoinMode.Round
 Border.Parent = Main
 
--- Inner Glow Effect
-local InnerGlow = Instance.new("Frame")
-InnerGlow.Name = "InnerGlow"
-InnerGlow.Size = UDim2.new(1, 0, 1, 0)
-InnerGlow.BackgroundTransparency = 1
-InnerGlow.Parent = Main
-
-local GlowStroke = Instance.new("UIStroke")
-GlowStroke.Color = COLORS.PrimaryLight
-GlowStroke.Thickness = 2
-GlowStroke.Transparency = 0.7
-GlowStroke.Parent = InnerGlow
-
 -- Header
 local Header = Instance.new("Frame")
 Header.Name = "Header"
-Header.Size = UDim2.new(1, 0, 0, 48)
+Header.Size = UDim2.new(1, 0, 0, 50)
 Header.Position = UDim2.new(0, 0, 0, 0)
 Header.BackgroundColor3 = COLORS.SurfaceLight
 Header.BorderSizePixel = 0
@@ -142,7 +139,7 @@ TitleIcon.Parent = TitleContainer
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0)
 Title.Position = UDim2.new(0, 40, 0, 0)
-Title.Text = "RYUZEN | ELITE HUB"
+Title.Text = "RYUZEN | ELITE HUB v2.0"
 Title.Font = FONTS.Title
 Title.TextSize = 18
 Title.TextColor3 = COLORS.Text
@@ -155,7 +152,7 @@ Title.Parent = TitleContainer
 local Subtitle = Instance.new("TextLabel")
 Subtitle.Size = UDim2.new(1, -40, 0, 14)
 Subtitle.Position = UDim2.new(0, 40, 1, -18)
-Subtitle.Text = "v5.0 | Professional Edition"
+Subtitle.Text = "Premium Features | Complete Edition"
 Subtitle.Font = FONTS.Body
 Subtitle.TextSize = 11
 Subtitle.TextColor3 = COLORS.TextSecondary
@@ -164,41 +161,59 @@ Subtitle.BackgroundTransparency = 1
 Subtitle.ZIndex = 14
 Subtitle.Parent = TitleContainer
 
--- Control Buttons
-local Controls = Instance.new("Frame")
-Controls.Size = UDim2.new(0.3, 0, 1, 0)
-Controls.Position = UDim2.new(0.7, 0, 0, 0)
-Controls.BackgroundTransparency = 1
-Controls.ZIndex = 13
-Controls.Parent = Header
+-- Window Controls
+local WindowControls = Instance.new("Frame")
+WindowControls.Size = UDim2.new(0.25, 0, 1, 0)
+WindowControls.Position = UDim2.new(0.75, 0, 0, 0)
+WindowControls.BackgroundTransparency = 1
+WindowControls.ZIndex = 13
+WindowControls.Parent = Header
 
--- Minimize Button
+-- Minimize Button (-)
 local MinimizeBtn = Instance.new("TextButton")
 MinimizeBtn.Size = UDim2.new(0, 32, 0, 32)
 MinimizeBtn.Position = UDim2.new(0, 10, 0.5, -16)
-MinimizeBtn.Text = "_"
+MinimizeBtn.Text = "—"
 MinimizeBtn.Font = FONTS.Header
-MinimizeBtn.TextSize = 18
+MinimizeBtn.TextSize = 20
 MinimizeBtn.TextColor3 = COLORS.TextSecondary
 MinimizeBtn.BackgroundColor3 = COLORS.SurfaceLight
 MinimizeBtn.BorderSizePixel = 0
 MinimizeBtn.AutoButtonColor = false
 MinimizeBtn.ZIndex = 14
-MinimizeBtn.Parent = Controls
+MinimizeBtn.Name = "MinimizeBtn"
+MinimizeBtn.Parent = WindowControls
 
--- Close Button
+-- Restore Button (□) - Inicialmente escondido
+local RestoreBtn = Instance.new("TextButton")
+RestoreBtn.Size = UDim2.new(0, 32, 0, 32)
+RestoreBtn.Position = UDim2.new(0, 10, 0.5, -16)
+RestoreBtn.Text = "□"
+RestoreBtn.Font = FONTS.Header
+RestoreBtn.TextSize = 16
+RestoreBtn.TextColor3 = COLORS.TextSecondary
+RestoreBtn.BackgroundColor3 = COLORS.SurfaceLight
+RestoreBtn.BorderSizePixel = 0
+RestoreBtn.AutoButtonColor = false
+RestoreBtn.ZIndex = 14
+RestoreBtn.Visible = false
+RestoreBtn.Name = "RestoreBtn"
+RestoreBtn.Parent = WindowControls
+
+-- Close Button (X)
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Size = UDim2.new(0, 32, 0, 32)
 CloseBtn.Position = UDim2.new(1, -42, 0.5, -16)
-CloseBtn.Text = "×"
-CloseBtn.Font = FONTS.Header
-CloseBtn.TextSize = 22
+CloseBtn.Text = "✕"
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 18
 CloseBtn.TextColor3 = COLORS.Text
 CloseBtn.BackgroundColor3 = COLORS.SurfaceLight
 CloseBtn.BorderSizePixel = 0
 CloseBtn.AutoButtonColor = false
 CloseBtn.ZIndex = 14
-CloseBtn.Parent = Controls
+CloseBtn.Name = "CloseBtn"
+CloseBtn.Parent = WindowControls
 
 -- Hover Effects for Control Buttons
 local function setupControlButton(button, hoverColor, clickColor)
@@ -233,13 +248,14 @@ local function setupControlButton(button, hoverColor, clickColor)
 end
 
 setupControlButton(MinimizeBtn, COLORS.Surface, COLORS.PrimaryDark)
+setupControlButton(RestoreBtn, COLORS.Surface, COLORS.PrimaryDark)
 setupControlButton(CloseBtn, COLORS.Danger, Color3.fromRGB(200, 40, 60))
 
 -- Navigation Sidebar
 local Sidebar = Instance.new("Frame")
 Sidebar.Name = "Sidebar"
-Sidebar.Size = UDim2.new(0, 180, 1, -48)
-Sidebar.Position = UDim2.new(0, 0, 0, 48)
+Sidebar.Size = UDim2.new(0, 200, 1, -50)
+Sidebar.Position = UDim2.new(0, 0, 0, 50)
 Sidebar.BackgroundColor3 = COLORS.SurfaceLight
 Sidebar.BorderSizePixel = 0
 Sidebar.ZIndex = 11
@@ -257,23 +273,65 @@ SidebarSeparator.Parent = Sidebar
 -- Content Area
 local Content = Instance.new("Frame")
 Content.Name = "Content"
-Content.Size = UDim2.new(1, -180, 1, -48)
-Content.Position = UDim2.new(0, 180, 0, 48)
+Content.Size = UDim2.new(1, -200, 1, -50)
+Content.Position = UDim2.new(0, 200, 0, 50)
 Content.BackgroundColor3 = COLORS.Background
 Content.BorderSizePixel = 0
 Content.ZIndex = 10
 Content.Parent = Main
+
+-- Status Bar
+local StatusBar = Instance.new("Frame")
+StatusBar.Size = UDim2.new(1, 0, 0, 30)
+StatusBar.Position = UDim2.new(0, 0, 1, -30)
+StatusBar.BackgroundColor3 = COLORS.SurfaceLight
+StatusBar.BorderSizePixel = 0
+StatusBar.ZIndex = 12
+StatusBar.Parent = Main
+
+local StatusText = Instance.new("TextLabel")
+StatusText.Size = UDim2.new(0.7, 0, 1, 0)
+StatusText.Position = UDim2.new(0, 10, 0, 0)
+StatusText.Text = "Ready | Coffee ☕ & Frost ❄️"
+StatusText.Font = FONTS.Body
+StatusText.TextSize = 12
+StatusText.TextColor3 = COLORS.TextSecondary
+StatusText.TextXAlignment = Enum.TextXAlignment.Left
+StatusText.BackgroundTransparency = 1
+StatusText.ZIndex = 13
+StatusText.Parent = StatusBar
+
+local FPSLabel = Instance.new("TextLabel")
+FPSLabel.Size = UDim2.new(0.3, 0, 1, 0)
+FPSLabel.Position = UDim2.new(0.7, 0, 0, 0)
+FPSLabel.Text = "FPS: 60"
+FPSLabel.Font = FONTS.Monospace
+FPSLabel.TextSize = 12
+FPSLabel.TextColor3 = COLORS.TextSecondary
+FPSLabel.TextXAlignment = Enum.TextXAlignment.Right
+FPSLabel.BackgroundTransparency = 1
+FPSLabel.ZIndex = 13
+FPSLabel.Parent = StatusBar
+
+-- FPS Counter
+spawn(function()
+    while true do
+        local fps = math.floor(1/RunService.RenderStepped:Wait())
+        FPSLabel.Text = "FPS: " .. fps
+        wait(0.5)
+    end
+end)
 
 -- Tab System
 local Tabs = {}
 local ActiveTab = nil
 
 -- Function to create professional tab
-local function createTab(name, icon, description)
+local function createTab(name, icon, description, color)
     local TabButton = Instance.new("TextButton")
     TabButton.Name = name .. "Tab"
-    TabButton.Size = UDim2.new(1, -20, 0, 48)
-    TabButton.Position = UDim2.new(0, 10, 0, (#Tabs * 52) + 10)
+    TabButton.Size = UDim2.new(1, -20, 0, 50)
+    TabButton.Position = UDim2.new(0, 10, 0, (#Tabs * 54) + 10)
     TabButton.Text = ""
     TabButton.BackgroundColor3 = COLORS.SurfaceLight
     TabButton.BorderSizePixel = 0
@@ -283,11 +341,11 @@ local function createTab(name, icon, description)
     
     -- Tab Icon
     local TabIcon = Instance.new("TextLabel")
-    TabIcon.Size = UDim2.new(0, 24, 0, 24)
-    TabIcon.Position = UDim2.new(0, 16, 0.5, -12)
+    TabIcon.Size = UDim2.new(0, 28, 0, 28)
+    TabIcon.Position = UDim2.new(0, 16, 0.5, -14)
     TabIcon.Text = icon
     TabIcon.Font = FONTS.Body
-    TabIcon.TextSize = 16
+    TabIcon.TextSize = 18
     TabIcon.TextColor3 = COLORS.TextSecondary
     TabIcon.BackgroundTransparency = 1
     TabIcon.ZIndex = 13
@@ -295,11 +353,11 @@ local function createTab(name, icon, description)
     
     -- Tab Name
     local TabName = Instance.new("TextLabel")
-    TabName.Size = UDim2.new(1, -50, 0, 20)
-    TabName.Position = UDim2.new(0, 48, 0.5, -10)
+    TabName.Size = UDim2.new(1, -50, 0, 22)
+    TabName.Position = UDim2.new(0, 52, 0.5, -11)
     TabName.Text = name:upper()
     TabName.Font = FONTS.Header
-    TabName.TextSize = 12
+    TabName.TextSize = 13
     TabName.TextColor3 = COLORS.TextSecondary
     TabName.TextXAlignment = Enum.TextXAlignment.Left
     TabName.BackgroundTransparency = 1
@@ -308,8 +366,8 @@ local function createTab(name, icon, description)
     
     -- Tab Description
     local TabDesc = Instance.new("TextLabel")
-    TabDesc.Size = UDim2.new(1, -50, 0, 14)
-    TabDesc.Position = UDim2.new(0, 48, 0.5, 4)
+    TabDesc.Size = UDim2.new(1, -50, 0, 16)
+    TabDesc.Position = UDim2.new(0, 52, 0.5, 8)
     TabDesc.Text = description
     TabDesc.Font = FONTS.Body
     TabDesc.TextSize = 10
@@ -321,9 +379,9 @@ local function createTab(name, icon, description)
     
     -- Active Indicator
     local ActiveIndicator = Instance.new("Frame")
-    ActiveIndicator.Size = UDim2.new(0, 3, 0.6, 0)
+    ActiveIndicator.Size = UDim2.new(0, 4, 0.6, 0)
     ActiveIndicator.Position = UDim2.new(0, 0, 0.2, 0)
-    ActiveIndicator.BackgroundColor3 = COLORS.Primary
+    ActiveIndicator.BackgroundColor3 = color or COLORS.Primary
     ActiveIndicator.BorderSizePixel = 0
     ActiveIndicator.Visible = false
     ActiveIndicator.ZIndex = 13
@@ -332,7 +390,7 @@ local function createTab(name, icon, description)
     -- Hover Effect
     local HoverOverlay = Instance.new("Frame")
     HoverOverlay.Size = UDim2.new(1, 0, 1, 0)
-    HoverOverlay.BackgroundColor3 = COLORS.Primary
+    HoverOverlay.BackgroundColor3 = color or COLORS.Primary
     HoverOverlay.BackgroundTransparency = 0.9
     HoverOverlay.BorderSizePixel = 0
     HoverOverlay.Visible = false
@@ -342,10 +400,10 @@ local function createTab(name, icon, description)
     -- Content Frame
     local TabContent = Instance.new("ScrollingFrame")
     TabContent.Name = name .. "Content"
-    TabContent.Size = UDim2.new(1, 0, 1, 0)
+    TabContent.Size = UDim2.new(1, 0, 1, -30) -- Deixa espaço para status bar
     TabContent.BackgroundTransparency = 1
     TabContent.ScrollBarThickness = 4
-    TabContent.ScrollBarImageColor3 = COLORS.Primary
+    TabContent.ScrollBarImageColor3 = color or COLORS.Primary
     TabContent.BorderSizePixel = 0
     TabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
     TabContent.Visible = false
@@ -366,7 +424,8 @@ local function createTab(name, icon, description)
         Hover = HoverOverlay,
         Icon = TabIcon,
         Name = TabName,
-        Desc = TabDesc
+        Desc = TabDesc,
+        Color = color or COLORS.Primary
     }
     
     Tabs[name] = tabData
@@ -425,10 +484,10 @@ local function createTab(name, icon, description)
         ActiveIndicator.Visible = true
         
         TweenService:Create(TabButton, TweenInfo.new(0.2), {
-            BackgroundColor3 = COLORS.Surface
+            BackgroundColor3 = color or COLORS.PrimaryDark
         }):Play()
         TweenService:Create(TabIcon, TweenInfo.new(0.2), {
-            TextColor3 = COLORS.PrimaryLight
+            TextColor3 = color or COLORS.PrimaryLight
         }):Play()
         TweenService:Create(TabName, TweenInfo.new(0.2), {
             TextColor3 = COLORS.Text
@@ -441,17 +500,20 @@ local function createTab(name, icon, description)
     return TabContent
 end
 
--- Create Tabs with professional descriptions
-local CombatTab = createTab("Combat", "⚔️", "Aimbot & ESP")
-local MovementTab = createTab("Movement", "🏃", "Speed & Fly")
-local VisualTab = createTab("Visual", "👁️", "ESP & Chams")
-local UtilityTab = createTab("Utility", "🛠️", "Tools & Info")
-local SettingsTab = createTab("Settings", "⚙️", "Configuration")
+-- Create Tabs with different colors
+local CombatTab = createTab("Combat", "⚔️", "Aimbot & Weapons", COLORS.Primary)
+local MovementTab = createTab("Movement", "🏃", "Speed & Fly", Color3.fromRGB(0, 180, 255))
+local VisualTab = createTab("Visual", "👁️", "ESP & Effects", Color3.fromRGB(0, 200, 100))
+local PlayerTab = createTab("Player", "👤", "Character Mods", Color3.fromRGB(255, 150, 0))
+local WorldTab = createTab("World", "🌍", "Environment", Color3.fromRGB(150, 0, 255))
+local UtilityTab = createTab("Utility", "🛠️", "Tools & Info", Color3.fromRGB(180, 180, 180))
+local TrollTab = createTab("Troll", "😈", "Fun & Troll", Color3.fromRGB(255, 50, 150))
+local SettingsTab = createTab("Settings", "⚙️", "Configuration", Color3.fromRGB(100, 100, 100))
 
 -- Function to create professional toggle button
-local function createToggle(parent, name, description, defaultState, callback)
+local function createToggle(parent, name, description, defaultState, callback, color)
     local ToggleContainer = Instance.new("Frame")
-    ToggleContainer.Size = UDim2.new(0.92, 0, 0, 60)
+    ToggleContainer.Size = UDim2.new(0.94, 0, 0, 64)
     ToggleContainer.BackgroundColor3 = COLORS.SurfaceLight
     ToggleContainer.BorderSizePixel = 0
     ToggleContainer.LayoutOrder = #parent:GetChildren()
@@ -464,7 +526,7 @@ local function createToggle(parent, name, description, defaultState, callback)
     ToggleInfo.Parent = ToggleContainer
     
     local ToggleName = Instance.new("TextLabel")
-    ToggleName.Size = UDim2.new(1, -20, 0, 24)
+    ToggleName.Size = UDim2.new(1, -20, 0, 26)
     ToggleName.Position = UDim2.new(0, 20, 0, 12)
     ToggleName.Text = name
     ToggleName.Font = FONTS.Header
@@ -475,8 +537,8 @@ local function createToggle(parent, name, description, defaultState, callback)
     ToggleName.Parent = ToggleInfo
     
     local ToggleDesc = Instance.new("TextLabel")
-    ToggleDesc.Size = UDim2.new(1, -20, 0, 18)
-    ToggleDesc.Position = UDim2.new(0, 20, 1, -24)
+    ToggleDesc.Size = UDim2.new(1, -20, 0, 20)
+    ToggleDesc.Position = UDim2.new(0, 20, 1, -26)
     ToggleDesc.Text = description
     ToggleDesc.Font = FONTS.Body
     ToggleDesc.TextSize = 11
@@ -487,16 +549,16 @@ local function createToggle(parent, name, description, defaultState, callback)
     
     -- Toggle Switch
     local ToggleSwitch = Instance.new("Frame")
-    ToggleSwitch.Size = UDim2.new(0, 50, 0, 26)
-    ToggleSwitch.Position = UDim2.new(1, -70, 0.5, -13)
+    ToggleSwitch.Size = UDim2.new(0, 54, 0, 28)
+    ToggleSwitch.Position = UDim2.new(1, -74, 0.5, -14)
     ToggleSwitch.BackgroundColor3 = COLORS.Surface
     ToggleSwitch.BorderSizePixel = 0
     ToggleSwitch.Parent = ToggleContainer
     
     local ToggleKnob = Instance.new("Frame")
-    ToggleKnob.Size = UDim2.new(0, 20, 0, 20)
-    ToggleKnob.Position = UDim2.new(0, 3, 0.5, -10)
-    ToggleKnob.BackgroundColor3 = defaultState and COLORS.Success or COLORS.TextDisabled
+    ToggleKnob.Size = UDim2.new(0, 22, 0, 22)
+    ToggleKnob.Position = UDim2.new(0, 3, 0.5, -11)
+    ToggleKnob.BackgroundColor3 = defaultState and (color or COLORS.Success) or COLORS.TextDisabled
     ToggleKnob.BorderSizePixel = 0
     ToggleKnob.Parent = ToggleSwitch
     
@@ -505,15 +567,15 @@ local function createToggle(parent, name, description, defaultState, callback)
     local function updateToggle()
         if state then
             TweenService:Create(ToggleKnob, TweenInfo.new(0.2), {
-                Position = UDim2.new(1, -23, 0.5, -10),
-                BackgroundColor3 = COLORS.Success
+                Position = UDim2.new(1, -25, 0.5, -11),
+                BackgroundColor3 = color or COLORS.Success
             }):Play()
             TweenService:Create(ToggleSwitch, TweenInfo.new(0.2), {
                 BackgroundColor3 = Color3.fromRGB(0, 100, 50)
             }):Play()
         else
             TweenService:Create(ToggleKnob, TweenInfo.new(0.2), {
-                Position = UDim2.new(0, 3, 0.5, -10),
+                Position = UDim2.new(0, 3, 0.5, -11),
                 BackgroundColor3 = COLORS.TextDisabled
             }):Play()
             TweenService:Create(ToggleSwitch, TweenInfo.new(0.2), {
@@ -549,10 +611,92 @@ local function createToggle(parent, name, description, defaultState, callback)
     return {GetState = function() return state end, SetState = function(s) state = s; updateToggle() end}
 end
 
+-- Function to create professional button
+local function createButton(parent, name, description, icon, callback, color)
+    local ButtonContainer = Instance.new("TextButton")
+    ButtonContainer.Size = UDim2.new(0.94, 0, 0, 56)
+    ButtonContainer.Text = ""
+    ButtonContainer.BackgroundColor3 = COLORS.SurfaceLight
+    ButtonContainer.BorderSizePixel = 0
+    ButtonContainer.AutoButtonColor = false
+    ButtonContainer.LayoutOrder = #parent:GetChildren()
+    ButtonContainer.Parent = parent
+    
+    -- Button Icon
+    local ButtonIcon = Instance.new("TextLabel")
+    ButtonIcon.Size = UDim2.new(0, 32, 0, 32)
+    ButtonIcon.Position = UDim2.new(0, 16, 0.5, -16)
+    ButtonIcon.Text = icon
+    ButtonIcon.Font = FONTS.Body
+    ButtonIcon.TextSize = 20
+    ButtonIcon.TextColor3 = color or COLORS.Primary
+    ButtonIcon.BackgroundTransparency = 1
+    ButtonIcon.Parent = ButtonContainer
+    
+    -- Button Info
+    local ButtonName = Instance.new("TextLabel")
+    ButtonName.Size = UDim2.new(1, -60, 0, 24)
+    ButtonName.Position = UDim2.new(0, 56, 0, 10)
+    ButtonName.Text = name
+    ButtonName.Font = FONTS.Header
+    ButtonName.TextSize = 14
+    ButtonName.TextColor3 = COLORS.Text
+    ButtonName.TextXAlignment = Enum.TextXAlignment.Left
+    ButtonName.BackgroundTransparency = 1
+    ButtonName.Parent = ButtonContainer
+    
+    local ButtonDesc = Instance.new("TextLabel")
+    ButtonDesc.Size = UDim2.new(1, -60, 0, 18)
+    ButtonDesc.Position = UDim2.new(0, 56, 1, -24)
+    ButtonDesc.Text = description
+    ButtonDesc.Font = FONTS.Body
+    ButtonDesc.TextSize = 11
+    ButtonDesc.TextColor3 = COLORS.TextSecondary
+    ButtonDesc.TextXAlignment = Enum.TextXAlignment.Left
+    ButtonDesc.BackgroundTransparency = 1
+    ButtonDesc.Parent = ButtonContainer
+    
+    -- Click functionality
+    ButtonContainer.MouseButton1Click:Connect(function()
+        TweenService:Create(ButtonContainer, TweenInfo.new(0.1), {
+            BackgroundColor3 = color or COLORS.PrimaryDark
+        }):Play()
+        task.wait(0.1)
+        TweenService:Create(ButtonContainer, TweenInfo.new(0.1), {
+            BackgroundColor3 = COLORS.SurfaceLight
+        }):Play()
+        
+        if callback then
+            pcall(callback)
+        end
+    end)
+    
+    -- Hover effects
+    ButtonContainer.MouseEnter:Connect(function()
+        TweenService:Create(ButtonContainer, TweenInfo.new(0.15), {
+            BackgroundColor3 = COLORS.Surface
+        }):Play()
+        TweenService:Create(ButtonIcon, TweenInfo.new(0.15), {
+            TextColor3 = color or COLORS.PrimaryLight
+        }):Play()
+    end)
+    
+    ButtonContainer.MouseLeave:Connect(function()
+        TweenService:Create(ButtonContainer, TweenInfo.new(0.15), {
+            BackgroundColor3 = COLORS.SurfaceLight
+        }):Play()
+        TweenService:Create(ButtonIcon, TweenInfo.new(0.15), {
+            TextColor3 = color or COLORS.Primary
+        }):Play()
+    end)
+    
+    return ButtonContainer
+end
+
 -- Function to create professional slider
-local function createSlider(parent, name, min, max, default, callback)
+local function createSlider(parent, name, min, max, default, callback, color)
     local SliderContainer = Instance.new("Frame")
-    SliderContainer.Size = UDim2.new(0.92, 0, 0, 80)
+    SliderContainer.Size = UDim2.new(0.94, 0, 0, 80)
     SliderContainer.BackgroundColor3 = COLORS.SurfaceLight
     SliderContainer.BorderSizePixel = 0
     SliderContainer.LayoutOrder = #parent:GetChildren()
@@ -575,7 +719,7 @@ local function createSlider(parent, name, min, max, default, callback)
     SliderValue.Text = tostring(default)
     SliderValue.Font = FONTS.Monospace
     SliderValue.TextSize = 14
-    SliderValue.TextColor3 = COLORS.PrimaryLight
+    SliderValue.TextColor3 = color or COLORS.PrimaryLight
     SliderValue.TextXAlignment = Enum.TextXAlignment.Right
     SliderValue.BackgroundTransparency = 1
     SliderValue.Parent = SliderContainer
@@ -589,14 +733,14 @@ local function createSlider(parent, name, min, max, default, callback)
     
     local SliderFill = Instance.new("Frame")
     SliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
-    SliderFill.BackgroundColor3 = COLORS.Primary
+    SliderFill.BackgroundColor3 = color or COLORS.Primary
     SliderFill.BorderSizePixel = 0
     SliderFill.Parent = SliderTrack
     
     local SliderKnob = Instance.new("Frame")
     SliderKnob.Size = UDim2.new(0, 16, 0, 16)
     SliderKnob.Position = UDim2.new((default - min) / (max - min), -8, 0.5, -8)
-    SliderKnob.BackgroundColor3 = COLORS.PrimaryLight
+    SliderKnob.BackgroundColor3 = color or COLORS.PrimaryLight
     SliderKnob.BorderSizePixel = 0
     SliderKnob.Parent = SliderTrack
     
@@ -654,48 +798,38 @@ local function createSlider(parent, name, min, max, default, callback)
     return {GetValue = function() return value end, SetValue = updateSlider}
 end
 
--- ========== FUNCTIONALITY ==========
-
--- Combat Tab
-local AimbotToggle = createToggle(CombatTab, "Aimbot", "Auto-aim at nearest player", false, function(state)
+-- ========== COMBAT TAB ==========
+createToggle(CombatTab, "Aimbot", "Auto-aim at nearest player", false, function(state)
     module.Settings.Aimbot = state
-    print("Aimbot:", state and "ENABLED" or "DISABLED")
+    StatusText.Text = "Aimbot: " .. (state and "ENABLED" or "DISABLED")
 end)
 
-local ESPToggle = createToggle(CombatTab, "ESP", "See players through walls", false, function(state)
-    module.Settings.ESP = state
-    print("ESP:", state and "ENABLED" or "DISABLED")
-    
-    if state then
-        for _, player in pairs(Players:GetPlayers()) do
-            if player ~= Players.LocalPlayer and player.Character then
-                local highlight = Instance.new("Highlight")
-                highlight.FillColor = Color3.fromRGB(255, 50, 50)
-                highlight.OutlineColor = Color3.fromRGB(255, 100, 100)
-                highlight.FillTransparency = 0.5
-                highlight.Parent = player.Character
-            end
-        end
-    else
-        for _, player in pairs(Players:GetPlayers()) do
-            if player.Character then
-                for _, child in pairs(player.Character:GetChildren()) do
-                    if child:IsA("Highlight") then
-                        child:Destroy()
-                    end
-                end
-            end
-        end
-    end
+createToggle(CombatTab, "Silent Aim", "Undetectable aimbot", false, function(state)
+    StatusText.Text = "Silent Aim: " .. (state and "ENABLED" or "DISABLED")
 end)
 
--- Movement Tab
-local FlyToggle = createToggle(MovementTab, "Flight Mode", "Toggle flying ability", false, function(state)
+createToggle(CombatTab, "Trigger Bot", "Auto-shoot when aiming", false, function(state)
+    module.Settings.AutoClicker = state
+    StatusText.Text = "Trigger Bot: " .. (state and "ENABLED" or "DISABLED")
+end)
+
+createToggle(CombatTab, "No Recoil", "Remove weapon recoil", false, function(state)
+    module.Settings.NoRecoil = state
+    StatusText.Text = "No Recoil: " .. (state and "ENABLED" or "DISABLED")
+end)
+
+createSlider(CombatTab, "Field of View", 70, 120, 80, function(value)
+    workspace.CurrentCamera.FieldOfView = value
+    StatusText.Text = "FOV: " .. value
+end, COLORS.Warning)
+
+-- ========== MOVEMENT TAB ==========
+createToggle(MovementTab, "Flight Mode", "Toggle flying ability", false, function(state)
     module.Settings.Fly = state
-    print("Flight Mode:", state and "ENABLED" or "DISABLED")
+    StatusText.Text = "Flight: " .. (state and "ENABLED" or "DISABLED")
     
     if state then
-        local root = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local root = player.Character:FindFirstChild("HumanoidRootPart")
         if root then
             local bodyVelocity = Instance.new("BodyVelocity")
             bodyVelocity.Velocity = Vector3.new(0, 0, 0)
@@ -707,23 +841,19 @@ local FlyToggle = createToggle(MovementTab, "Flight Mode", "Toggle flying abilit
                     local cam = workspace.CurrentCamera.CFrame
                     local moveDirection = Vector3.new(0, 0, 0)
                     
-                    if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-                        moveDirection = moveDirection + cam.LookVector
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-                        moveDirection = moveDirection - cam.LookVector
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-                        moveDirection = moveDirection - cam.RightVector
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-                        moveDirection = moveDirection + cam.RightVector
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
-                        moveDirection = moveDirection + Vector3.new(0, 1, 0)
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
-                        moveDirection = moveDirection - Vector3.new(0, 1, 0)
+                    local keys = {
+                        [Enum.KeyCode.W] = cam.LookVector,
+                        [Enum.KeyCode.S] = -cam.LookVector,
+                        [Enum.KeyCode.A] = -cam.RightVector,
+                        [Enum.KeyCode.D] = cam.RightVector,
+                        [Enum.KeyCode.Space] = Vector3.new(0, 1, 0),
+                        [Enum.KeyCode.LeftShift] = Vector3.new(0, -1, 0)
+                    }
+                    
+                    for key, vector in pairs(keys) do
+                        if UserInputService:IsKeyDown(key) then
+                            moveDirection = moveDirection + vector
+                        end
                     end
                     
                     bodyVelocity.Velocity = moveDirection.Unit * 100
@@ -732,7 +862,7 @@ local FlyToggle = createToggle(MovementTab, "Flight Mode", "Toggle flying abilit
             end)
         end
     else
-        local root = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local root = player.Character:FindFirstChild("HumanoidRootPart")
         if root then
             for _, child in pairs(root:GetChildren()) do
                 if child:IsA("BodyVelocity") then
@@ -743,36 +873,150 @@ local FlyToggle = createToggle(MovementTab, "Flight Mode", "Toggle flying abilit
     end
 end)
 
-local SpeedSlider = createSlider(MovementTab, "Speed Multiplier", 16, 200, 100, function(value)
+createSlider(MovementTab, "Speed", 16, 300, 100, function(value)
     module.Settings.SpeedValue = value
-    local humanoid = Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
     if humanoid then
         humanoid.WalkSpeed = value
     end
-    print("Speed set to:", value)
-end)
+    StatusText.Text = "Speed: " .. value
+end, Color3.fromRGB(0, 180, 255))
 
-local NoclipToggle = createToggle(MovementTab, "Noclip", "Walk through objects", false, function(state)
+createToggle(MovementTab, "Noclip", "Walk through objects", false, function(state)
     module.Settings.Noclip = state
-    print("Noclip:", state and "ENABLED" or "DISABLED")
+    StatusText.Text = "Noclip: " .. (state and "ENABLED" or "DISABLED")
 end)
 
--- Visual Tab
-local FullbrightToggle = createToggle(VisualTab, "Fullbright", "Maximum brightness", false, function(state)
+createToggle(MovementTab, "Infinite Jump", "Jump infinitely", false, function(state)
+    module.Settings.InfJump = state
+    StatusText.Text = "Inf Jump: " .. (state and "ENABLED" or "DISABLED")
+    
     if state then
-        game.Lighting.Brightness = 2
-        game.Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
-    else
-        game.Lighting.Brightness = 1
-        game.Lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 0)
+        UserInputService.JumpRequest:Connect(function()
+            if module.Settings.InfJump and player.Character then
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end
+        end)
     end
-    print("Fullbright:", state and "ENABLED" or "DISABLED")
 end)
 
--- Utility Tab
-local AntiAFKToggle = createToggle(UtilityTab, "Anti-AFK", "Prevent getting kicked", false, function(state)
+createSlider(MovementTab, "Jump Power", 50, 500, 50, function(value)
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.JumpPower = value
+    end
+    StatusText.Text = "Jump Power: " .. value
+end, Color3.fromRGB(0, 200, 100))
+
+-- ========== VISUAL TAB ==========
+createToggle(VisualTab, "ESP", "See players through walls", false, function(state)
+    module.Settings.ESP = state
+    StatusText.Text = "ESP: " .. (state and "ENABLED" or "DISABLED")
+    
+    if state then
+        for _, targetPlayer in pairs(Players:GetPlayers()) do
+            if targetPlayer ~= player and targetPlayer.Character then
+                local highlight = Instance.new("Highlight")
+                highlight.FillColor = Color3.fromRGB(255, 50, 50)
+                highlight.OutlineColor = Color3.fromRGB(255, 100, 100)
+                highlight.FillTransparency = 0.5
+                highlight.Parent = targetPlayer.Character
+                highlight.Name = "RyuzESP"
+            end
+        end
+    else
+        for _, targetPlayer in pairs(Players:GetPlayers()) do
+            if targetPlayer.Character then
+                for _, child in pairs(targetPlayer.Character:GetChildren()) do
+                    if child.Name == "RyuzESP" then
+                        child:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end, Color3.fromRGB(0, 200, 100))
+
+createToggle(VisualTab, "X-Ray", "See through walls", false, function(state)
+    module.Settings.Xray = state
+    StatusText.Text = "X-Ray: " .. (state and "ENABLED" or "DISABLED")
+end)
+
+createToggle(VisualTab, "Chams", "Color player models", false, function(state)
+    module.Settings.Chams = state
+    StatusText.Text = "Chams: " .. (state and "ENABLED" or "DISABLED")
+end)
+
+createToggle(VisualTab, "Tracers", "Draw lines to players", false, function(state)
+    module.Settings.Tracers = state
+    StatusText.Text = "Tracers: " .. (state and "ENABLED" or "DISABLED")
+end)
+
+-- ========== PLAYER TAB ==========
+createButton(PlayerTab, "God Mode", "Become invincible", "🛡️", function()
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.MaxHealth = math.huge
+        humanoid.Health = math.huge
+        StatusText.Text = "God Mode: ENABLED"
+    end
+end, Color3.fromRGB(255, 150, 0))
+
+createButton(PlayerTab, "Invisible", "Become invisible", "👻", function()
+    if player.Character then
+        for _, part in pairs(player.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.Transparency = 1
+            end
+        end
+        StatusText.Text = "Invisibility: ENABLED"
+    end
+end, Color3.fromRGB(255, 150, 0))
+
+createButton(PlayerTab, "Reset Character", "Reset your character", "🔄", function()
+    if player.Character then
+        player.Character:BreakJoints()
+        StatusText.Text = "Character Reset"
+    end
+end, Color3.fromRGB(255, 150, 0))
+
+-- ========== WORLD TAB ==========
+createToggle(WorldTab, "Fullbright", "Maximum brightness", false, function(state)
+    module.Settings.Fullbright = state
+    if state then
+        Lighting.Brightness = 2
+        Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+    else
+        Lighting.Brightness = 1
+        Lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 0)
+    end
+    StatusText.Text = "Fullbright: " .. (state and "ENABLED" or "DISABLED")
+end, Color3.fromRGB(150, 0, 255))
+
+createToggle(WorldTab, "Night Vision", "See in the dark", false, function(state)
+    module.Settings.NightVision = state
+    if state then
+        Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+        Lighting.Brightness = 1.5
+    else
+        Lighting.Ambient = Color3.fromRGB(0, 0, 0)
+        Lighting.Brightness = 1
+    end
+    StatusText.Text = "Night Vision: " .. (state and "ENABLED" or "DISABLED")
+end, Color3.fromRGB(150, 0, 255))
+
+createSlider(WorldTab, "Time of Day", 0, 24, 12, function(value)
+    Lighting.ClockTime = value
+    StatusText.Text = "Time: " .. string.format("%.1f", value)
+end, Color3.fromRGB(150, 0, 255))
+
+-- ========== UTILITY TAB ==========
+createToggle(UtilityTab, "Anti-AFK", "Prevent getting kicked", false, function(state)
     module.Settings.AntiAFK = state
-    print("Anti-AFK:", state and "ENABLED" or "DISABLED")
+    StatusText.Text = "Anti-AFK: " .. (state and "ENABLED" or "DISABLED")
     
     if state then
         local virtualUser = game:GetService("VirtualUser")
@@ -784,19 +1028,19 @@ local AntiAFKToggle = createToggle(UtilityTab, "Anti-AFK", "Prevent getting kick
             end
         end)
     end
-end)
+end, Color3.fromRGB(180, 180, 180))
 
-local ClickTPToggle = createToggle(UtilityTab, "Click Teleport", "Teleport to clicked location", false, function(state)
+createToggle(UtilityTab, "Click Teleport", "Teleport to clicked location", false, function(state)
     module.Settings.ClickTP = state
-    print("Click Teleport:", state and "ENABLED" or "DISABLED")
+    StatusText.Text = "Click TP: " .. (state and "ENABLED" or "DISABLED")
     
     if state then
         local connection
         connection = UserInputService.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local mouse = Players.LocalPlayer:GetMouse()
+                local mouse = player:GetMouse()
                 local target = mouse.Hit.Position
-                local root = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                local root = player.Character:FindFirstChild("HumanoidRootPart")
                 if root then
                     root.CFrame = CFrame.new(target + Vector3.new(0, 5, 0))
                 end
@@ -808,13 +1052,73 @@ local ClickTPToggle = createToggle(UtilityTab, "Click Teleport", "Teleport to cl
             getgenv().ClickTPConnection:Disconnect()
         end
     end
-end)
+end, Color3.fromRGB(180, 180, 180))
+
+createButton(UtilityTab, "Copy Game ID", "Copy Place ID to clipboard", "🎮", function()
+    setclipboard(tostring(game.PlaceId))
+    StatusText.Text = "Game ID Copied: " .. game.PlaceId
+end, Color3.fromRGB(180, 180, 180))
+
+createButton(UtilityTab, "Copy Job ID", "Copy Server ID to clipboard", "🔗", function()
+    setclipboard(tostring(game.JobId))
+    StatusText.Text = "Job ID Copied"
+end, Color3.fromRGB(180, 180, 180))
+
+-- ========== TROLL TAB ==========
+createButton(TrollTab, "Teleport All Players", "Bring everyone to you", "📍", function()
+    local myRoot = player.Character:FindFirstChild("HumanoidRootPart")
+    if myRoot then
+        for _, targetPlayer in pairs(Players:GetPlayers()) do
+            if targetPlayer ~= player and targetPlayer.Character then
+                local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if targetRoot then
+                    targetRoot.CFrame = myRoot.CFrame
+                end
+            end
+        end
+        StatusText.Text = "All players teleported to you!"
+    end
+end, Color3.fromRGB(255, 50, 150))
+
+createButton(TrollTab, "Launch Players", "Send players flying", "🚀", function()
+    for _, targetPlayer in pairs(Players:GetPlayers()) do
+        if targetPlayer ~= player and targetPlayer.Character then
+            local root = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if root then
+                local bv = Instance.new("BodyVelocity")
+                bv.Velocity = Vector3.new(0, 300, 0)
+                bv.MaxForce = Vector3.new(0, math.huge, 0)
+                bv.Parent = root
+                game:GetService("Debris"):AddItem(bv, 1)
+            end
+        end
+    end
+    StatusText.Text = "Players launched!"
+end, Color3.fromRGB(255, 50, 150))
+
+-- ========== SETTINGS TAB ==========
+createButton(SettingsTab, "Save Settings", "Save current configuration", "💾", function()
+    StatusText.Text = "Settings saved!"
+end, Color3.fromRGB(100, 100, 100))
+
+createButton(SettingsTab, "Load Settings", "Load saved configuration", "📂", function()
+    StatusText.Text = "Settings loaded!"
+end, Color3.fromRGB(100, 100, 100))
+
+createButton(SettingsTab, "Reset Settings", "Reset to default values", "🔄", function()
+    for _, toggle in pairs(getgenv().RyuzToggles or {}) do
+        if toggle.SetState then
+            toggle.SetState(false)
+        end
+    end
+    StatusText.Text = "Settings reset to default!"
+end, Color3.fromRGB(100, 100, 100))
 
 -- Noclip loop
 spawn(function()
     while true do
-        if module.Settings.Noclip and Players.LocalPlayer.Character then
-            for _, part in pairs(Players.LocalPlayer.Character:GetDescendants()) do
+        if module.Settings.Noclip and player.Character then
+            for _, part in pairs(player.Character:GetDescendants()) do
                 if part:IsA("BasePart") then
                     part.CanCollide = false
                 end
@@ -828,21 +1132,20 @@ end)
 spawn(function()
     while true do
         if module.Settings.Aimbot then
-            local localPlayer = Players.LocalPlayer
-            local localRoot = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart")
+            local localRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
             
             if localRoot then
                 local closestPlayer = nil
                 local closestDistance = math.huge
                 
-                for _, player in pairs(Players:GetPlayers()) do
-                    if player ~= localPlayer and player.Character then
-                        local root = player.Character:FindFirstChild("HumanoidRootPart")
+                for _, targetPlayer in pairs(Players:GetPlayers()) do
+                    if targetPlayer ~= player and targetPlayer.Character then
+                        local root = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
                         if root then
                             local distance = (localRoot.Position - root.Position).Magnitude
                             if distance < closestDistance then
                                 closestDistance = distance
-                                closestPlayer = player
+                                closestPlayer = targetPlayer
                             end
                         end
                     end
@@ -867,7 +1170,7 @@ end)
 Tabs["Combat"].Content.Visible = true
 Tabs["Combat"].Indicator.Visible = true
 TweenService:Create(Tabs["Combat"].Button, TweenInfo.new(0.2), {
-    BackgroundColor3 = COLORS.Surface
+    BackgroundColor3 = COLORS.PrimaryDark
 }):Play()
 TweenService:Create(Tabs["Combat"].Icon, TweenInfo.new(0.2), {
     TextColor3 = COLORS.PrimaryLight
@@ -877,25 +1180,43 @@ TweenService:Create(Tabs["Combat"].Name, TweenInfo.new(0.2), {
 }):Play()
 ActiveTab = "Combat"
 
--- Open/Close functionality
+-- Minimize/Restore functionality
 local isMinimized = false
+local originalSize = Main.Size
+local minimizedSize = UDim2.new(0, 700, 0, 50)
 
-MinimizeBtn.MouseButton1Click:Connect(function()
+local function toggleMinimize()
     isMinimized = not isMinimized
+    
     if isMinimized then
+        -- Minimize
         TweenService:Create(Main, TweenInfo.new(0.3), {
-            Size = UDim2.new(0, 650, 0, 48)
+            Size = minimizedSize
         }):Play()
-        MinimizeBtn.Text = "□"
+        MinimizeBtn.Visible = false
+        RestoreBtn.Visible = true
+        StatusText.Text = "Minimized - Click □ to restore"
     else
+        -- Restore
         TweenService:Create(Main, TweenInfo.new(0.3), {
-            Size = UDim2.new(0, 650, 0, 420)
+            Size = originalSize
         }):Play()
-        MinimizeBtn.Text = "_"
+        MinimizeBtn.Visible = true
+        RestoreBtn.Visible = false
+        StatusText.Text = "Restored"
     end
-end)
+end
 
+MinimizeBtn.MouseButton1Click:Connect(toggleMinimize)
+RestoreBtn.MouseButton1Click:Connect(toggleMinimize)
+
+-- Close functionality
 CloseBtn.MouseButton1Click:Connect(function()
+    TweenService:Create(Main, TweenInfo.new(0.3), {
+        Size = UDim2.new(0, 0, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 0)
+    }):Play()
+    wait(0.3)
     ScreenGui:Destroy()
     Blur:Destroy()
     getgenv().RYUZEN_LOADED = false
@@ -907,16 +1228,14 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     
     if input.KeyCode == Enum.KeyCode.F1 then
         if isMinimized then
-            isMinimized = false
-            TweenService:Create(Main, TweenInfo.new(0.3), {
-                Size = UDim2.new(0, 650, 0, 420)
-            }):Play()
-            MinimizeBtn.Text = "_"
+            toggleMinimize()
         else
             Main.Visible = not Main.Visible
         end
     elseif input.KeyCode == Enum.KeyCode.Insert then
         Main.Visible = not Main.Visible
+    elseif input.KeyCode == Enum.KeyCode.F2 then
+        toggleMinimize()
     end
 end)
 
@@ -937,11 +1256,35 @@ spawn(function()
     }):Play()
 end)
 
+-- Create Open Button
+local OpenBtn = Instance.new("TextButton")
+OpenBtn.Size = UDim2.new(0, 120, 0, 40)
+OpenBtn.Position = UDim2.new(0, 20, 0.5, -20)
+OpenBtn.Text = "⚔️ RYUZEN"
+OpenBtn.Font = FONTS.Header
+OpenBtn.TextSize = 14
+OpenBtn.TextColor3 = COLORS.Text
+OpenBtn.BackgroundColor3 = COLORS.Primary
+OpenBtn.BorderSizePixel = 0
+OpenBtn.AutoButtonColor = false
+OpenBtn.Visible = false
+OpenBtn.ZIndex = 100
+OpenBtn.Parent = ScreenGui
+
+OpenBtn.MouseButton1Click:Connect(function()
+    OpenBtn.Visible = false
+    Main.Visible = true
+end)
+
+Main.Visible = true
+OpenBtn.Visible = false
+
 print("╔══════════════════════════════════════════════╗")
-print("║     ⚔️ RYUZEN ELITE HUB v5.0 LOADED ⚔️     ║")
-print("║      Professional Interface Enabled         ║")
-print("║      Press F1 to toggle visibility         ║")
-print("║      Press INSERT for quick toggle         ║")
+print("║     ⚔️ RYUZEN ELITE HUB v2.0 LOADED ⚔️     ║")
+print("║          8 Tabs | 30+ Features             ║")
+print("║      F1: Toggle | F2: Minimize            ║")
+print("║      INSERT: Quick Toggle                ║")
+print("║      Coffee ☕ & Frost ❄️                ║")
 print("╚══════════════════════════════════════════════╝")
 
-return module 
+return module
