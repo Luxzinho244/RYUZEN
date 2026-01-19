@@ -79,7 +79,7 @@ Blur.Parent = ScreenGui
 -- Main Container
 local Main = Instance.new("Frame")
 Main.Name = "Main"
-Main.Size = UDim2.new(0, 700, 0, 500) -- Aumentado para mais conteúdo
+Main.Size = UDim2.new(0, 700, 0, 500)
 Main.Position = UDim2.new(0.5, -350, 0.5, -250)
 Main.BackgroundColor3 = COLORS.Surface
 Main.BackgroundTransparency = 0
@@ -1097,21 +1097,152 @@ createButton(TrollTab, "Launch Players", "Send players flying", "🚀", function
 end, Color3.fromRGB(255, 50, 150))
 
 -- ========== SETTINGS TAB ==========
+-- CORREÇÃO DOS BOTÕES DE MINIMIZAR E FECHAR
+local isMinimized = false
+local originalSize = Main.Size
+local originalPosition = Main.Position
+local minimizedSize = UDim2.new(0, 700, 0, 50)
+local minimizedPosition = UDim2.new(0.5, -350, 1, -100)
+
+local function toggleMinimize()
+    isMinimized = not isMinimized
+    
+    if isMinimized then
+        -- Minimizar
+        TweenService:Create(Main, TweenInfo.new(0.3), {
+            Size = minimizedSize,
+            Position = minimizedPosition
+        }):Play()
+        TweenService:Create(Sidebar, TweenInfo.new(0.3), {
+            Size = UDim2.new(0, 0, 0, 0)
+        }):Play()
+        TweenService:Create(Content, TweenInfo.new(0.3), {
+            Size = UDim2.new(1, 0, 0, 0),
+            Position = UDim2.new(0, 0, 0, 50)
+        }):Play()
+        TweenService:Create(StatusBar, TweenInfo.new(0.3), {
+            Size = UDim2.new(1, 0, 0, 0),
+            Position = UDim2.new(0, 0, 1, 0)
+        }):Play()
+        MinimizeBtn.Visible = false
+        RestoreBtn.Visible = true
+        StatusText.Text = "Minimized - Click □ to restore"
+    else
+        -- Restaurar
+        TweenService:Create(Main, TweenInfo.new(0.3), {
+            Size = originalSize,
+            Position = originalPosition
+        }):Play()
+        TweenService:Create(Sidebar, TweenInfo.new(0.3), {
+            Size = UDim2.new(0, 200, 1, -50),
+            Position = UDim2.new(0, 0, 0, 50)
+        }):Play()
+        TweenService:Create(Content, TweenInfo.new(0.3), {
+            Size = UDim2.new(1, -200, 1, -50),
+            Position = UDim2.new(0, 200, 0, 50)
+        }):Play()
+        TweenService:Create(StatusBar, TweenInfo.new(0.3), {
+            Size = UDim2.new(1, 0, 0, 30),
+            Position = UDim2.new(0, 0, 1, -30)
+        }):Play()
+        MinimizeBtn.Visible = true
+        RestoreBtn.Visible = false
+        StatusText.Text = "Restored"
+    end
+end
+
+-- Conectar os botões
+MinimizeBtn.MouseButton1Click:Connect(toggleMinimize)
+RestoreBtn.MouseButton1Click:Connect(toggleMinimize)
+
+-- Fechar script
+CloseBtn.MouseButton1Click:Connect(function()
+    TweenService:Create(Main, TweenInfo.new(0.3), {
+        Size = UDim2.new(0, 0, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 0)
+    }):Play()
+    TweenService:Create(Blur, TweenInfo.new(0.3), {
+        Size = 0
+    }):Play()
+    wait(0.3)
+    ScreenGui:Destroy()
+    Blur:Destroy()
+    getgenv().RYUZEN_LOADED = false
+end)
+
+-- Configurações adicionais
+createToggle(SettingsTab, "UI Sound Effects", "Enable/disable UI sounds", true, function(state)
+    StatusText.Text = "UI Sounds: " .. (state and "ENABLED" or "DISABLED")
+end, Color3.fromRGB(100, 100, 100))
+
+createToggle(SettingsTab, "Auto-Save Settings", "Save settings automatically", true, function(state)
+    StatusText.Text = "Auto-Save: " .. (state and "ENABLED" or "DISABLED")
+end, Color3.fromRGB(100, 100, 100))
+
+createSlider(SettingsTab, "UI Transparency", 0, 0.5, 0, function(value)
+    Main.BackgroundTransparency = value
+    Header.BackgroundTransparency = value
+    Sidebar.BackgroundTransparency = value
+    StatusBar.BackgroundTransparency = value
+    StatusText.Text = "UI Transparency: " .. string.format("%.1f", value)
+end, Color3.fromRGB(100, 100, 100))
+
+createSlider(SettingsTab, "Blur Intensity", 0, 20, 10, function(value)
+    Blur.Size = value
+    StatusText.Text = "Blur Intensity: " .. value
+end, Color3.fromRGB(100, 100, 100))
+
 createButton(SettingsTab, "Save Settings", "Save current configuration", "💾", function()
-    StatusText.Text = "Settings saved!"
+    -- Simular salvamento de configurações
+    local savedSettings = {}
+    for key, value in pairs(module.Settings) do
+        savedSettings[key] = value
+    end
+    getgenv().RyuzSavedSettings = savedSettings
+    StatusText.Text = "Settings saved successfully!"
 end, Color3.fromRGB(100, 100, 100))
 
 createButton(SettingsTab, "Load Settings", "Load saved configuration", "📂", function()
-    StatusText.Text = "Settings loaded!"
+    -- Simular carregamento de configurações
+    if getgenv().RyuzSavedSettings then
+        for key, value in pairs(getgenv().RyuzSavedSettings) do
+            module.Settings[key] = value
+        end
+        StatusText.Text = "Settings loaded successfully!"
+    else
+        StatusText.Text = "No saved settings found!"
+    end
 end, Color3.fromRGB(100, 100, 100))
 
 createButton(SettingsTab, "Reset Settings", "Reset to default values", "🔄", function()
-    for _, toggle in pairs(getgenv().RyuzToggles or {}) do
-        if toggle.SetState then
-            toggle.SetState(false)
+    -- Resetar todas as configurações
+    for key, _ in pairs(module.Settings) do
+        if type(module.Settings[key]) == "boolean" then
+            module.Settings[key] = false
+        elseif key == "SpeedValue" then
+            module.Settings[key] = 100
+        elseif key == "JumpValue" then
+            module.Settings[key] = 50
         end
     end
-    StatusText.Text = "Settings reset to default!"
+    
+    -- Resetar UI
+    Main.BackgroundTransparency = 0
+    Blur.Size = 10
+    
+    -- Resetar personagem se aplicável
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = 16
+        humanoid.JumpPower = 50
+    end
+    
+    StatusText.Text = "All settings reset to default!"
+end, Color3.fromRGB(100, 100, 100))
+
+createButton(SettingsTab, "Hide UI", "Temporarily hide interface", "👁️", function()
+    Main.Visible = not Main.Visible
+    StatusText.Text = Main.Visible and "UI: VISIBLE" or "UI: HIDDEN"
 end, Color3.fromRGB(100, 100, 100))
 
 -- Noclip loop
@@ -1180,60 +1311,15 @@ TweenService:Create(Tabs["Combat"].Name, TweenInfo.new(0.2), {
 }):Play()
 ActiveTab = "Combat"
 
--- Minimize/Restore functionality
-local isMinimized = false
-local originalSize = Main.Size
-local minimizedSize = UDim2.new(0, 700, 0, 50)
-
-local function toggleMinimize()
-    isMinimized = not isMinimized
-    
-    if isMinimized then
-        -- Minimize
-        TweenService:Create(Main, TweenInfo.new(0.3), {
-            Size = minimizedSize
-        }):Play()
-        MinimizeBtn.Visible = false
-        RestoreBtn.Visible = true
-        StatusText.Text = "Minimized - Click □ to restore"
-    else
-        -- Restore
-        TweenService:Create(Main, TweenInfo.new(0.3), {
-            Size = originalSize
-        }):Play()
-        MinimizeBtn.Visible = true
-        RestoreBtn.Visible = false
-        StatusText.Text = "Restored"
-    end
-end
-
-MinimizeBtn.MouseButton1Click:Connect(toggleMinimize)
-RestoreBtn.MouseButton1Click:Connect(toggleMinimize)
-
--- Close functionality
-CloseBtn.MouseButton1Click:Connect(function()
-    TweenService:Create(Main, TweenInfo.new(0.3), {
-        Size = UDim2.new(0, 0, 0, 0),
-        Position = UDim2.new(0.5, 0, 0.5, 0)
-    }):Play()
-    wait(0.3)
-    ScreenGui:Destroy()
-    Blur:Destroy()
-    getgenv().RYUZEN_LOADED = false
-end)
-
 -- Keybind system
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
     
     if input.KeyCode == Enum.KeyCode.F1 then
-        if isMinimized then
-            toggleMinimize()
-        else
-            Main.Visible = not Main.Visible
-        end
-    elseif input.KeyCode == Enum.KeyCode.Insert then
         Main.Visible = not Main.Visible
+        StatusText.Text = Main.Visible and "UI: TOGGLED ON" or "UI: TOGGLED OFF"
+    elseif input.KeyCode == Enum.KeyCode.Insert then
+        toggleMinimize()
     elseif input.KeyCode == Enum.KeyCode.F2 then
         toggleMinimize()
     end
@@ -1256,7 +1342,7 @@ spawn(function()
     }):Play()
 end)
 
--- Create Open Button
+-- Create Open Button (caso o UI seja fechado)
 local OpenBtn = Instance.new("TextButton")
 OpenBtn.Size = UDim2.new(0, 120, 0, 40)
 OpenBtn.Position = UDim2.new(0, 20, 0.5, -20)
@@ -1274,16 +1360,22 @@ OpenBtn.Parent = ScreenGui
 OpenBtn.MouseButton1Click:Connect(function()
     OpenBtn.Visible = false
     Main.Visible = true
+    Main.Size = originalSize
+    Main.Position = originalPosition
+    isMinimized = false
+    MinimizeBtn.Visible = true
+    RestoreBtn.Visible = false
 end)
 
+-- Mostrar UI inicialmente
 Main.Visible = true
 OpenBtn.Visible = false
 
 print("╔══════════════════════════════════════════════╗")
 print("║     ⚔️ RYUZEN ELITE HUB v2.0 LOADED ⚔️     ║")
 print("║          8 Tabs | 30+ Features             ║")
-print("║      F1: Toggle | F2: Minimize            ║")
-print("║      INSERT: Quick Toggle                ║")
+print("║      F1: Toggle UI | F2: Minimize         ║")
+print("║      INSERT: Quick Minimize              ║")
 print("║      Coffee ☕ & Frost ❄️                ║")
 print("╚══════════════════════════════════════════════╝")
 
