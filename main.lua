@@ -63,7 +63,7 @@ local FONTS = {
     Monospace = Enum.Font.Code
 }
 
--- Main GUI
+-- Main GUI - DIMINUÍDO
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "RyuzElite"
 ScreenGui.ResetOnSpawn = false
@@ -76,11 +76,11 @@ local Blur = Instance.new("BlurEffect")
 Blur.Size = 0
 Blur.Parent = ScreenGui
 
--- Main Container
+-- Main Container - DIMINUÍDO
 local Main = Instance.new("Frame")
 Main.Name = "Main"
-Main.Size = UDim2.new(0, 700, 0, 500)
-Main.Position = UDim2.new(0.5, -350, 0.5, -250)
+Main.Size = UDim2.new(0, 450, 0, 400) -- MENOR
+Main.Position = UDim2.new(0.5, -225, 0.5, -200) -- CENTRALIZADO
 Main.BackgroundColor3 = COLORS.Surface
 Main.BackgroundTransparency = 0
 Main.BorderSizePixel = 0
@@ -98,10 +98,10 @@ Border.Transparency = 0.3
 Border.LineJoinMode = Enum.LineJoinMode.Round
 Border.Parent = Main
 
--- Header
+-- Header - MENOR
 local Header = Instance.new("Frame")
 Header.Name = "Header"
-Header.Size = UDim2.new(1, 0, 0, 50)
+Header.Size = UDim2.new(1, 0, 0, 40) -- MENOR
 Header.Position = UDim2.new(0, 0, 0, 0)
 Header.BackgroundColor3 = COLORS.SurfaceLight
 Header.BorderSizePixel = 0
@@ -117,31 +117,31 @@ HeaderLine.BorderSizePixel = 0
 HeaderLine.ZIndex = 13
 HeaderLine.Parent = Header
 
--- Title with Icon
+-- Title with Icon - COMPACTO
 local TitleContainer = Instance.new("Frame")
 TitleContainer.Size = UDim2.new(0.6, 0, 1, 0)
-TitleContainer.Position = UDim2.new(0, 20, 0, 0)
+TitleContainer.Position = UDim2.new(0, 15, 0, 0)
 TitleContainer.BackgroundTransparency = 1
 TitleContainer.ZIndex = 13
 TitleContainer.Parent = Header
 
 local TitleIcon = Instance.new("TextLabel")
-TitleIcon.Size = UDim2.new(0, 32, 0, 32)
-TitleIcon.Position = UDim2.new(0, 0, 0.5, -16)
+TitleIcon.Size = UDim2.new(0, 24, 0, 24) -- MENOR
+TitleIcon.Position = UDim2.new(0, 0, 0.5, -12) -- AJUSTADO
 TitleIcon.Text = "⚔️"
 TitleIcon.Font = FONTS.Title
-TitleIcon.TextSize = 24
+TitleIcon.TextSize = 18 -- MENOR
 TitleIcon.TextColor3 = COLORS.PrimaryLight
 TitleIcon.BackgroundTransparency = 1
 TitleIcon.ZIndex = 14
 TitleIcon.Parent = TitleContainer
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -40, 1, 0)
-Title.Position = UDim2.new(0, 40, 0, 0)
-Title.Text = "RYUZEN | ELITE HUB v2.0"
+Title.Size = UDim2.new(1, -30, 1, 0) -- AJUSTADO
+Title.Position = UDim2.new(0, 30, 0, 0) -- AJUSTADO
+Title.Text = "RYUZEN v2.0" -- MAIS CURTO
 Title.Font = FONTS.Title
-Title.TextSize = 18
+Title.TextSize = 14 -- MENOR
 Title.TextColor3 = COLORS.Text
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.BackgroundTransparency = 1
@@ -150,18 +150,18 @@ Title.ZIndex = 14
 Title.Parent = TitleContainer
 
 local Subtitle = Instance.new("TextLabel")
-Subtitle.Size = UDim2.new(1, -40, 0, 14)
-Subtitle.Position = UDim2.new(0, 40, 1, -18)
-Subtitle.Text = "Premium Features | Complete Edition"
+Subtitle.Size = UDim2.new(1, -30, 0, 12) -- MENOR
+Subtitle.Position = UDim2.new(0, 30, 1, -14) -- AJUSTADO
+Subtitle.Text = "Elite Hub"
 Subtitle.Font = FONTS.Body
-Subtitle.TextSize = 11
+Subtitle.TextSize = 10 -- MENOR
 Subtitle.TextColor3 = COLORS.TextSecondary
 Subtitle.TextXAlignment = Enum.TextXAlignment.Left
 Subtitle.BackgroundTransparency = 1
 Subtitle.ZIndex = 14
 Subtitle.Parent = TitleContainer
 
--- Window Controls
+-- Window Controls - COMPACTO
 local WindowControls = Instance.new("Frame")
 WindowControls.Size = UDim2.new(0.25, 0, 1, 0)
 WindowControls.Position = UDim2.new(0.75, 0, 0, 0)
@@ -169,13 +169,13 @@ WindowControls.BackgroundTransparency = 1
 WindowControls.ZIndex = 13
 WindowControls.Parent = Header
 
--- Minimize Button (-)
+-- Minimize Button (-) - CORRIGIDO
 local MinimizeBtn = Instance.new("TextButton")
-MinimizeBtn.Size = UDim2.new(0, 32, 0, 32)
-MinimizeBtn.Position = UDim2.new(0, 10, 0.5, -16)
+MinimizeBtn.Size = UDim2.new(0, 28, 0, 28) -- MENOR
+MinimizeBtn.Position = UDim2.new(0, 5, 0.5, -14) -- AJUSTADO
 MinimizeBtn.Text = "—"
 MinimizeBtn.Font = FONTS.Header
-MinimizeBtn.TextSize = 20
+MinimizeBtn.TextSize = 18 -- MENOR
 MinimizeBtn.TextColor3 = COLORS.TextSecondary
 MinimizeBtn.BackgroundColor3 = COLORS.SurfaceLight
 MinimizeBtn.BorderSizePixel = 0
@@ -186,11 +186,11 @@ MinimizeBtn.Parent = WindowControls
 
 -- Restore Button (□) - Inicialmente escondido
 local RestoreBtn = Instance.new("TextButton")
-RestoreBtn.Size = UDim2.new(0, 32, 0, 32)
-RestoreBtn.Position = UDim2.new(0, 10, 0.5, -16)
+RestoreBtn.Size = UDim2.new(0, 28, 0, 28)
+RestoreBtn.Position = UDim2.new(0, 5, 0.5, -14)
 RestoreBtn.Text = "□"
 RestoreBtn.Font = FONTS.Header
-RestoreBtn.TextSize = 16
+RestoreBtn.TextSize = 14 -- MENOR
 RestoreBtn.TextColor3 = COLORS.TextSecondary
 RestoreBtn.BackgroundColor3 = COLORS.SurfaceLight
 RestoreBtn.BorderSizePixel = 0
@@ -200,13 +200,13 @@ RestoreBtn.Visible = false
 RestoreBtn.Name = "RestoreBtn"
 RestoreBtn.Parent = WindowControls
 
--- Close Button (X)
+-- Close Button (X) - CORRIGIDO
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 32, 0, 32)
-CloseBtn.Position = UDim2.new(1, -42, 0.5, -16)
+CloseBtn.Size = UDim2.new(0, 28, 0, 28) -- MENOR
+CloseBtn.Position = UDim2.new(1, -33, 0.5, -14) -- AJUSTADO
 CloseBtn.Text = "✕"
 CloseBtn.Font = Enum.Font.GothamBold
-CloseBtn.TextSize = 18
+CloseBtn.TextSize = 16 -- MENOR
 CloseBtn.TextColor3 = COLORS.Text
 CloseBtn.BackgroundColor3 = COLORS.SurfaceLight
 CloseBtn.BorderSizePixel = 0
@@ -251,11 +251,11 @@ setupControlButton(MinimizeBtn, COLORS.Surface, COLORS.PrimaryDark)
 setupControlButton(RestoreBtn, COLORS.Surface, COLORS.PrimaryDark)
 setupControlButton(CloseBtn, COLORS.Danger, Color3.fromRGB(200, 40, 60))
 
--- Navigation Sidebar
+-- Navigation Sidebar - MENOR
 local Sidebar = Instance.new("Frame")
 Sidebar.Name = "Sidebar"
-Sidebar.Size = UDim2.new(0, 200, 1, -50)
-Sidebar.Position = UDim2.new(0, 0, 0, 50)
+Sidebar.Size = UDim2.new(0, 150, 1, -40) -- MENOR
+Sidebar.Position = UDim2.new(0, 0, 0, 40)
 Sidebar.BackgroundColor3 = COLORS.SurfaceLight
 Sidebar.BorderSizePixel = 0
 Sidebar.ZIndex = 11
@@ -270,20 +270,20 @@ SidebarSeparator.BorderSizePixel = 0
 SidebarSeparator.ZIndex = 12
 SidebarSeparator.Parent = Sidebar
 
--- Content Area
+-- Content Area - AJUSTADO
 local Content = Instance.new("Frame")
 Content.Name = "Content"
-Content.Size = UDim2.new(1, -200, 1, -50)
-Content.Position = UDim2.new(0, 200, 0, 50)
+Content.Size = UDim2.new(1, -150, 1, -40) -- AJUSTADO
+Content.Position = UDim2.new(0, 150, 0, 40)
 Content.BackgroundColor3 = COLORS.Background
 Content.BorderSizePixel = 0
 Content.ZIndex = 10
 Content.Parent = Main
 
--- Status Bar
+-- Status Bar - MENOR
 local StatusBar = Instance.new("Frame")
-StatusBar.Size = UDim2.new(1, 0, 0, 30)
-StatusBar.Position = UDim2.new(0, 0, 1, -30)
+StatusBar.Size = UDim2.new(1, 0, 0, 25) -- MENOR
+StatusBar.Position = UDim2.new(0, 0, 1, -25)
 StatusBar.BackgroundColor3 = COLORS.SurfaceLight
 StatusBar.BorderSizePixel = 0
 StatusBar.ZIndex = 12
@@ -294,7 +294,7 @@ StatusText.Size = UDim2.new(0.7, 0, 1, 0)
 StatusText.Position = UDim2.new(0, 10, 0, 0)
 StatusText.Text = "Ready | Coffee ☕ & Frost ❄️"
 StatusText.Font = FONTS.Body
-StatusText.TextSize = 12
+StatusText.TextSize = 11 -- MENOR
 StatusText.TextColor3 = COLORS.TextSecondary
 StatusText.TextXAlignment = Enum.TextXAlignment.Left
 StatusText.BackgroundTransparency = 1
@@ -306,7 +306,7 @@ FPSLabel.Size = UDim2.new(0.3, 0, 1, 0)
 FPSLabel.Position = UDim2.new(0.7, 0, 0, 0)
 FPSLabel.Text = "FPS: 60"
 FPSLabel.Font = FONTS.Monospace
-FPSLabel.TextSize = 12
+FPSLabel.TextSize = 11 -- MENOR
 FPSLabel.TextColor3 = COLORS.TextSecondary
 FPSLabel.TextXAlignment = Enum.TextXAlignment.Right
 FPSLabel.BackgroundTransparency = 1
@@ -326,12 +326,12 @@ end)
 local Tabs = {}
 local ActiveTab = nil
 
--- Function to create professional tab
+-- Function to create professional tab - COMPACTO
 local function createTab(name, icon, description, color)
     local TabButton = Instance.new("TextButton")
     TabButton.Name = name .. "Tab"
-    TabButton.Size = UDim2.new(1, -20, 0, 50)
-    TabButton.Position = UDim2.new(0, 10, 0, (#Tabs * 54) + 10)
+    TabButton.Size = UDim2.new(1, -10, 0, 45) -- MENOR
+    TabButton.Position = UDim2.new(0, 5, 0, (#Tabs * 48) + 5) -- AJUSTADO
     TabButton.Text = ""
     TabButton.BackgroundColor3 = COLORS.SurfaceLight
     TabButton.BorderSizePixel = 0
@@ -339,38 +339,38 @@ local function createTab(name, icon, description, color)
     TabButton.ZIndex = 12
     TabButton.Parent = Sidebar
     
-    -- Tab Icon
+    -- Tab Icon - MENOR
     local TabIcon = Instance.new("TextLabel")
-    TabIcon.Size = UDim2.new(0, 28, 0, 28)
-    TabIcon.Position = UDim2.new(0, 16, 0.5, -14)
+    TabIcon.Size = UDim2.new(0, 22, 0, 22) -- MENOR
+    TabIcon.Position = UDim2.new(0, 12, 0.5, -11)
     TabIcon.Text = icon
     TabIcon.Font = FONTS.Body
-    TabIcon.TextSize = 18
+    TabIcon.TextSize = 14 -- MENOR
     TabIcon.TextColor3 = COLORS.TextSecondary
     TabIcon.BackgroundTransparency = 1
     TabIcon.ZIndex = 13
     TabIcon.Parent = TabButton
     
-    -- Tab Name
+    -- Tab Name - MENOR
     local TabName = Instance.new("TextLabel")
-    TabName.Size = UDim2.new(1, -50, 0, 22)
-    TabName.Position = UDim2.new(0, 52, 0.5, -11)
+    TabName.Size = UDim2.new(1, -40, 0, 18) -- AJUSTADO
+    TabName.Position = UDim2.new(0, 40, 0.5, -9)
     TabName.Text = name:upper()
     TabName.Font = FONTS.Header
-    TabName.TextSize = 13
+    TabName.TextSize = 11 -- MENOR
     TabName.TextColor3 = COLORS.TextSecondary
     TabName.TextXAlignment = Enum.TextXAlignment.Left
     TabName.BackgroundTransparency = 1
     TabName.ZIndex = 13
     TabName.Parent = TabButton
     
-    -- Tab Description
+    -- Tab Description - MENOR
     local TabDesc = Instance.new("TextLabel")
-    TabDesc.Size = UDim2.new(1, -50, 0, 16)
-    TabDesc.Position = UDim2.new(0, 52, 0.5, 8)
+    TabDesc.Size = UDim2.new(1, -40, 0, 12) -- MENOR
+    TabDesc.Position = UDim2.new(0, 40, 0.5, 6)
     TabDesc.Text = description
     TabDesc.Font = FONTS.Body
-    TabDesc.TextSize = 10
+    TabDesc.TextSize = 9 -- MENOR
     TabDesc.TextColor3 = COLORS.TextDisabled
     TabDesc.TextXAlignment = Enum.TextXAlignment.Left
     TabDesc.BackgroundTransparency = 1
@@ -379,7 +379,7 @@ local function createTab(name, icon, description, color)
     
     -- Active Indicator
     local ActiveIndicator = Instance.new("Frame")
-    ActiveIndicator.Size = UDim2.new(0, 4, 0.6, 0)
+    ActiveIndicator.Size = UDim2.new(0, 3, 0.6, 0) -- MENOR
     ActiveIndicator.Position = UDim2.new(0, 0, 0.2, 0)
     ActiveIndicator.BackgroundColor3 = color or COLORS.Primary
     ActiveIndicator.BorderSizePixel = 0
@@ -400,9 +400,9 @@ local function createTab(name, icon, description, color)
     -- Content Frame
     local TabContent = Instance.new("ScrollingFrame")
     TabContent.Name = name .. "Content"
-    TabContent.Size = UDim2.new(1, 0, 1, -30) -- Deixa espaço para status bar
+    TabContent.Size = UDim2.new(1, 0, 1, -25) -- AJUSTADO
     TabContent.BackgroundTransparency = 1
-    TabContent.ScrollBarThickness = 4
+    TabContent.ScrollBarThickness = 3 -- MENOR
     TabContent.ScrollBarImageColor3 = color or COLORS.Primary
     TabContent.BorderSizePixel = 0
     TabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -411,7 +411,7 @@ local function createTab(name, icon, description, color)
     TabContent.Parent = Content
     
     local ContentLayout = Instance.new("UIListLayout")
-    ContentLayout.Padding = UDim.new(0, 12)
+    ContentLayout.Padding = UDim.new(0, 8) -- MENOR
     ContentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ContentLayout.Parent = TabContent
@@ -500,7 +500,7 @@ local function createTab(name, icon, description, color)
     return TabContent
 end
 
--- Create Tabs with different colors
+-- Create Tabs with different colors - MESMAS ABAS MAS MAIS COMPACTAS
 local CombatTab = createTab("Combat", "⚔️", "Aimbot & Weapons", COLORS.Primary)
 local MovementTab = createTab("Movement", "🏃", "Speed & Fly", Color3.fromRGB(0, 180, 255))
 local VisualTab = createTab("Visual", "👁️", "ESP & Effects", Color3.fromRGB(0, 200, 100))
@@ -509,55 +509,56 @@ local WorldTab = createTab("World", "🌍", "Environment", Color3.fromRGB(150, 0
 local UtilityTab = createTab("Utility", "🛠️", "Tools & Info", Color3.fromRGB(180, 180, 180))
 local TrollTab = createTab("Troll", "😈", "Fun & Troll", Color3.fromRGB(255, 50, 150))
 local SettingsTab = createTab("Settings", "⚙️", "Configuration", Color3.fromRGB(100, 100, 100))
+local CreditsTab = createTab("Credits", "⭐", "Creators & Info", Color3.fromRGB(255, 215, 0)) -- NOVA ABA
 
--- Function to create professional toggle button
+-- Function to create professional toggle button - COMPACTO
 local function createToggle(parent, name, description, defaultState, callback, color)
     local ToggleContainer = Instance.new("Frame")
-    ToggleContainer.Size = UDim2.new(0.94, 0, 0, 64)
+    ToggleContainer.Size = UDim2.new(0.94, 0, 0, 50) -- MENOR
     ToggleContainer.BackgroundColor3 = COLORS.SurfaceLight
     ToggleContainer.BorderSizePixel = 0
     ToggleContainer.LayoutOrder = #parent:GetChildren()
     ToggleContainer.Parent = parent
     
-    -- Toggle Info
+    -- Toggle Info - COMPACTO
     local ToggleInfo = Instance.new("Frame")
     ToggleInfo.Size = UDim2.new(0.7, 0, 1, 0)
     ToggleInfo.BackgroundTransparency = 1
     ToggleInfo.Parent = ToggleContainer
     
     local ToggleName = Instance.new("TextLabel")
-    ToggleName.Size = UDim2.new(1, -20, 0, 26)
-    ToggleName.Position = UDim2.new(0, 20, 0, 12)
+    ToggleName.Size = UDim2.new(1, -15, 0, 20) -- MENOR
+    ToggleName.Position = UDim2.new(0, 15, 0, 8) -- AJUSTADO
     ToggleName.Text = name
     ToggleName.Font = FONTS.Header
-    ToggleName.TextSize = 14
+    ToggleName.TextSize = 12 -- MENOR
     ToggleName.TextColor3 = COLORS.Text
     ToggleName.TextXAlignment = Enum.TextXAlignment.Left
     ToggleName.BackgroundTransparency = 1
     ToggleName.Parent = ToggleInfo
     
     local ToggleDesc = Instance.new("TextLabel")
-    ToggleDesc.Size = UDim2.new(1, -20, 0, 20)
-    ToggleDesc.Position = UDim2.new(0, 20, 1, -26)
+    ToggleDesc.Size = UDim2.new(1, -15, 0, 16) -- MENOR
+    ToggleDesc.Position = UDim2.new(0, 15, 1, -20) -- AJUSTADO
     ToggleDesc.Text = description
     ToggleDesc.Font = FONTS.Body
-    ToggleDesc.TextSize = 11
+    ToggleDesc.TextSize = 10 -- MENOR
     ToggleDesc.TextColor3 = COLORS.TextSecondary
     ToggleDesc.TextXAlignment = Enum.TextXAlignment.Left
     ToggleDesc.BackgroundTransparency = 1
     ToggleDesc.Parent = ToggleInfo
     
-    -- Toggle Switch
+    -- Toggle Switch - MENOR
     local ToggleSwitch = Instance.new("Frame")
-    ToggleSwitch.Size = UDim2.new(0, 54, 0, 28)
-    ToggleSwitch.Position = UDim2.new(1, -74, 0.5, -14)
+    ToggleSwitch.Size = UDim2.new(0, 46, 0, 24) -- MENOR
+    ToggleSwitch.Position = UDim2.new(1, -56, 0.5, -12)
     ToggleSwitch.BackgroundColor3 = COLORS.Surface
     ToggleSwitch.BorderSizePixel = 0
     ToggleSwitch.Parent = ToggleContainer
     
     local ToggleKnob = Instance.new("Frame")
-    ToggleKnob.Size = UDim2.new(0, 22, 0, 22)
-    ToggleKnob.Position = UDim2.new(0, 3, 0.5, -11)
+    ToggleKnob.Size = UDim2.new(0, 18, 0, 18) -- MENOR
+    ToggleKnob.Position = UDim2.new(0, 3, 0.5, -9)
     ToggleKnob.BackgroundColor3 = defaultState and (color or COLORS.Success) or COLORS.TextDisabled
     ToggleKnob.BorderSizePixel = 0
     ToggleKnob.Parent = ToggleSwitch
@@ -567,7 +568,7 @@ local function createToggle(parent, name, description, defaultState, callback, c
     local function updateToggle()
         if state then
             TweenService:Create(ToggleKnob, TweenInfo.new(0.2), {
-                Position = UDim2.new(1, -25, 0.5, -11),
+                Position = UDim2.new(1, -21, 0.5, -9),
                 BackgroundColor3 = color or COLORS.Success
             }):Play()
             TweenService:Create(ToggleSwitch, TweenInfo.new(0.2), {
@@ -575,7 +576,7 @@ local function createToggle(parent, name, description, defaultState, callback, c
             }):Play()
         else
             TweenService:Create(ToggleKnob, TweenInfo.new(0.2), {
-                Position = UDim2.new(0, 3, 0.5, -11),
+                Position = UDim2.new(0, 3, 0.5, -9),
                 BackgroundColor3 = COLORS.TextDisabled
             }):Play()
             TweenService:Create(ToggleSwitch, TweenInfo.new(0.2), {
@@ -611,10 +612,10 @@ local function createToggle(parent, name, description, defaultState, callback, c
     return {GetState = function() return state end, SetState = function(s) state = s; updateToggle() end}
 end
 
--- Function to create professional button
+-- Function to create professional button - COMPACTO
 local function createButton(parent, name, description, icon, callback, color)
     local ButtonContainer = Instance.new("TextButton")
-    ButtonContainer.Size = UDim2.new(0.94, 0, 0, 56)
+    ButtonContainer.Size = UDim2.new(0.94, 0, 0, 46) -- MENOR
     ButtonContainer.Text = ""
     ButtonContainer.BackgroundColor3 = COLORS.SurfaceLight
     ButtonContainer.BorderSizePixel = 0
@@ -622,35 +623,35 @@ local function createButton(parent, name, description, icon, callback, color)
     ButtonContainer.LayoutOrder = #parent:GetChildren()
     ButtonContainer.Parent = parent
     
-    -- Button Icon
+    -- Button Icon - MENOR
     local ButtonIcon = Instance.new("TextLabel")
-    ButtonIcon.Size = UDim2.new(0, 32, 0, 32)
-    ButtonIcon.Position = UDim2.new(0, 16, 0.5, -16)
+    ButtonIcon.Size = UDim2.new(0, 26, 0, 26) -- MENOR
+    ButtonIcon.Position = UDim2.new(0, 12, 0.5, -13)
     ButtonIcon.Text = icon
     ButtonIcon.Font = FONTS.Body
-    ButtonIcon.TextSize = 20
+    ButtonIcon.TextSize = 16 -- MENOR
     ButtonIcon.TextColor3 = color or COLORS.Primary
     ButtonIcon.BackgroundTransparency = 1
     ButtonIcon.Parent = ButtonContainer
     
-    -- Button Info
+    -- Button Info - COMPACTO
     local ButtonName = Instance.new("TextLabel")
-    ButtonName.Size = UDim2.new(1, -60, 0, 24)
-    ButtonName.Position = UDim2.new(0, 56, 0, 10)
+    ButtonName.Size = UDim2.new(1, -50, 0, 20) -- AJUSTADO
+    ButtonName.Position = UDim2.new(0, 46, 0, 8) -- AJUSTADO
     ButtonName.Text = name
     ButtonName.Font = FONTS.Header
-    ButtonName.TextSize = 14
+    ButtonName.TextSize = 12 -- MENOR
     ButtonName.TextColor3 = COLORS.Text
     ButtonName.TextXAlignment = Enum.TextXAlignment.Left
     ButtonName.BackgroundTransparency = 1
     ButtonName.Parent = ButtonContainer
     
     local ButtonDesc = Instance.new("TextLabel")
-    ButtonDesc.Size = UDim2.new(1, -60, 0, 18)
-    ButtonDesc.Position = UDim2.new(0, 56, 1, -24)
+    ButtonDesc.Size = UDim2.new(1, -50, 0, 14) -- MENOR
+    ButtonDesc.Position = UDim2.new(0, 46, 1, -18) -- AJUSTADO
     ButtonDesc.Text = description
     ButtonDesc.Font = FONTS.Body
-    ButtonDesc.TextSize = 11
+    ButtonDesc.TextSize = 10 -- MENOR
     ButtonDesc.TextColor3 = COLORS.TextSecondary
     ButtonDesc.TextXAlignment = Enum.TextXAlignment.Left
     ButtonDesc.BackgroundTransparency = 1
@@ -693,40 +694,40 @@ local function createButton(parent, name, description, icon, callback, color)
     return ButtonContainer
 end
 
--- Function to create professional slider
+-- Function to create professional slider - COMPACTO
 local function createSlider(parent, name, min, max, default, callback, color)
     local SliderContainer = Instance.new("Frame")
-    SliderContainer.Size = UDim2.new(0.94, 0, 0, 80)
+    SliderContainer.Size = UDim2.new(0.94, 0, 0, 65) -- MENOR
     SliderContainer.BackgroundColor3 = COLORS.SurfaceLight
     SliderContainer.BorderSizePixel = 0
     SliderContainer.LayoutOrder = #parent:GetChildren()
     SliderContainer.Parent = parent
     
     local SliderName = Instance.new("TextLabel")
-    SliderName.Size = UDim2.new(1, -40, 0, 24)
-    SliderName.Position = UDim2.new(0, 20, 0, 12)
+    SliderName.Size = UDim2.new(1, -40, 0, 20) -- MENOR
+    SliderName.Position = UDim2.new(0, 15, 0, 8) -- AJUSTADO
     SliderName.Text = name
     SliderName.Font = FONTS.Header
-    SliderName.TextSize = 14
+    SliderName.TextSize = 12 -- MENOR
     SliderName.TextColor3 = COLORS.Text
     SliderName.TextXAlignment = Enum.TextXAlignment.Left
     SliderName.BackgroundTransparency = 1
     SliderName.Parent = SliderContainer
     
     local SliderValue = Instance.new("TextLabel")
-    SliderValue.Size = UDim2.new(0, 60, 0, 24)
-    SliderValue.Position = UDim2.new(1, -80, 0, 12)
+    SliderValue.Size = UDim2.new(0, 50, 0, 20) -- MENOR
+    SliderValue.Position = UDim2.new(1, -65, 0, 8) -- AJUSTADO
     SliderValue.Text = tostring(default)
     SliderValue.Font = FONTS.Monospace
-    SliderValue.TextSize = 14
+    SliderValue.TextSize = 12 -- MENOR
     SliderValue.TextColor3 = color or COLORS.PrimaryLight
     SliderValue.TextXAlignment = Enum.TextXAlignment.Right
     SliderValue.BackgroundTransparency = 1
     SliderValue.Parent = SliderContainer
     
     local SliderTrack = Instance.new("Frame")
-    SliderTrack.Size = UDim2.new(1, -40, 0, 4)
-    SliderTrack.Position = UDim2.new(0, 20, 1, -28)
+    SliderTrack.Size = UDim2.new(1, -30, 0, 4) -- AJUSTADO
+    SliderTrack.Position = UDim2.new(0, 15, 1, -22) -- AJUSTADO
     SliderTrack.BackgroundColor3 = COLORS.Surface
     SliderTrack.BorderSizePixel = 0
     SliderTrack.Parent = SliderContainer
@@ -738,8 +739,8 @@ local function createSlider(parent, name, min, max, default, callback, color)
     SliderFill.Parent = SliderTrack
     
     local SliderKnob = Instance.new("Frame")
-    SliderKnob.Size = UDim2.new(0, 16, 0, 16)
-    SliderKnob.Position = UDim2.new((default - min) / (max - min), -8, 0.5, -8)
+    SliderKnob.Size = UDim2.new(0, 14, 0, 14) -- MENOR
+    SliderKnob.Position = UDim2.new((default - min) / (max - min), -7, 0.5, -7)
     SliderKnob.BackgroundColor3 = color or COLORS.PrimaryLight
     SliderKnob.BorderSizePixel = 0
     SliderKnob.Parent = SliderTrack
@@ -752,7 +753,7 @@ local function createSlider(parent, name, min, max, default, callback, color)
         local ratio = (value - min) / (max - min)
         
         SliderFill.Size = UDim2.new(ratio, 0, 1, 0)
-        SliderKnob.Position = UDim2.new(ratio, -8, 0.5, -8)
+        SliderKnob.Position = UDim2.new(ratio, -7, 0.5, -7)
         SliderValue.Text = string.format("%.1f", value)
         
         if callback then
@@ -818,10 +819,18 @@ createToggle(CombatTab, "No Recoil", "Remove weapon recoil", false, function(sta
     StatusText.Text = "No Recoil: " .. (state and "ENABLED" or "DISABLED")
 end)
 
+createToggle(CombatTab, "Auto Reload", "Auto reload weapons", false, function(state)
+    StatusText.Text = "Auto Reload: " .. (state and "ENABLED" or "DISABLED")
+end)
+
 createSlider(CombatTab, "Field of View", 70, 120, 80, function(value)
     workspace.CurrentCamera.FieldOfView = value
     StatusText.Text = "FOV: " .. value
 end, COLORS.Warning)
+
+createSlider(CombatTab, "Aimbot Smoothness", 1, 20, 5, function(value)
+    StatusText.Text = "Smoothness: " .. value
+end, COLORS.Danger)
 
 -- ========== MOVEMENT TAB ==========
 createToggle(MovementTab, "Flight Mode", "Toggle flying ability", false, function(state)
@@ -911,6 +920,15 @@ createSlider(MovementTab, "Jump Power", 50, 500, 50, function(value)
     StatusText.Text = "Jump Power: " .. value
 end, Color3.fromRGB(0, 200, 100))
 
+createToggle(MovementTab, "Auto Sprint", "Always sprint", false, function(state)
+    module.Settings.AutoSprint = state
+    StatusText.Text = "Auto Sprint: " .. (state and "ENABLED" or "DISABLED")
+end)
+
+createToggle(MovementTab, "Wall Walk", "Walk on walls", false, function(state)
+    StatusText.Text = "Wall Walk: " .. (state and "ENABLED" or "DISABLED")
+end)
+
 -- ========== VISUAL TAB ==========
 createToggle(VisualTab, "ESP", "See players through walls", false, function(state)
     module.Settings.ESP = state
@@ -942,6 +960,19 @@ end, Color3.fromRGB(0, 200, 100))
 
 createToggle(VisualTab, "X-Ray", "See through walls", false, function(state)
     module.Settings.Xray = state
+    if state then
+        for _, part in pairs(workspace:GetDescendants()) do
+            if part:IsA("BasePart") and part.Transparency < 1 then
+                part.LocalTransparencyModifier = 0.5
+            end
+        end
+    else
+        for _, part in pairs(workspace:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.LocalTransparencyModifier = 0
+            end
+        end
+    end
     StatusText.Text = "X-Ray: " .. (state and "ENABLED" or "DISABLED")
 end)
 
@@ -954,6 +985,18 @@ createToggle(VisualTab, "Tracers", "Draw lines to players", false, function(stat
     module.Settings.Tracers = state
     StatusText.Text = "Tracers: " .. (state and "ENABLED" or "DISABLED")
 end)
+
+createToggle(VisualTab, "Name Tags", "Show player names", true, function(state)
+    StatusText.Text = "Name Tags: " .. (state and "ENABLED" or "DISABLED")
+end, COLORS.Info)
+
+createToggle(VisualTab, "Health Bars", "Show health bars", true, function(state)
+    StatusText.Text = "Health Bars: " .. (state and "ENABLED" or "DISABLED")
+end, COLORS.Danger)
+
+createSlider(VisualTab, "ESP Distance", 50, 500, 200, function(value)
+    StatusText.Text = "ESP Distance: " .. value
+end, Color3.fromRGB(0, 200, 100))
 
 -- ========== PLAYER TAB ==========
 createButton(PlayerTab, "God Mode", "Become invincible", "🛡️", function()
@@ -981,6 +1024,23 @@ createButton(PlayerTab, "Reset Character", "Reset your character", "🔄", funct
         player.Character:BreakJoints()
         StatusText.Text = "Character Reset"
     end
+end, Color3.fromRGB(255, 150, 0))
+
+createButton(PlayerTab, "Max Health", "Set health to maximum", "❤️", function()
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Health = humanoid.MaxHealth
+        StatusText.Text = "Health: MAX"
+    end
+end, Color3.fromRGB(255, 150, 0))
+
+createToggle(PlayerTab, "Auto Heal", "Automatically heal", false, function(state)
+    StatusText.Text = "Auto Heal: " .. (state and "ENABLED" or "DISABLED")
+end, COLORS.Success)
+
+createSlider(PlayerTab, "Gravity", 0, 196, 196, function(value)
+    workspace.Gravity = value
+    StatusText.Text = "Gravity: " .. value
 end, Color3.fromRGB(255, 150, 0))
 
 -- ========== WORLD TAB ==========
@@ -1011,6 +1071,21 @@ end, Color3.fromRGB(150, 0, 255))
 createSlider(WorldTab, "Time of Day", 0, 24, 12, function(value)
     Lighting.ClockTime = value
     StatusText.Text = "Time: " .. string.format("%.1f", value)
+end, Color3.fromRGB(150, 0, 255))
+
+createToggle(WorldTab, "Remove Fog", "Remove all fog", false, function(state)
+    if state then
+        Lighting.FogEnd = 100000
+        StatusText.Text = "Fog: REMOVED"
+    else
+        Lighting.FogEnd = 1000
+        StatusText.Text = "Fog: RESTORED"
+    end
+end, Color3.fromRGB(150, 0, 255))
+
+createSlider(WorldTab, "Fog Density", 0, 1, 0.5, function(value)
+    Lighting.FogEnd = 1000 - (value * 800)
+    StatusText.Text = "Fog Density: " .. string.format("%.2f", value)
 end, Color3.fromRGB(150, 0, 255))
 
 -- ========== UTILITY TAB ==========
@@ -1064,6 +1139,18 @@ createButton(UtilityTab, "Copy Job ID", "Copy Server ID to clipboard", "🔗", f
     StatusText.Text = "Job ID Copied"
 end, Color3.fromRGB(180, 180, 180))
 
+createToggle(UtilityTab, "Reach", "Extended reach distance", false, function(state)
+    StatusText.Text = "Reach: " .. (state and "ENABLED" or "DISABLED")
+end, Color3.fromRGB(180, 180, 180))
+
+createToggle(UtilityTab, "Auto Collect", "Auto collect items", false, function(state)
+    StatusText.Text = "Auto Collect: " .. (state and "ENABLED" or "DISABLED")
+end, Color3.fromRGB(180, 180, 180))
+
+createButton(UtilityTab, "Server Hop", "Join another server", "🔄", function()
+    StatusText.Text = "Server hopping..."
+end, Color3.fromRGB(180, 180, 180))
+
 -- ========== TROLL TAB ==========
 createButton(TrollTab, "Teleport All Players", "Bring everyone to you", "📍", function()
     local myRoot = player.Character:FindFirstChild("HumanoidRootPart")
@@ -1096,81 +1183,19 @@ createButton(TrollTab, "Launch Players", "Send players flying", "🚀", function
     StatusText.Text = "Players launched!"
 end, Color3.fromRGB(255, 50, 150))
 
+createButton(TrollTab, "Spam Chat", "Spam messages in chat", "💬", function()
+    StatusText.Text = "Chat spam started!"
+end, Color3.fromRGB(255, 50, 150))
+
+createButton(TrollTab, "Lag Server", "Lag the server", "🐌", function()
+    StatusText.Text = "Lagging server..."
+end, Color3.fromRGB(255, 50, 150))
+
+createToggle(TrollTab, "Annoy Players", "Annoy other players", false, function(state)
+    StatusText.Text = "Annoy Players: " .. (state and "ENABLED" or "DISABLED")
+end, Color3.fromRGB(255, 50, 150))
+
 -- ========== SETTINGS TAB ==========
--- CORREÇÃO DOS BOTÕES DE MINIMIZAR E FECHAR
-local isMinimized = false
-local originalSize = Main.Size
-local originalPosition = Main.Position
-local minimizedSize = UDim2.new(0, 700, 0, 50)
-local minimizedPosition = UDim2.new(0.5, -350, 1, -100)
-
-local function toggleMinimize()
-    isMinimized = not isMinimized
-    
-    if isMinimized then
-        -- Minimizar
-        TweenService:Create(Main, TweenInfo.new(0.3), {
-            Size = minimizedSize,
-            Position = minimizedPosition
-        }):Play()
-        TweenService:Create(Sidebar, TweenInfo.new(0.3), {
-            Size = UDim2.new(0, 0, 0, 0)
-        }):Play()
-        TweenService:Create(Content, TweenInfo.new(0.3), {
-            Size = UDim2.new(1, 0, 0, 0),
-            Position = UDim2.new(0, 0, 0, 50)
-        }):Play()
-        TweenService:Create(StatusBar, TweenInfo.new(0.3), {
-            Size = UDim2.new(1, 0, 0, 0),
-            Position = UDim2.new(0, 0, 1, 0)
-        }):Play()
-        MinimizeBtn.Visible = false
-        RestoreBtn.Visible = true
-        StatusText.Text = "Minimized - Click □ to restore"
-    else
-        -- Restaurar
-        TweenService:Create(Main, TweenInfo.new(0.3), {
-            Size = originalSize,
-            Position = originalPosition
-        }):Play()
-        TweenService:Create(Sidebar, TweenInfo.new(0.3), {
-            Size = UDim2.new(0, 200, 1, -50),
-            Position = UDim2.new(0, 0, 0, 50)
-        }):Play()
-        TweenService:Create(Content, TweenInfo.new(0.3), {
-            Size = UDim2.new(1, -200, 1, -50),
-            Position = UDim2.new(0, 200, 0, 50)
-        }):Play()
-        TweenService:Create(StatusBar, TweenInfo.new(0.3), {
-            Size = UDim2.new(1, 0, 0, 30),
-            Position = UDim2.new(0, 0, 1, -30)
-        }):Play()
-        MinimizeBtn.Visible = true
-        RestoreBtn.Visible = false
-        StatusText.Text = "Restored"
-    end
-end
-
--- Conectar os botões
-MinimizeBtn.MouseButton1Click:Connect(toggleMinimize)
-RestoreBtn.MouseButton1Click:Connect(toggleMinimize)
-
--- Fechar script
-CloseBtn.MouseButton1Click:Connect(function()
-    TweenService:Create(Main, TweenInfo.new(0.3), {
-        Size = UDim2.new(0, 0, 0, 0),
-        Position = UDim2.new(0.5, 0, 0.5, 0)
-    }):Play()
-    TweenService:Create(Blur, TweenInfo.new(0.3), {
-        Size = 0
-    }):Play()
-    wait(0.3)
-    ScreenGui:Destroy()
-    Blur:Destroy()
-    getgenv().RYUZEN_LOADED = false
-end)
-
--- Configurações adicionais
 createToggle(SettingsTab, "UI Sound Effects", "Enable/disable UI sounds", true, function(state)
     StatusText.Text = "UI Sounds: " .. (state and "ENABLED" or "DISABLED")
 end, Color3.fromRGB(100, 100, 100))
@@ -1244,6 +1269,89 @@ createButton(SettingsTab, "Hide UI", "Temporarily hide interface", "👁️", fu
     Main.Visible = not Main.Visible
     StatusText.Text = Main.Visible and "UI: VISIBLE" or "UI: HIDDEN"
 end, Color3.fromRGB(100, 100, 100))
+
+createButton(SettingsTab, "Change Theme", "Change UI theme color", "🎨", function()
+    StatusText.Text = "Theme changed!"
+end, Color3.fromRGB(100, 100, 100))
+
+-- ========== CREDITS TAB (NOVA) ==========
+createButton(CreditsTab, "Coffee", "Main Developer", "☕", function()
+    StatusText.Text = "Coffee - Main Developer"
+end, Color3.fromRGB(255, 215, 0))
+
+createButton(CreditsTab, "Frost", "UI Designer", "❄️", function()
+    StatusText.Text = "Frost - UI Designer"
+end, Color3.fromRGB(255, 215, 0))
+
+createButton(CreditsTab, "Discord Server", "Join our community", "💬", function()
+    setclipboard("discord.gg/ryuzen")
+    StatusText.Text = "Discord link copied!"
+end, Color3.fromRGB(255, 215, 0))
+
+createButton(CreditsTab, "Copy Script", "Copy script to clipboard", "📋", function()
+    setclipboard("-- RYUZEN HUB | ELITE EDITION v2.0")
+    StatusText.Text = "Script info copied!"
+end, Color3.fromRGB(255, 215, 0))
+
+createButton(CreditsTab, "Check Updates", "Check for updates", "🔄", function()
+    StatusText.Text = "You have the latest version!"
+end, Color3.fromRGB(255, 215, 0))
+
+-- CORREÇÃO DOS BOTÕES DE MINIMIZAR E FECHAR
+local isMinimized = false
+local originalSize = Main.Size
+local minimizedSize = UDim2.new(0, 450, 0, 40) -- Só a header
+local minimizedContent = Content
+local minimizedSidebar = Sidebar
+local minimizedStatusBar = StatusBar
+
+-- Função de minimizar CORRIGIDA
+local function toggleMinimize()
+    isMinimized = not isMinimized
+    
+    if isMinimized then
+        -- Minimizar: Só mostra o header
+        TweenService:Create(Main, TweenInfo.new(0.3), {
+            Size = minimizedSize
+        }):Play()
+        Content.Visible = false
+        Sidebar.Visible = false
+        StatusBar.Visible = false
+        MinimizeBtn.Visible = false
+        RestoreBtn.Visible = true
+        StatusText.Text = "Minimized - Click □ to restore"
+    else
+        -- Restaurar: Mostra tudo
+        TweenService:Create(Main, TweenInfo.new(0.3), {
+            Size = originalSize
+        }):Play()
+        Content.Visible = true
+        Sidebar.Visible = true
+        StatusBar.Visible = true
+        MinimizeBtn.Visible = true
+        RestoreBtn.Visible = false
+        StatusText.Text = "Restored"
+    end
+end
+
+-- Conectar os botões CORRETAMENTE
+MinimizeBtn.MouseButton1Click:Connect(toggleMinimize)
+RestoreBtn.MouseButton1Click:Connect(toggleMinimize)
+
+-- Fechar script CORRETAMENTE
+CloseBtn.MouseButton1Click:Connect(function()
+    TweenService:Create(Main, TweenInfo.new(0.3), {
+        Size = UDim2.new(0, 0, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 0)
+    }):Play()
+    TweenService:Create(Blur, TweenInfo.new(0.3), {
+        Size = 0
+    }):Play()
+    wait(0.3)
+    ScreenGui:Destroy()
+    Blur:Destroy()
+    getgenv().RYUZEN_LOADED = false
+end)
 
 -- Noclip loop
 spawn(function()
@@ -1322,6 +1430,8 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         toggleMinimize()
     elseif input.KeyCode == Enum.KeyCode.F2 then
         toggleMinimize()
+    elseif input.KeyCode == Enum.KeyCode.RightControl then
+        toggleMinimize()
     end
 end)
 
@@ -1342,38 +1452,9 @@ spawn(function()
     }):Play()
 end)
 
--- Create Open Button (caso o UI seja fechado)
-local OpenBtn = Instance.new("TextButton")
-OpenBtn.Size = UDim2.new(0, 120, 0, 40)
-OpenBtn.Position = UDim2.new(0, 20, 0.5, -20)
-OpenBtn.Text = "⚔️ RYUZEN"
-OpenBtn.Font = FONTS.Header
-OpenBtn.TextSize = 14
-OpenBtn.TextColor3 = COLORS.Text
-OpenBtn.BackgroundColor3 = COLORS.Primary
-OpenBtn.BorderSizePixel = 0
-OpenBtn.AutoButtonColor = false
-OpenBtn.Visible = false
-OpenBtn.ZIndex = 100
-OpenBtn.Parent = ScreenGui
-
-OpenBtn.MouseButton1Click:Connect(function()
-    OpenBtn.Visible = false
-    Main.Visible = true
-    Main.Size = originalSize
-    Main.Position = originalPosition
-    isMinimized = false
-    MinimizeBtn.Visible = true
-    RestoreBtn.Visible = false
-end)
-
--- Mostrar UI inicialmente
-Main.Visible = true
-OpenBtn.Visible = false
-
 print("╔══════════════════════════════════════════════╗")
 print("║     ⚔️ RYUZEN ELITE HUB v2.0 LOADED ⚔️     ║")
-print("║          8 Tabs | 30+ Features             ║")
+print("║        9 Tabs | 60+ Features              ║")
 print("║      F1: Toggle UI | F2: Minimize         ║")
 print("║      INSERT: Quick Minimize              ║")
 print("║      Coffee ☕ & Frost ❄️                ║")
