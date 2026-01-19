@@ -1,6 +1,5 @@
--- ⛩️ RYUZEN ADMIN GUI | MAIN LOADER
--- Compatível: Mobile + PC
--- Executor: RYUZEN / Delta / outros
+-- ⛩️ RYUZEN HUB | MAIN LOADER
+-- Mobile + PC | Loader estável
 
 if getgenv().RYUZEN_LOADED then return end
 getgenv().RYUZEN_LOADED = true
@@ -15,24 +14,14 @@ gui.Name = "RYUZEN_GUI"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- Frame principal
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 360, 0, 220)
-main.Position = UDim2.new(0.5, -180, 0.5, -130)
+main.Position = UDim2.new(0.5, -180, 0.5, -110)
 main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
-main.BackgroundTransparency = 1
 
--- Animação
-TweenService:Create(
-	main,
-	TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-	{BackgroundTransparency = 0}
-):Play()
-
--- Borda vermelha
 local stroke = Instance.new("UIStroke", main)
 stroke.Thickness = 2
 stroke.Color = Color3.fromRGB(170, 0, 0)
@@ -50,7 +39,7 @@ title.TextColor3 = Color3.fromRGB(220, 0, 0)
 local status = Instance.new("TextLabel", main)
 status.Position = UDim2.new(0, 0, 0, 50)
 status.Size = UDim2.new(1, 0, 0, 30)
-status.Text = "Inicializando..."
+status.Text = "Pronto para carregar"
 status.BackgroundTransparency = 1
 status.Font = Enum.Font.Gotham
 status.TextSize = 14
@@ -71,7 +60,12 @@ local corner = Instance.new("UICorner", loadBtn)
 corner.CornerRadius = UDim.new(0, 10)
 
 -- ================= LOADER =================
+local loaded = false
+
 local function loadModules()
+	if loaded then return end
+	loaded = true
+
 	status.Text = "Carregando módulos..."
 
 	local base = "https://raw.githubusercontent.com/Luxzinho244/RYUZEN/main/modules/"
@@ -88,12 +82,6 @@ local function loadModules()
 	end
 
 	status.Text = "✔ Hub carregado"
-	wait(0.6)
-	gui:Destroy()
 end
 
 loadBtn.MouseButton1Click:Connect(loadModules)
-
--- Auto execute
-task.delay(0.5, loadModules)
-
