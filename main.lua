@@ -1,5 +1,5 @@
--- ⛩️ RYUZEN HUB V4.5 LITE
--- By Coffee & Frost | Modo Leve & Design Premium
+-- ⛩️ RYUZEN HUB SIMPLES & FUNCIONAL
+-- By Coffee & Frost
 
 if getgenv().RYUZEN_LOADED then return end
 getgenv().RYUZEN_LOADED = true
@@ -9,455 +9,193 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local Lighting = game:GetService("Lighting")
 local player = Players.LocalPlayer
 
--- Variáveis globais (otimizadas)
+-- Variáveis
 local noclip = false
 local flying = false
 local speedHack = false
 local infJump = false
 local espEnabled = false
-local aimbotEnabled = false
-local clickTP = false
-local nightVision = false
-local chamsEnabled = false
 
--- CONFIGURAÇÕES PREMIUM
-local CONFIG = {
-    Theme = {
-        Primary = Color3.fromRGB(8, 8, 8),           -- Preto mais escuro
-        Secondary = Color3.fromRGB(25, 0, 0),        -- Vermelho escuro
-        Accent = Color3.fromRGB(200, 0, 0),          -- Vermelho sangue
-        Highlight = Color3.fromRGB(255, 40, 40),     -- Vermelho brilhante
-        Text = Color3.fromRGB(245, 245, 245),        -- Branco puro
-        DarkText = Color3.fromRGB(180, 180, 180),    -- Cinza claro
-        Glow = Color3.fromRGB(255, 80, 80)           -- Brilho vermelho
-    },
-    Effects = {
-        ShadowIntensity = 0.4,
-        GlowIntensity = 0.2,
-        AnimationSpeed = 0.15
-    }
-}
-
--- GUI PREMIUM
+-- GUI Simples
 local gui = Instance.new("ScreenGui")
-gui.Name = "RYUZEN_HUB_PREMIUM"
+gui.Name = "RYUZEN_HUB_V5"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- FUNDO COM GRADIENTE
-local bg = Instance.new("Frame", gui)
-bg.Size = UDim2.new(1, 0, 1, 0)
-bg.BackgroundTransparency = 1
-
-local gradient = Instance.new("UIGradient", bg)
-gradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(5, 0, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 0, 5))
-}
-gradient.Rotation = 45
-
--- EFEITO DE PARTICULAS NO FUNDO (leve)
-for i = 1, 5 do
-    local particle = Instance.new("Frame", bg)
-    particle.Size = UDim2.new(0, math.random(2, 4), 0, math.random(2, 4))
-    particle.Position = UDim2.new(math.random(), 0, math.random(), 0)
-    particle.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    particle.BorderSizePixel = 0
-    particle.BackgroundTransparency = 0.7
-    
-    spawn(function()
-        while particle do
-            particle.Position = UDim2.new(
-                (math.sin(tick() * 0.3 + i) * 0.1) + 0.5,
-                math.random(-300, 300),
-                (math.cos(tick() * 0.2 + i) * 0.1) + 0.5,
-                math.random(-300, 300)
-            )
-            task.wait(0.1)
-        end
-    end)
-end
-
--- MAIN FRAME COM DESIGN PREMIUM
+-- MAIN FRAME (Simples)
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 620, 0, 380)
-main.Position = UDim2.new(0.5, -310, 0.5, -190)
-main.BackgroundColor3 = CONFIG.Theme.Primary
+main.Size = UDim2.new(0, 600, 0, 400)
+main.Position = UDim2.new(0.5, -300, 0.5, -200)
+main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
-main.ZIndex = 20
-main.ClipsDescendants = true
 
--- BORDA COM GRADIENTE
-local border = Instance.new("UIStroke", main)
-border.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, CONFIG.Theme.Accent),
-    ColorSequenceKeypoint.new(0.5, CONFIG.Theme.Highlight),
-    ColorSequenceKeypoint.new(1, CONFIG.Theme.Accent)
-}
-border.Thickness = 3
-border.LineJoinMode = Enum.LineJoinMode.Round
+-- Borda vermelha
+local stroke = Instance.new("UIStroke", main)
+stroke.Color = Color3.fromRGB(200, 0, 0)
+stroke.Thickness = 2
 
--- GLOW EFFECT
-local glow = Instance.new("ImageLabel", main)
-glow.Size = UDim2.new(1, 40, 1, 40)
-glow.Position = UDim2.new(-0.032, 0, -0.032, 0)
-glow.BackgroundTransparency = 1
-glow.Image = "rbxassetid://8992234291"
-glow.ImageColor3 = CONFIG.Theme.Glow
-glow.ImageTransparency = 0.9
-glow.ScaleType = Enum.ScaleType.Slice
-glow.SliceCenter = Rect.new(100, 100, 100, 100)
-glow.SliceScale = 0.02
-glow.ZIndex = 19
-
--- HEADER PREMIUM
+-- HEADER
 local header = Instance.new("Frame", main)
-header.Size = UDim2.new(1, 0, 0, 55)
-header.BackgroundColor3 = CONFIG.Theme.Secondary
+header.Size = UDim2.new(1, 0, 0, 50)
+header.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
 header.BorderSizePixel = 0
-header.ZIndex = 25
 
--- GRADIENTE NO HEADER
-local headerGradient = Instance.new("UIGradient", header)
-headerGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 0, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 0, 0))
-}
-headerGradient.Rotation = 90
-
--- TÍTULO COM EFEITO
-local titleContainer = Instance.new("Frame", header)
-titleContainer.Size = UDim2.new(0.6, 0, 1, 0)
-titleContainer.Position = UDim2.new(0, 15, 0, 0)
-titleContainer.BackgroundTransparency = 1
-
-local title = Instance.new("TextLabel", titleContainer)
-title.Size = UDim2.new(1, 0, 1, 0)
-title.Text = "⚔️ RYUZEN HUB PREMIUM ⚔️"
-title.Font = Enum.Font.GothamBlack
+-- Título
+local title = Instance.new("TextLabel", header)
+title.Size = UDim2.new(0.7, 0, 1, 0)
+title.Position = UDim2.new(0, 15, 0, 0)
+title.Text = "🐉 RYUZEN HUB V5 🐉"
+title.Font = Enum.Font.GothamBold
 title.TextSize = 20
-title.TextColor3 = CONFIG.Theme.Highlight
+title.TextColor3 = Color3.fromRGB(255, 50, 50)
 title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
-title.TextStrokeTransparency = 0.7
-title.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 
--- ANIMAÇÃO NO TÍTULO
-spawn(function()
-    while true do
-        TweenService:Create(title, TweenInfo.new(1.5, Enum.EasingStyle.Sine), {
-            TextColor3 = Color3.fromRGB(255, 80, 80)
-        }):Play()
-        task.wait(1.5)
-        TweenService:Create(title, TweenInfo.new(1.5, Enum.EasingStyle.Sine), {
-            TextColor3 = CONFIG.Theme.Highlight
-        }):Play()
-        task.wait(1.5)
-    end
-end)
-
--- BOTÃO FECHAR PREMIUM
-local closeBtn = Instance.new("ImageButton", header)
+-- Botão Fechar
+local closeBtn = Instance.new("TextButton", header)
 closeBtn.Size = UDim2.new(0, 40, 0, 40)
 closeBtn.Position = UDim2.new(1, -50, 0.5, -20)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 18
+closeBtn.TextColor3 = Color3.fromRGB(255, 100, 100)
 closeBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
 closeBtn.BorderSizePixel = 0
 closeBtn.AutoButtonColor = false
-closeBtn.ZIndex = 26
-closeBtn.Image = "rbxassetid://3926305904"
-closeBtn.ImageRectSize = Vector2.new(36, 36)
-closeBtn.ImageRectOffset = Vector2.new(884, 284) -- X vermelho mais bonito
-closeBtn.ScaleType = Enum.ScaleType.Fit
-
--- EFEITO 3D NO BOTÃO FECHAR
-local closeGlow = Instance.new("Frame", closeBtn)
-closeGlow.Size = UDim2.new(1, 0, 1, 0)
-closeGlow.BackgroundColor3 = CONFIG.Theme.Highlight
-closeGlow.BorderSizePixel = 0
-closeGlow.BackgroundTransparency = 0.8
-closeGlow.ZIndex = -1
 
 closeBtn.MouseEnter:Connect(function()
-    TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-        BackgroundColor3 = Color3.fromRGB(60, 0, 0),
-        Rotation = 180,
-        Size = UDim2.new(0, 42, 0, 42)
-    }):Play()
-    TweenService:Create(closeGlow, TweenInfo.new(0.2), {
-        BackgroundTransparency = 0.5
-    }):Play()
+    closeBtn.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
 end)
 
 closeBtn.MouseLeave:Connect(function()
-    TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-        BackgroundColor3 = Color3.fromRGB(40, 0, 0),
-        Rotation = 0,
-        Size = UDim2.new(0, 40, 0, 40)
-    }):Play()
-    TweenService:Create(closeGlow, TweenInfo.new(0.2), {
-        BackgroundTransparency = 0.8
-    }):Play()
+    closeBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
 end)
 
--- SIDEBAR PREMIUM
+-- SIDEBAR
 local sidebar = Instance.new("Frame", main)
-sidebar.Position = UDim2.new(0, 0, 0, 55)
-sidebar.Size = UDim2.new(0, 200, 1, -55)
-sidebar.BackgroundColor3 = Color3.fromRGB(15, 0, 0)
+sidebar.Position = UDim2.new(0, 0, 0, 50)
+sidebar.Size = UDim2.new(0, 150, 1, -50)
+sidebar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 sidebar.BorderSizePixel = 0
-sidebar.ZIndex = 22
 
--- SEPARADOR DINÂMICO
+-- Separador
 local separator = Instance.new("Frame", sidebar)
-separator.Size = UDim2.new(0, 3, 1, 0)
-separator.Position = UDim2.new(1, -3, 0, 0)
-separator.BackgroundColor3 = CONFIG.Theme.Accent
+separator.Size = UDim2.new(0, 2, 1, 0)
+separator.Position = UDim2.new(1, -2, 0, 0)
+separator.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 separator.BorderSizePixel = 0
-
--- ANIMAÇÃO NO SEPARADOR
-spawn(function()
-    while true do
-        TweenService:Create(separator, TweenInfo.new(1), {
-            BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-        }):Play()
-        task.wait(1)
-        TweenService:Create(separator, TweenInfo.new(1), {
-            BackgroundColor3 = CONFIG.Theme.Accent
-        }):Play()
-        task.wait(1)
-    end
-end)
 
 -- ÁREA DE CONTEÚDO
 local content = Instance.new("Frame", main)
-content.Position = UDim2.new(0, 200, 0, 55)
-content.Size = UDim2.new(1, -200, 1, -55)
-content.BackgroundColor3 = CONFIG.Theme.Primary
+content.Position = UDim2.new(0, 150, 0, 50)
+content.Size = UDim2.new(1, -150, 1, -50)
+content.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 content.BorderSizePixel = 0
-content.ZIndex = 21
 
--- DECORAÇÃO NO CONTEÚDO
-local pattern = Instance.new("ImageLabel", content)
-pattern.Size = UDim2.new(1, 0, 1, 0)
-pattern.Image = "rbxassetid://11144540292" -- Textura sutil
-pattern.ImageTransparency = 0.97
-pattern.BackgroundTransparency = 1
-pattern.ScaleType = Enum.ScaleType.Tile
-pattern.TileSize = UDim2.new(0, 100, 0, 100)
-
--- SISTEMA DE ABAS PREMIUM
+-- Sistema de Abas
 local tabs = {}
 local activeTab = nil
 
-local function createTab(name, icon, color)
+local function createTab(name, icon)
     local btn = Instance.new("TextButton", sidebar)
-    btn.Size = UDim2.new(1, -10, 0, 38)
-    btn.Position = UDim2.new(0, 5, 0, (#tabs * 42) + 10)
-    btn.Text = icon .. "  " .. name
+    btn.Size = UDim2.new(1, -10, 0, 40)
+    btn.Position = UDim2.new(0, 5, 0, (#tabs * 45) + 10)
+    btn.Text = icon .. " " .. name
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 13
-    btn.TextColor3 = CONFIG.Theme.DarkText
-    btn.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+    btn.TextSize = 14
+    btn.TextColor3 = Color3.fromRGB(150, 150, 150)
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
     btn.TextXAlignment = Enum.TextXAlignment.Left
-    btn.ZIndex = 23
     
     local padding = Instance.new("UIPadding", btn)
-    padding.PaddingLeft = UDim.new(0, 15)
-    
-    -- GLOW NO BOTÃO
-    local btnGlow = Instance.new("Frame", btn)
-    btnGlow.Size = UDim2.new(1, 0, 1, 0)
-    btnGlow.BackgroundColor3 = color or CONFIG.Theme.Accent
-    btnGlow.BorderSizePixel = 0
-    btnGlow.BackgroundTransparency = 0.9
-    btnGlow.ZIndex = 22
+    padding.PaddingLeft = UDim.new(0, 10)
     
     local frame = Instance.new("ScrollingFrame", content)
     frame.Size = UDim2.new(1, 0, 1, 0)
     frame.BackgroundTransparency = 1
     frame.ScrollBarThickness = 4
-    frame.ScrollBarImageColor3 = CONFIG.Theme.Accent
+    frame.ScrollBarImageColor3 = Color3.fromRGB(200, 0, 0)
     frame.BorderSizePixel = 0
     frame.CanvasSize = UDim2.new(0, 0, 0, 0)
     frame.Visible = false
-    frame.ZIndex = 22
     
-    local frameLayout = Instance.new("UIListLayout", frame)
-    frameLayout.Padding = UDim.new(0, 10)
-    frameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    frameLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    local layout = Instance.new("UIListLayout", frame)
+    layout.Padding = UDim.new(0, 10)
+    layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     
-    tabs[name] = {button = btn, frame = frame, glow = btnGlow}
-    
-    -- EFEITOS PREMIUM NO BOTÃO
-    btn.MouseEnter:Connect(function()
-        if activeTab ~= name then
-            TweenService:Create(btn, TweenInfo.new(0.15), {
-                BackgroundColor3 = Color3.fromRGB(35, 0, 0),
-                TextColor3 = CONFIG.Theme.Text
-            }):Play()
-            TweenService:Create(btnGlow, TweenInfo.new(0.15), {
-                BackgroundTransparency = 0.7
-            }):Play()
-        end
-    end)
-    
-    btn.MouseLeave:Connect(function()
-        if activeTab ~= name then
-            TweenService:Create(btn, TweenInfo.new(0.15), {
-                BackgroundColor3 = Color3.fromRGB(25, 0, 0),
-                TextColor3 = CONFIG.Theme.DarkText
-            }):Play()
-            TweenService:Create(btnGlow, TweenInfo.new(0.15), {
-                BackgroundTransparency = 0.9
-            }):Play()
-        end
-    end)
+    tabs[name] = {button = btn, frame = frame}
     
     btn.MouseButton1Click:Connect(function()
-        if activeTab == name then return end
-        
-        -- Desativar aba atual
         if activeTab then
             tabs[activeTab].frame.Visible = false
-            TweenService:Create(tabs[activeTab].button, TweenInfo.new(0.2), {
-                BackgroundColor3 = Color3.fromRGB(25, 0, 0),
-                TextColor3 = CONFIG.Theme.DarkText
-            }):Play()
-            TweenService:Create(tabs[activeTab].glow, TweenInfo.new(0.2), {
-                BackgroundTransparency = 0.9
-            }):Play()
+            tabs[activeTab].button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+            tabs[activeTab].button.TextColor3 = Color3.fromRGB(150, 150, 150)
         end
         
-        -- Ativar nova aba
         frame.Visible = true
-        TweenService:Create(btn, TweenInfo.new(0.2), {
-            BackgroundColor3 = color or CONFIG.Theme.Accent,
-            TextColor3 = Color3.fromRGB(255, 255, 255)
-        }):Play()
-        TweenService:Create(btnGlow, TweenInfo.new(0.2), {
-            BackgroundTransparency = 0.3
-        }):Play()
+        btn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
         activeTab = name
     end)
     
     return frame
 end
 
--- CRIAR ABAS COM CORES DIFERENTES
-local funTab = createTab("Hacks", "⚡", Color3.fromRGB(220, 0, 0))
-local visualTab = createTab("Visual", "👁️", Color3.fromRGB(0, 150, 220))
-local moveTab = createTab("Movimento", "🏃", Color3.fromRGB(0, 200, 100))
-local trollTab = createTab("Troll", "😈", Color3.fromRGB(200, 0, 200))
-local utilTab = createTab("Utilitários", "🛠️", Color3.fromRGB(220, 150, 0))
-local creditsTab = createTab("Créditos", "⭐", Color3.fromRGB(255, 200, 0))
+-- Criar Abas
+local funTab = createTab("Hacks", "⚡")
+local visualTab = createTab("Visual", "👁️")
+local moveTab = createTab("Movimento", "🏃")
+local trollTab = createTab("Troll", "😈")
+local utilTab = createTab("Utilitários", "🛠️")
 
--- FUNÇÃO PARA CRIAR BOTÕES PREMIUM
-local function createPremiumButton(parent, text, icon, color, callback)
+-- Função para criar botões
+local function createButton(parent, text, icon, callback)
     local btn = Instance.new("TextButton", parent)
-    btn.Size = UDim2.new(0.92, 0, 0, 42)
-    btn.Text = icon .. "  " .. text
+    btn.Size = UDim2.new(0.9, 0, 0, 45)
+    btn.Text = icon .. " " .. text
     btn.Font = Enum.Font.GothamBold
     btn.TextSize = 14
-    btn.TextColor3 = CONFIG.Theme.Text
-    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
-    btn.LayoutOrder = #parent:GetChildren()
-    btn.ZIndex = 23
     
-    local padding = Instance.new("UIPadding", btn)
-    padding.PaddingLeft = UDim.new(0, 20)
-    btn.TextXAlignment = Enum.TextXAlignment.Left
-    
-    -- BORDA COLORIDA
-    local btnBorder = Instance.new("Frame", btn)
-    btnBorder.Size = UDim2.new(0, 4, 1, 0)
-    btnBorder.Position = UDim2.new(0, 0, 0, 0)
-    btnBorder.BackgroundColor3 = color or CONFIG.Theme.Accent
-    btnBorder.BorderSizePixel = 0
-    btnBorder.ZIndex = 24
-    
-    -- GLOW
-    local btnGlow = Instance.new("Frame", btn)
-    btnGlow.Size = UDim2.new(1, 0, 1, 0)
-    btnGlow.BackgroundColor3 = color or CONFIG.Theme.Accent
-    btnGlow.BorderSizePixel = 0
-    btnGlow.BackgroundTransparency = 0.9
-    btnGlow.ZIndex = 22
-    
-    -- EFEITOS
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {
-            BackgroundColor3 = Color3.fromRGB(50, 50, 50),
-            Size = UDim2.new(0.93, 0, 0, 44)
-        }):Play()
-        TweenService:Create(btnBorder, TweenInfo.new(0.15), {
-            BackgroundColor3 = Color3.fromRGB(255, 100, 100)
-        }):Play()
-        TweenService:Create(btnGlow, TweenInfo.new(0.15), {
-            BackgroundTransparency = 0.6
-        }):Play()
+        btn.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
     end)
     
     btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {
-            BackgroundColor3 = Color3.fromRGB(30, 30, 30),
-            Size = UDim2.new(0.92, 0, 0, 42)
-        }):Play()
-        TweenService:Create(btnBorder, TweenInfo.new(0.15), {
-            BackgroundColor3 = color or CONFIG.Theme.Accent
-        }):Play()
-        TweenService:Create(btnGlow, TweenInfo.new(0.15), {
-            BackgroundTransparency = 0.9
-        }):Play()
+        btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     end)
     
     btn.MouseButton1Click:Connect(function()
-        -- Efeito de clique
-        TweenService:Create(btn, TweenInfo.new(0.1), {
-            BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        }):Play()
-        TweenService:Create(btnBorder, TweenInfo.new(0.1), {
-            BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        }):Play()
-        task.wait(0.1)
-        TweenService:Create(btn, TweenInfo.new(0.1), {
-            BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        }):Play()
-        TweenService:Create(btnBorder, TweenInfo.new(0.1), {
-            BackgroundColor3 = color or CONFIG.Theme.Accent
-        }):Play()
+        btn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        wait(0.1)
+        btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
         
-        -- Executar função
         if callback then
-            local success, err = pcall(callback)
-            if not success then
-                warn("[RYUZEN] Erro: " .. err)
-            end
+            pcall(callback)
         end
     end)
     
     return btn
 end
 
--- ========== FUNÇÕES LEVES E OTIMIZADAS ==========
+-- ========== FUNÇÕES ==========
 
--- 1. FLY HACK OTIMIZADO
+-- Fly Hack
 local function toggleFly()
     flying = not flying
     
     if flying then
-        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        local root = player.Character:FindFirstChild("HumanoidRootPart")
         if root then
             local bv = Instance.new("BodyVelocity")
             bv.Velocity = Vector3.new(0, 0, 0)
@@ -489,7 +227,7 @@ local function toggleFly()
                     end
                     
                     bv.Velocity = velocity.Unit * 100
-                    task.wait()
+                    wait()
                 end
             end)
         end
@@ -505,20 +243,20 @@ local function toggleFly()
             end
         end
     end
-    print("🕊️ Fly Hack " .. (flying and "ATIVADO" or "DESATIVADO"))
+    print("Fly Hack: " .. (flying and "ON" or "OFF"))
 end
 
--- 2. SPEED HACK
+-- Speed Hack
 local function toggleSpeed()
     speedHack = not speedHack
-    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
     if humanoid then
         humanoid.WalkSpeed = speedHack and 100 or 16
-        print("⚡ Speed Hack " .. (speedHack and "ATIVADO" or "DESATIVADO"))
+        print("Speed Hack: " .. (speedHack and "ON" or "OFF"))
     end
 end
 
--- 3. INFINITE JUMP
+-- Infinite Jump
 local function toggleInfJump()
     infJump = not infJump
     if infJump then
@@ -531,10 +269,10 @@ local function toggleInfJump()
             end
         end)
     end
-    print("⬆️ Infinite Jump " .. (infJump and "ATIVADO" or "DESATIVADO"))
+    print("Inf Jump: " .. (infJump and "ON" or "OFF"))
 end
 
--- 4. ESP LEVE
+-- ESP
 local function toggleESP()
     espEnabled = not espEnabled
     
@@ -544,26 +282,31 @@ local function toggleESP()
                 local highlight = Instance.new("Highlight")
                 highlight.FillColor = Color3.fromRGB(255, 0, 0)
                 highlight.OutlineColor = Color3.fromRGB(255, 100, 100)
-                highlight.FillTransparency = 0.6
                 highlight.Parent = plr.Character
-                highlight.Name = "RyuzESP"
+                highlight.Name = "ESP"
             end
         end
     else
         for _, plr in pairs(Players:GetPlayers()) do
             if plr.Character then
                 for _, obj in pairs(plr.Character:GetChildren()) do
-                    if obj.Name == "RyuzESP" then
+                    if obj.Name == "ESP" then
                         obj:Destroy()
                     end
                 end
             end
         end
     end
-    print("👁️ ESP " .. (espEnabled and "ATIVADO" or "DESATIVADO"))
+    print("ESP: " .. (espEnabled and "ON" or "OFF"))
 end
 
--- 5. AIMBOT SIMPLES
+-- Noclip
+local function toggleNoclip()
+    noclip = not noclip
+    print("Noclip: " .. (noclip and "ON" or "OFF"))
+end
+
+-- Aimbot
 local function toggleAimbot()
     aimbotEnabled = not aimbotEnabled
     
@@ -572,7 +315,7 @@ local function toggleAimbot()
             while aimbotEnabled do
                 local closestPlayer = nil
                 local closestDistance = math.huge
-                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                local root = player.Character:FindFirstChild("HumanoidRootPart")
                 
                 if root then
                     for _, plr in pairs(Players:GetPlayers()) do
@@ -598,14 +341,14 @@ local function toggleAimbot()
                         end
                     end
                 end
-                task.wait()
+                wait()
             end
         end)
     end
-    print("🎯 Aimbot " .. (aimbotEnabled and "ATIVADO" or "DESATIVADO"))
+    print("Aimbot: " .. (aimbotEnabled and "ON" or "OFF"))
 end
 
--- 6. CLICK TELEPORT
+-- Click TP
 local function toggleClickTP()
     clickTP = not clickTP
     
@@ -615,7 +358,7 @@ local function toggleClickTP()
             if input.UserInputType == Enum.UserInputType.MouseButton1 then
                 local mouse = player:GetMouse()
                 local target = mouse.Hit.Position
-                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                local root = player.Character:FindFirstChild("HumanoidRootPart")
                 if root then
                     root.CFrame = CFrame.new(target + Vector3.new(0, 5, 0))
                 end
@@ -627,120 +370,21 @@ local function toggleClickTP()
             getgenv().clickTPConnection:Disconnect()
         end
     end
-    print("📍 Click TP " .. (clickTP and "ATIVADO" or "DESATIVADO"))
+    print("Click TP: " .. (clickTP and "ON" or "OFF"))
 end
 
--- 7. NIGHT VISION
-local function toggleNightVision()
-    nightVision = not nightVision
-    
-    if nightVision then
-        Lighting.Ambient = Color3.fromRGB(255, 255, 255)
-        Lighting.Brightness = 2
-        Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
-    else
-        Lighting.Ambient = Color3.fromRGB(0, 0, 0)
-        Lighting.Brightness = 1
-        Lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 0)
-    end
-    print("🌙 Night Vision " .. (nightVision and "ATIVADO" or "DESATIVADO"))
-end
-
--- 8. FULLBRIGHT
-local function toggleFullbright()
-    Lighting.Ambient = Color3.fromRGB(255, 255, 255)
-    Lighting.Brightness = 3
-    Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
-    Lighting.ClockTime = 12
-    print("☀️ Fullbright ATIVADO")
-end
-
--- 9. NO CLIP
-local function toggleNoclip()
-    noclip = not noclip
-    print("👻 Noclip " .. (noclip and "ATIVADO" or "DESATIVADO"))
-end
-
--- 10. HIGH JUMP
+-- High Jump
 local function toggleHighJump()
-    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
     if humanoid then
         humanoid.JumpPower = humanoid.JumpPower == 50 and 150 or 50
-        print("🚀 High Jump " .. (humanoid.JumpPower == 150 and "ATIVADO" or "DESATIVADO"))
+        print("High Jump: " .. (humanoid.JumpPower == 150 and "ON" or "OFF"))
     end
 end
 
--- 11. WALL WALK
-local function toggleWallWalk()
-    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
-        print("🧗 Wall Walk ATIVADO")
-    end
-end
-
--- 12. CHAMS
-local function toggleChams()
-    chamsEnabled = not chamsEnabled
-    
-    if chamsEnabled then
-        for _, plr in pairs(Players:GetPlayers()) do
-            if plr ~= player and plr.Character then
-                for _, part in pairs(plr.Character:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.Transparency = 0.3
-                        part.Color = Color3.fromRGB(255, 0, 255)
-                    end
-                end
-            end
-        end
-    else
-        for _, plr in pairs(Players:GetPlayers()) do
-            if plr.Character then
-                for _, part in pairs(plr.Character:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.Transparency = 0
-                        part.Color = Color3.fromRGB(255, 255, 255)
-                    end
-                end
-            end
-        end
-    end
-    print("🌈 Chams " .. (chamsEnabled and "ATIVADO" or "DESATIVADO"))
-end
-
--- 13. TRACERS
-local function toggleTracers()
-    tracersEnabled = not tracersEnabled
-    
-    if tracersEnabled then
-        spawn(function()
-            while tracersEnabled do
-                for _, plr in pairs(Players:GetPlayers()) do
-                    if plr ~= player and plr.Character then
-                        local root = plr.Character:FindFirstChild("HumanoidRootPart")
-                        if root then
-                            local beam = Instance.new("Beam")
-                            beam.Attachment0 = player.Character:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("Attachment") or Instance.new("Attachment", player.Character:FindFirstChild("HumanoidRootPart"))
-                            beam.Attachment1 = root:FindFirstChildOfClass("Attachment") or Instance.new("Attachment", root)
-                            beam.Color = ColorSequence.new(Color3.fromRGB(255, 0, 0))
-                            beam.Width0 = 0.1
-                            beam.Width1 = 0.1
-                            beam.Parent = workspace
-                            game:GetService("Debris"):AddItem(beam, 0.1)
-                        end
-                    end
-                end
-                task.wait(0.1)
-            end
-        end)
-    end
-    print("🎯 Tracers " .. (tracersEnabled and "ATIVADO" or "DESATIVADO"))
-end
-
--- 14. TELEPORT ALL (TROLL)
+-- Troll: Teleport All
 local function teleportAllToMe()
-    local myRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    local myRoot = player.Character:FindFirstChild("HumanoidRootPart")
     if myRoot then
         for _, plr in pairs(Players:GetPlayers()) do
             if plr ~= player and plr.Character then
@@ -750,11 +394,11 @@ local function teleportAllToMe()
                 end
             end
         end
-        print("😈 Todos teleportados para você!")
+        print("Teleportou todos para você!")
     end
 end
 
--- 15. ANTI-AFK
+-- Anti-AFK
 local function toggleAntiAFK()
     antiAfk = not antiAfk
     
@@ -764,146 +408,77 @@ local function toggleAntiAFK()
             while antiAfk do
                 virtualUser:CaptureController()
                 virtualUser:ClickButton2(Vector2.new())
-                task.wait(30)
+                wait(30)
             end
         end)
     end
-    print("🛡️ Anti-AFK " .. (antiAfk and "ATIVADO" or "DESATIVADO"))
+    print("Anti-AFK: " .. (antiAfk and "ON" or "OFF"))
 end
 
--- 16. AUTO CLICKER
-local function toggleAutoClicker()
-    autoClicker = not autoClicker
-    
-    if autoClicker then
-        spawn(function()
-            while autoClicker do
-                mouse1click()
-                task.wait(0.1)
-            end
-        end)
-    end
-    print("🤖 Auto Clicker " .. (autoClicker and "ATIVADO" or "DESATIVADO"))
-end
-
--- 17. RAINBOW CHARACTER
-local function toggleRainbow()
-    if player.Character then
-        for _, part in pairs(player.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                spawn(function()
-                    while part and part.Parent do
-                        part.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
-                        task.wait(0.1)
-                    end
-                end)
-            end
-        end
-        print("🌈 Rainbow Character ATIVADO")
-    end
-end
-
--- 18. FIRE AURA
-local function toggleFireAura()
-    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-    if root then
-        local fire = Instance.new("Fire")
-        fire.Size = 10
-        fire.Heat = 10
-        fire.Parent = root
-        print("🔥 Fire Aura ATIVADO")
-    end
-end
-
--- 19. SPEED MULTIPLIER
-local function setSpeedMultiplier(multiplier)
-    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.WalkSpeed = 16 * multiplier
-        print("⚡ Speed Multiplier: " .. multiplier .. "x")
-    end
-end
-
--- 20. COPY OUTFIT
-local function copyOutfit(targetPlayer)
-    if targetPlayer.Character then
-        for _, item in pairs(targetPlayer.Character:GetDescendants()) do
-            if item:IsA("Accessory") then
-                local clone = item:Clone()
-                clone.Parent = player.Character
-            end
-        end
-        print("👕 Outfit copiado!")
-    end
-end
-
--- ========== CONTEÚDO DAS ABAS ==========
+-- ========== BOTÕES ==========
 
 -- ABA HACKS
 local hacksTitle = Instance.new("TextLabel", funTab)
 hacksTitle.Size = UDim2.new(1, 0, 0, 50)
 hacksTitle.Text = "⚡ HACKS PRINCIPAIS"
-hacksTitle.Font = Enum.Font.GothamBlack
-hacksTitle.TextSize = 22
-hacksTitle.TextColor3 = CONFIG.Theme.Highlight
+hacksTitle.Font = Enum.Font.GothamBold
+hacksTitle.TextSize = 18
+hacksTitle.TextColor3 = Color3.fromRGB(255, 50, 50)
 hacksTitle.BackgroundTransparency = 1
-hacksTitle.LayoutOrder = 1
 
-createPremiumButton(funTab, "Fly Hack", "🕊️", Color3.fromRGB(220, 0, 0), toggleFly)
-createPremiumButton(funTab, "Speed Hack", "⚡", Color3.fromRGB(255, 150, 0), toggleSpeed)
-createPremiumButton(funTab, "Infinite Jump", "⬆️", Color3.fromRGB(0, 200, 100), toggleInfJump)
-createPremiumButton(funTab, "Noclip", "👻", Color3.fromRGB(150, 0, 200), toggleNoclip)
-createPremiumButton(funTab, "Aimbot", "🎯", Color3.fromRGB(255, 0, 100), toggleAimbot)
-createPremiumButton(funTab, "Click Teleport", "📍", Color3.fromRGB(0, 150, 255), toggleClickTP)
-createPremiumButton(funTab, "Anti-AFK", "🛡️", Color3.fromRGB(100, 100, 255), toggleAntiAFK)
-createPremiumButton(funTab, "Auto Clicker", "🤖", Color3.fromRGB(200, 100, 0), toggleAutoClicker)
+createButton(funTab, "Fly Hack", "🕊️", toggleFly)
+createButton(funTab, "Speed Hack", "⚡", toggleSpeed)
+createButton(funTab, "Infinite Jump", "⬆️", toggleInfJump)
+createButton(funTab, "Noclip", "👻", toggleNoclip)
+createButton(funTab, "Aimbot", "🎯", toggleAimbot)
+createButton(funTab, "Click Teleport", "📍", toggleClickTP)
+createButton(funTab, "Anti-AFK", "🛡️", toggleAntiAFK)
 
 -- ABA VISUAL
 local visualTitle = Instance.new("TextLabel", visualTab)
 visualTitle.Size = UDim2.new(1, 0, 0, 50)
-visualTitle.Text = "👁️ VISUAL MODS"
-visualTitle.Font = Enum.Font.GothamBlack
-visualTitle.TextSize = 22
-visualTitle.TextColor3 = Color3.fromRGB(0, 200, 255)
+visualTitle.Text = "👁️ VISUAL"
+visualTitle.Font = Enum.Font.GothamBold
+visualTitle.TextSize = 18
+visualTitle.TextColor3 = Color3.fromRGB(255, 50, 50)
 visualTitle.BackgroundTransparency = 1
-visualTitle.LayoutOrder = 1
 
-createPremiumButton(visualTab, "ESP (Wallhack)", "👁️", Color3.fromRGB(255, 0, 0), toggleESP)
-createPremiumButton(visualTab, "Night Vision", "🌙", Color3.fromRGB(0, 100, 200), toggleNightVision)
-createPremiumButton(visualTab, "Fullbright", "☀️", Color3.fromRGB(255, 200, 0), toggleFullbright)
-createPremiumButton(visualTab, "Chams", "🌈", Color3.fromRGB(255, 0, 255), toggleChams)
-createPremiumButton(visualTab, "Tracers", "🎯", Color3.fromRGB(255, 100, 0), toggleTracers)
-createPremiumButton(visualTab, "Rainbow Character", "🌈", Color3.fromRGB(255, 0, 100), toggleRainbow)
-createPremiumButton(visualTab, "Fire Aura", "🔥", Color3.fromRGB(255, 100, 0), toggleFireAura)
+createButton(visualTab, "ESP", "👁️", toggleESP)
+createButton(visualTab, "Fullbright", "☀️", function()
+    game.Lighting.Brightness = 2
+    game.Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+    print("Fullbright ON")
+end)
 
 -- ABA MOVIMENTO
 local moveTitle = Instance.new("TextLabel", moveTab)
 moveTitle.Size = UDim2.new(1, 0, 0, 50)
 moveTitle.Text = "🏃 MOVIMENTO"
-moveTitle.Font = Enum.Font.GothamBlack
-moveTitle.TextSize = 22
-moveTitle.TextColor3 = Color3.fromRGB(0, 200, 100)
+moveTitle.Font = Enum.Font.GothamBold
+moveTitle.TextSize = 18
+moveTitle.TextColor3 = Color3.fromRGB(255, 50, 50)
 moveTitle.BackgroundTransparency = 1
-moveTitle.LayoutOrder = 1
 
-createPremiumButton(moveTab, "High Jump", "🚀", Color3.fromRGB(0, 200, 100), toggleHighJump)
-createPremiumButton(moveTab, "Wall Walk", "🧗", Color3.fromRGB(100, 200, 0), toggleWallWalk)
-createPremiumButton(moveTab, "Speed 2x", "⚡", Color3.fromRGB(255, 150, 0), function() setSpeedMultiplier(2) end)
-createPremiumButton(moveTab, "Speed 3x", "⚡⚡", Color3.fromRGB(255, 100, 0), function() setSpeedMultiplier(3) end)
-createPremiumButton(moveTab, "Speed 5x", "⚡⚡⚡", Color3.fromRGB(255, 50, 0), function() setSpeedMultiplier(5) end)
+createButton(moveTab, "High Jump", "🚀", toggleHighJump)
+createButton(moveTab, "Speed 2x", "⚡", function()
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = 32
+        print("Speed 2x ON")
+    end
+end)
 
 -- ABA TROLL
 local trollTitle = Instance.new("TextLabel", trollTab)
 trollTitle.Size = UDim2.new(1, 0, 0, 50)
 trollTitle.Text = "😈 TROLL"
-trollTitle.Font = Enum.Font.GothamBlack
-trollTitle.TextSize = 22
-trollTitle.TextColor3 = Color3.fromRGB(255, 0, 255)
+trollTitle.Font = Enum.Font.GothamBold
+trollTitle.TextSize = 18
+trollTitle.TextColor3 = Color3.fromRGB(255, 50, 50)
 trollTitle.BackgroundTransparency = 1
-trollTitle.LayoutOrder = 1
 
-createPremiumButton(trollTab, "Teleportar Todos", "📍", Color3.fromRGB(255, 0, 100), teleportAllToMe)
-createPremiumButton(trollTab, "Lançar Jogadores", "🚀", Color3.fromRGB(255, 100, 0), function()
+createButton(trollTab, "Teleportar Todos", "📍", teleportAllToMe)
+createButton(trollTab, "Lançar Jogadores", "🚀", function()
     for _, plr in pairs(Players:GetPlayers()) do
         if plr ~= player and plr.Character then
             local root = plr.Character:FindFirstChild("HumanoidRootPart")
@@ -916,149 +491,57 @@ createPremiumButton(trollTab, "Lançar Jogadores", "🚀", Color3.fromRGB(255, 1
             end
         end
     end
-    print("😈 Jogadores lançados!")
+    print("Jogadores lançados!")
 end)
 
 -- ABA UTILITÁRIOS
 local utilTitle = Instance.new("TextLabel", utilTab)
 utilTitle.Size = UDim2.new(1, 0, 0, 50)
 utilTitle.Text = "🛠️ UTILITÁRIOS"
-utilTitle.Font = Enum.Font.GothamBlack
-utilTitle.TextSize = 22
-utilTitle.TextColor3 = Color3.fromRGB(255, 200, 0)
+utilTitle.Font = Enum.Font.GothamBold
+utilTitle.TextSize = 18
+utilTitle.TextColor3 = Color3.fromRGB(255, 50, 50)
 utilTitle.BackgroundTransparency = 1
-utilTitle.LayoutOrder = 1
 
-createPremiumButton(utilTab, "Copiar Game ID", "🎮", Color3.fromRGB(100, 150, 255), function()
+createButton(utilTab, "Copiar Game ID", "🎮", function()
     setclipboard(tostring(game.PlaceId))
-    print("🎮 Game ID copiado!")
+    print("Game ID copiado!")
 end)
 
-createPremiumButton(utilTab, "Copiar Job ID", "🔗", Color3.fromRGB(100, 200, 255), function()
+createButton(utilTab, "Copiar Job ID", "🔗", function()
     setclipboard(tostring(game.JobId))
-    print("🔗 Job ID copiado!")
+    print("Job ID copiado!")
 end)
 
-createPremiumButton(utilTab, "Copiar Discord", "💬", Color3.fromRGB(88, 101, 242), function()
-    setclipboard("https://discord.gg/zdDKdGbsZT")
-    print("💬 Discord copiado!")
-end)
-
-createPremiumButton(utilTab, "Copiar TikTok", "📱", Color3.fromRGB(0, 0, 0), function()
-    setclipboard("@lolyta")
-    print("📱 TikTok copiado!")
-end)
-
--- ABA CRÉDITOS
-local creditsTitle = Instance.new("TextLabel", creditsTab)
-creditsTitle.Size = UDim2.new(1, 0, 0, 50)
-creditsTitle.Text = "⭐ RYUZEN PREMIUM"
-creditsTitle.Font = Enum.Font.GothamBlack
-creditsTitle.TextSize = 24
-creditsTitle.TextColor3 = Color3.fromRGB(255, 200, 0)
-creditsTitle.BackgroundTransparency = 1
-creditsTitle.LayoutOrder = 1
-
-local teamInfo = Instance.new("TextLabel", creditsTab)
-teamInfo.Size = UDim2.new(0.9, 0, 0, 100)
-teamInfo.Text = "⚔️ CRIADO POR:\nCOFFEE ☕ & FROST ❄️\n\n🐉 EQUIPE RYUZEN\n✨ VERSÃO: HUB 4.5 PREMIUM"
-teamInfo.Font = Enum.Font.GothamBold
-teamInfo.TextSize = 16
-teamInfo.TextColor3 = CONFIG.Theme.Text
-teamInfo.BackgroundTransparency = 1
-teamInfo.TextYAlignment = Enum.TextYAlignment.Top
-teamInfo.LayoutOrder = 2
-
--- ATIVAR PRIMEIRA ABA
+-- Ativar primeira aba
 tabs["Hacks"].frame.Visible = true
+tabs["Hacks"].button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+tabs["Hacks"].button.TextColor3 = Color3.fromRGB(255, 255, 255)
 activeTab = "Hacks"
-TweenService:Create(tabs["Hacks"].button, TweenInfo.new(0.3), {
-    BackgroundColor3 = Color3.fromRGB(220, 0, 0),
-    TextColor3 = Color3.fromRGB(255, 255, 255)
-}):Play()
-TweenService:Create(tabs["Hacks"].glow, TweenInfo.new(0.3), {
-    BackgroundTransparency = 0.3
-}):Play()
 
--- AJUSTAR CANVAS SIZE
-for _, tab in pairs(tabs) do
-    local layout = tab.frame:FindFirstChildOfClass("UIListLayout")
-    if layout then
-        layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            tab.frame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
-        end)
-    end
-end
-
--- BOTÃO PARA ABRIR (DESIGN PREMIUM)
-local openBtn = Instance.new("ImageButton", gui)
-openBtn.Size = UDim2.new(0, 55, 0, 55)
-openBtn.Position = UDim2.new(0, 25, 0, 25)
-openBtn.BackgroundColor3 = CONFIG.Theme.Accent
+-- Botão para abrir
+local openBtn = Instance.new("TextButton", gui)
+openBtn.Size = UDim2.new(0, 120, 0, 40)
+openBtn.Position = UDim2.new(0, 20, 0, 20)
+openBtn.Text = "🐉 ABRIR HUB"
+openBtn.Font = Enum.Font.GothamBold
+openBtn.TextSize = 14
+openBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+openBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 openBtn.BorderSizePixel = 0
 openBtn.AutoButtonColor = false
 openBtn.Visible = false
-openBtn.ZIndex = 30
-openBtn.Image = "rbxassetid://3926307971" -- Ícone de dragão/espada
-openBtn.ImageRectSize = Vector2.new(48, 48)
-openBtn.ImageRectOffset = Vector2.new(240, 0)
-openBtn.ScaleType = Enum.ScaleType.Fit
 
--- GLOW NO BOTÃO ABRIR
-local openBtnGlow = Instance.new("ImageLabel", openBtn)
-openBtnGlow.Size = UDim2.new(1, 10, 1, 10)
-openBtnGlow.Position = UDim2.new(-0.09, 0, -0.09, 0)
-openBtnGlow.BackgroundTransparency = 1
-openBtnGlow.Image = "rbxassetid://8992234291"
-openBtnGlow.ImageColor3 = CONFIG.Theme.Glow
-openBtnGlow.ImageTransparency = 0.7
-openBtnGlow.ScaleType = Enum.ScaleType.Slice
-openBtnGlow.SliceCenter = Rect.new(100, 100, 100, 100)
-openBtnGlow.ZIndex = 29
-
--- ANIMAÇÃO PULSANTE
-spawn(function()
-    while true do
-        TweenService:Create(openBtn, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            Size = UDim2.new(0, 58, 0, 58),
-            BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-        }):Play()
-        TweenService:Create(openBtnGlow, TweenInfo.new(1.2), {
-            ImageTransparency = 0.5
-        }):Play()
-        task.wait(1.2)
-        TweenService:Create(openBtn, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            Size = UDim2.new(0, 55, 0, 55),
-            BackgroundColor3 = CONFIG.Theme.Accent
-        }):Play()
-        TweenService:Create(openBtnGlow, TweenInfo.new(1.2), {
-            ImageTransparency = 0.7
-        }):Play()
-        task.wait(1.2)
-    end
-end)
-
--- EFEITO HOVER
 openBtn.MouseEnter:Connect(function()
-    TweenService:Create(openBtn, TweenInfo.new(0.2), {
-        Rotation = 15,
-        BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    }):Play()
+    openBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
 end)
 
 openBtn.MouseLeave:Connect(function()
-    TweenService:Create(openBtn, TweenInfo.new(0.2), {
-        Rotation = 0,
-        BackgroundColor3 = CONFIG.Theme.Accent
-    }):Play()
+    openBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 end)
 
--- FUNÇÕES ABRIR/FECHAR
+-- Funções abrir/fechar
 closeBtn.MouseButton1Click:Connect(function()
-    TweenService:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-        Position = UDim2.new(0.5, -310, -1, 0)
-    }):Play()
-    task.wait(0.4)
     main.Visible = false
     openBtn.Visible = true
 end)
@@ -1066,24 +549,20 @@ end)
 openBtn.MouseButton1Click:Connect(function()
     openBtn.Visible = false
     main.Visible = true
-    TweenService:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Position = UDim2.new(0.5, -310, 0.5, -190)
-    }):Play()
 end)
 
--- KEYBIND F1
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
+-- Keybind
+UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.F1 then
         if main.Visible then
-            closeBtn.MouseButton1Click:Fire()
+            closeBtn:Fire()
         else
-            openBtn.MouseButton1Click:Fire()
+            openBtn:Fire()
         end
     end
 end)
 
--- NO CLIP AUTOMÁTICO
+-- Noclip automático
 RunService.Stepped:Connect(function()
     if noclip and player.Character then
         for _, part in pairs(player.Character:GetDescendants()) do
@@ -1094,16 +573,12 @@ RunService.Stepped:Connect(function()
     end
 end)
 
--- INICIAR
+-- Iniciar
 main.Visible = true
 openBtn.Visible = false
 
--- MENSAGEM NO CONSOLE
-print("╔══════════════════════════════════════════╗")
-print("║    ⚔️ RYUZEN HUB PREMIUM v4.5 ⚔️     ║")
-print("║    CRIADO POR: COFFEE ☕ & FROST ❄️    ║")
-print("║    PRESSIONE F1 PARA ABRIR/FECHAR       ║")
-print("╚══════════════════════════════════════════╝")
-print("✨ Modo Leve Ativado | 20+ Funções Premium ✨")
+print("🐉 RYUZEN HUB V5 CARREGADO!")
+print("Criado por: Coffee & Frost")
+print("Pressione F1 para abrir/fechar")
 
 return gui 
