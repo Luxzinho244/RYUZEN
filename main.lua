@@ -1,18 +1,19 @@
--- ⛩️ RYUZEN HUB | MENU COM ABAS
--- Dark + Red | Estilo Samurai/Masculino
+-- ⛩️ RYUZEN HUB V4.5
 -- By Coffee & Frost
 
-if getgenv().RYUZEN_LOADED then return end
+if getgenv().RYUZEN_LOADED then
+    return
+end
 getgenv().RYUZEN_LOADED = true
 
--- SERVICES
+-- Services
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 
--- VARIÁVEIS GLOBAIS
+-- Variáveis globais
 local noclip = false
 local flying = false
 local flyConnection
@@ -22,7 +23,7 @@ local infJump = false
 local antiAfk = false
 local espEnabled = false
 
--- CONFIGURAÇÕES
+-- Configurações
 local CONFIG = {
     Theme = {
         Primary = Color3.fromRGB(10, 10, 10),
@@ -35,7 +36,7 @@ local CONFIG = {
     }
 }
 
--- GUI
+-- Criar GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "RYUZEN_HUB_V45"
 gui.ResetOnSpawn = false
@@ -43,7 +44,7 @@ gui.IgnoreGuiInset = true
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- MAIN FRAME
+-- Frame principal
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 600, 0, 350)
 main.Position = UDim2.new(0.5, -300, 0.5, -175)
@@ -57,7 +58,7 @@ local stroke = Instance.new("UIStroke", main)
 stroke.Color = CONFIG.Theme.Accent
 stroke.Thickness = 3
 
--- HEADER
+-- Header
 local header = Instance.new("Frame", main)
 header.Size = UDim2.new(1, 0, 0, 50)
 header.BackgroundColor3 = Color3.fromRGB(15, 0, 0)
@@ -73,7 +74,7 @@ title.TextColor3 = CONFIG.Theme.Highlight
 title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 
--- AVISO DE METEOROS
+-- Aviso de meteoros
 local warningFrame = Instance.new("Frame", header)
 warningFrame.Size = UDim2.new(0.35, 0, 0, 25)
 warningFrame.Position = UDim2.new(0.65, 0, 0.5, -12.5)
@@ -88,7 +89,6 @@ warningText.TextSize = 11
 warningText.TextColor3 = Color3.fromRGB(255, 255, 200)
 warningText.BackgroundTransparency = 1
 
--- ANIMAÇÃO PISCANTE
 spawn(function()
     while true do
         warningFrame.Visible = not warningFrame.Visible
@@ -96,7 +96,7 @@ spawn(function()
     end
 end)
 
--- BOTÃO FECHAR
+-- Botão fechar
 local closeBtn = Instance.new("ImageButton", header)
 closeBtn.Size = UDim2.new(0, 35, 0, 35)
 closeBtn.Position = UDim2.new(1, -45, 0.5, -17.5)
@@ -123,7 +123,7 @@ closeBtn.MouseLeave:Connect(function()
     }):Play()
 end)
 
--- SIDEBAR
+-- Sidebar
 local sidebar = Instance.new("Frame", main)
 sidebar.Position = UDim2.new(0, 0, 0, 50)
 sidebar.Size = UDim2.new(0, 200, 1, -50)
@@ -136,14 +136,14 @@ separator.Position = UDim2.new(1, -2, 0, 0)
 separator.BackgroundColor3 = CONFIG.Theme.Accent
 separator.BorderSizePixel = 0
 
--- ÁREA DE CONTEÚDO
+-- Área de conteúdo
 local content = Instance.new("Frame", main)
 content.Position = UDim2.new(0, 200, 0, 50)
 content.Size = UDim2.new(1, -200, 1, -50)
 content.BackgroundColor3 = CONFIG.Theme.Primary
 content.BorderSizePixel = 0
 
--- SISTEMA DE ABAS SIMPLIFICADO
+-- Sistema de abas
 local tabs = {}
 local activeTab = nil
 
@@ -180,11 +180,9 @@ local function createTab(name, icon)
     
     tabs[name] = {button = btn, frame = frame}
     
-    -- CONECTAR CLIQUE
     btn.MouseButton1Click:Connect(function()
         if activeTab == name then return end
         
-        -- Desativar aba atual
         if activeTab then
             tabs[activeTab].frame.Visible = false
             TweenService:Create(tabs[activeTab].button, TweenInfo.new(0.2), {
@@ -194,7 +192,6 @@ local function createTab(name, icon)
             }):Play()
         end
         
-        -- Ativar nova aba
         frame.Visible = true
         TweenService:Create(btn, TweenInfo.new(0.2), {
             BackgroundColor3 = CONFIG.Theme.Accent,
@@ -207,19 +204,17 @@ local function createTab(name, icon)
     return frame, btn
 end
 
--- CRIAR TODAS AS ABAS
+-- Criar todas as abas
 local funTab, funBtn = createTab("Fun", "🎮")
 local avatarTab, avatarBtn = createTab("Avatar", "👤")
-local houseTab, houseBtn = createTab("House", "🏠")
-local carTab, carBtn = createTab("Car", "🚗")
+local trollTab, trollBtn = createTab("Troll", "😈")
+local musicTab, musicBtn = createTab("Music", "🎵")
 local toolsTab, toolsBtn = createTab("Tools", "🛠️")
 local rgbTab, rgbBtn = createTab("RGB", "🌈")
-local musicAllTab, musicAllBtn = createTab("Music All", "🎵")
-local musicTab, musicBtn = createTab("Music", "🎶")
-local trollTab, trollBtn = createTab("Troll", "😈")
+local creditsTab, creditsBtn = createTab("Créditos", "⭐")
 
--- FUNÇÃO PARA CRIAR BOTÕES
-local function createFunctionalButton(parent, text, icon, callback)
+-- Função para criar botões
+local function createButton(parent, text, icon, callback)
     local btn = Instance.new("TextButton", parent)
     btn.Size = UDim2.new(0.9, 0, 0, 40)
     btn.Text = icon .. "  " .. text:upper()
@@ -236,7 +231,6 @@ local function createFunctionalButton(parent, text, icon, callback)
     padding.PaddingLeft = UDim.new(0, 15)
     btn.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- EFEITO HOVER
     btn.MouseEnter:Connect(function()
         TweenService:Create(btn, TweenInfo.new(0.2), {
             BackgroundColor3 = Color3.fromRGB(40, 0, 0),
@@ -251,7 +245,6 @@ local function createFunctionalButton(parent, text, icon, callback)
         }):Play()
     end)
     
-    -- EFEITO CLIQUE
     btn.MouseButton1Click:Connect(function()
         TweenService:Create(btn, TweenInfo.new(0.1), {
             BackgroundColor3 = CONFIG.Theme.Highlight
@@ -262,10 +255,7 @@ local function createFunctionalButton(parent, text, icon, callback)
         }):Play()
         
         if callback then
-            local success, result = pcall(callback)
-            if not success then
-                warn("Erro: " .. result)
-            end
+            pcall(callback)
         end
     end)
     
@@ -274,7 +264,7 @@ end
 
 -- ========== FUNÇÕES PRINCIPAIS ==========
 
--- FLY HACK MELHORADO
+-- Fly Hack
 local function toggleFly()
     flying = not flying
     
@@ -338,7 +328,7 @@ local function toggleFly()
                 bv.Velocity = velocity
             end)
             
-            print("🕊️ Fly Hack ATIVADO - WASD + Espaço/Shift")
+            print("🕊️ Fly Hack ATIVADO")
         end
     else
         if flyConnection then
@@ -367,7 +357,7 @@ local function toggleFly()
     end
 end
 
--- SPEED HACK
+-- Speed Hack
 local function toggleSpeed()
     speedHack = not speedHack
     
@@ -376,7 +366,7 @@ local function toggleSpeed()
         if speedHack then
             originalWalkSpeed = humanoid.WalkSpeed
             humanoid.WalkSpeed = 100
-            print("⚡ Speed Hack ATIVADO (Velocidade: 100)")
+            print("⚡ Speed Hack ATIVADO")
         else
             humanoid.WalkSpeed = originalWalkSpeed
             print("⚡ Speed Hack DESATIVADO")
@@ -384,13 +374,13 @@ local function toggleSpeed()
     end
 end
 
--- NO CLIP
+-- Noclip
 local function toggleNoclip()
     noclip = not noclip
     print("👻 Noclip " .. (noclip and "ATIVADO" or "DESATIVADO"))
 end
 
--- INFINITE JUMP
+-- Infinite Jump
 local function toggleInfJump()
     infJump = not infJump
     
@@ -447,7 +437,26 @@ local function toggleESP()
     end
 end
 
--- ========== FUNÇÕES DE TROLL (TODAS FUNCIONAIS) ==========
+-- Anti-AFK
+local function toggleAntiAFK()
+    antiAfk = not antiAfk
+    
+    if antiAfk then
+        local virtualUser = game:GetService('VirtualUser')
+        spawn(function()
+            while antiAfk do
+                virtualUser:CaptureController()
+                virtualUser:ClickButton2(Vector2.new())
+                wait(30)
+            end
+        end)
+        print("🛡️ Anti-AFK ATIVADO")
+    else
+        print("🛡️ Anti-AFK DESATIVADO")
+    end
+end
+
+-- ========== FUNÇÕES DE TROLL ==========
 
 local function trollTeleportAll()
     local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -462,9 +471,7 @@ local function trollTeleportAll()
                 end
             end
         end
-        print("😈 " .. count .. " jogadores teleportados para você!")
-    else
-        print("❌ Erro: Character não encontrado")
+        print("😈 " .. count .. " jogadores teleportados!")
     end
 end
 
@@ -486,7 +493,7 @@ local function trollLaunchPlayers()
             end
         end
     end
-    print("😈 " .. count .. " jogadores lançados para o alto!")
+    print("😈 " .. count .. " jogadores lançados!")
 end
 
 local function trollFreezeAll()
@@ -535,37 +542,6 @@ local function trollSpinPlayers()
     print("🌀 " .. count .. " jogadores girando!")
 end
 
--- ========== FUNÇÕES DE AVATAR ==========
-
-local function avatarGodMode()
-    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.MaxHealth = math.huge
-        humanoid.Health = math.huge
-        print("👤 God Mode ATIVADO - Vida infinita")
-    end
-end
-
-local function avatarInvisible()
-    if player.Character then
-        for _, part in pairs(player.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.Transparency = 1
-            elseif part:IsA("Decal") then
-                part.Transparency = 1
-            end
-        end
-        print("👤 Invisibilidade ATIVADA")
-    end
-end
-
-local function avatarReset()
-    if player.Character then
-        player.Character:BreakJoints()
-        print("👤 Avatar resetado!")
-    end
-end
-
 -- ========== CONTEÚDO DAS ABAS ==========
 
 -- ABA FUN
@@ -578,27 +554,28 @@ funTitle.TextColor3 = CONFIG.Theme.Highlight
 funTitle.BackgroundTransparency = 1
 funTitle.LayoutOrder = 1
 
-createFunctionalButton(funTab, "Fly Hack", "🕊️", toggleFly)
-createFunctionalButton(funTab, "Speed Hack", "⚡", toggleSpeed)
-createFunctionalButton(funTab, "Noclip", "👻", toggleNoclip)
-createFunctionalButton(funTab, "Infinite Jump", "⬆️", toggleInfJump)
-createFunctionalButton(funTab, "ESP (Wallhack)", "👁️", toggleESP)
+createButton(funTab, "Fly Hack", "🕊️", toggleFly)
+createButton(funTab, "Speed Hack", "⚡", toggleSpeed)
+createButton(funTab, "Noclip", "👻", toggleNoclip)
+createButton(funTab, "Infinite Jump", "⬆️", toggleInfJump)
+createButton(funTab, "ESP", "👁️", toggleESP)
+createButton(funTab, "Anti-AFK", "🛡️", toggleAntiAFK)
 
 -- ABA TROLL
 local trollTitle = Instance.new("TextLabel", trollTab)
 trollTitle.Size = UDim2.new(1, 0, 0, 40)
-trollTitle.Text = "😈 FUNÇÕES DE TROLL"
+trollTitle.Text = "😈 TROLL"
 trollTitle.Font = Enum.Font.GothamBlack
 trollTitle.TextSize = 18
 trollTitle.TextColor3 = CONFIG.Theme.Highlight
 trollTitle.BackgroundTransparency = 1
 trollTitle.LayoutOrder = 1
 
-createFunctionalButton(trollTab, "Teleportar Todos", "📍", trollTeleportAll)
-createFunctionalButton(trollTab, "Lançar Jogadores", "🚀", trollLaunchPlayers)
-createFunctionalButton(trollTab, "Congelar Todos", "❄️", trollFreezeAll)
-createFunctionalButton(trollTab, "Descongelar Todos", "🔥", trollUnfreezeAll)
-createFunctionalButton(trollTab, "Girar Jogadores", "🌀", trollSpinPlayers)
+createButton(trollTab, "Teleportar Todos", "📍", trollTeleportAll)
+createButton(trollTab, "Lançar Jogadores", "🚀", trollLaunchPlayers)
+createButton(trollTab, "Congelar Todos", "❄️", trollFreezeAll)
+createButton(trollTab, "Descongelar Todos", "🔥", trollUnfreezeAll)
+createButton(trollTab, "Girar Jogadores", "🌀", trollSpinPlayers)
 
 -- ABA AVATAR
 local avatarTitle = Instance.new("TextLabel", avatarTab)
@@ -610,9 +587,21 @@ avatarTitle.TextColor3 = CONFIG.Theme.Highlight
 avatarTitle.BackgroundTransparency = 1
 avatarTitle.LayoutOrder = 1
 
-createFunctionalButton(avatarTab, "God Mode", "🛡️", avatarGodMode)
-createFunctionalButton(avatarTab, "Invisibilidade", "👻", avatarInvisible)
-createFunctionalButton(avatarTab, "Reset Avatar", "🔄", avatarReset)
+createButton(avatarTab, "God Mode", "🛡️", function()
+    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.MaxHealth = math.huge
+        humanoid.Health = math.huge
+        print("👤 God Mode ATIVADO")
+    end
+end)
+
+createButton(avatarTab, "Reset Avatar", "🔄", function()
+    if player.Character then
+        player.Character:BreakJoints()
+        print("👤 Avatar resetado!")
+    end
+end)
 
 -- ABA MUSIC
 local musicTitle = Instance.new("TextLabel", musicTab)
@@ -624,9 +613,9 @@ musicTitle.TextColor3 = CONFIG.Theme.Highlight
 musicTitle.BackgroundTransparency = 1
 musicTitle.LayoutOrder = 1
 
-createFunctionalButton(musicTab, "Tocar Música Épica", "🎶", function()
+createButton(musicTab, "Tocar Música", "🎶", function()
     local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://276972217" -- Música genérica
+    sound.SoundId = "rbxassetid://276972217"
     sound.Volume = 0.5
     sound.Looped = true
     sound.Parent = workspace
@@ -634,13 +623,13 @@ createFunctionalButton(musicTab, "Tocar Música Épica", "🎶", function()
     print("🎵 Música tocando!")
 end)
 
-createFunctionalButton(musicTab, "Parar Todas Músicas", "⏹️", function()
+createButton(musicTab, "Parar Música", "⏹️", function()
     for _, sound in pairs(workspace:GetDescendants()) do
         if sound:IsA("Sound") then
             sound:Stop()
         end
     end
-    print("🎵 Todas as músicas paradas!")
+    print("🎵 Música parada!")
 end)
 
 -- ABA TOOLS
@@ -653,14 +642,14 @@ toolsTitle.TextColor3 = CONFIG.Theme.Highlight
 toolsTitle.BackgroundTransparency = 1
 toolsTitle.LayoutOrder = 1
 
-createFunctionalButton(toolsTab, "Copiar Game ID", "🎮", function()
+createButton(toolsTab, "Copiar Game ID", "🎮", function()
     setclipboard(tostring(game.PlaceId))
-    print("🎮 Game ID copiado: " .. game.PlaceId)
+    print("🎮 Game ID copiado!")
 end)
 
-createFunctionalButton(toolsTab, "Copiar Job ID", "🔗", function()
+createButton(toolsTab, "Copiar Job ID", "🔗", function()
     setclipboard(tostring(game.JobId))
-    print("🔗 Job ID copiado: " .. game.JobId)
+    print("🔗 Job ID copiado!")
 end)
 
 -- ABA RGB
@@ -673,7 +662,7 @@ rgbTitle.TextColor3 = CONFIG.Theme.Highlight
 rgbTitle.BackgroundTransparency = 1
 rgbTitle.LayoutOrder = 1
 
-createFunctionalButton(rgbTab, "RGB Character", "🎨", function()
+createButton(rgbTab, "RGB Character", "🎨", function()
     if player.Character then
         for _, part in pairs(player.Character:GetDescendants()) do
             if part:IsA("BasePart") then
@@ -685,13 +674,11 @@ createFunctionalButton(rgbTab, "RGB Character", "🎨", function()
                 end)
             end
         end
-        print("🌈 RGB Character ativado!")
+        print("🌈 RGB ativado!")
     end
 end)
 
--- ABA CRÉDITOS (AGORA É UMA ABA NORMAL)
-local creditsTab, creditsBtn = createTab("Créditos", "⭐")
-
+-- ABA CRÉDITOS
 local creditsTitle = Instance.new("TextLabel", creditsTab)
 creditsTitle.Size = UDim2.new(1, 0, 0, 40)
 creditsTitle.Text = "🐉 RYUZEN CREDITS 🐉"
@@ -711,20 +698,17 @@ teamInfo.BackgroundTransparency = 1
 teamInfo.TextYAlignment = Enum.TextYAlignment.Top
 teamInfo.LayoutOrder = 2
 
-createFunctionalButton(creditsTab, "Copiar Discord", "💬", function()
+createButton(creditsTab, "Copiar Discord", "💬", function()
     setclipboard("https://discord.gg/zdDKdGbsZT")
-    print("💬 Discord link copiado!")
+    print("💬 Discord copiado!")
 end)
 
-createFunctionalButton(creditsTab, "Copiar TikTok @lolyta", "📱", function()
+createButton(creditsTab, "Copiar TikTok", "📱", function()
     setclipboard("@lolyta")
-    print("📱 TikTok @ copiado!")
+    print("📱 TikTok copiado!")
 end)
 
--- REMOVER A ANTIGA ABA DE CRÉDITOS DO FIM
-creditsBtn.Position = UDim2.new(0, 5, 0, (10 * 40) + 10)
-
--- ATIVAR PRIMEIRA ABA
+-- Ativar primeira aba
 tabs["Fun"].frame.Visible = true
 activeTab = "Fun"
 TweenService:Create(funBtn, TweenInfo.new(0.2), {
@@ -733,7 +717,7 @@ TweenService:Create(funBtn, TweenInfo.new(0.2), {
     TextColor3 = Color3.fromRGB(255, 255, 255)
 }):Play()
 
--- AJUSTAR CANVAS SIZE
+-- Ajustar canvas size
 for _, tab in pairs(tabs) do
     local layout = tab.frame:FindFirstChildOfClass("UIListLayout")
     if layout then
@@ -743,7 +727,7 @@ for _, tab in pairs(tabs) do
     end
 end
 
--- BOTÃO PARA ABRIR
+-- Botão para abrir menu
 local openBtn = Instance.new("ImageButton", gui)
 openBtn.Size = UDim2.new(0, 50, 0, 50)
 openBtn.Position = UDim2.new(0, 20, 0, 20)
@@ -773,7 +757,6 @@ openBtn.MouseLeave:Connect(function()
     }):Play()
 end)
 
--- PULSAÇÃO
 spawn(function()
     while true do
         if openBtn.Visible then
@@ -791,7 +774,7 @@ spawn(function()
     end
 end)
 
--- FUNÇÕES ABRIR/FECHAR
+-- Funções abrir/fechar
 closeBtn.MouseButton1Click:Connect(function()
     TweenService:Create(main, TweenInfo.new(0.3), {
         Position = UDim2.new(0.5, -300, -1, 0)
@@ -809,7 +792,7 @@ openBtn.MouseButton1Click:Connect(function()
     }):Play()
 end)
 
--- KEYBIND F1
+-- Keybind F1
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
     if input.KeyCode == Enum.KeyCode.F1 then
@@ -821,7 +804,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
--- NO CLIP AUTOMÁTICO
+-- Noclip automático
 RunService.Stepped:Connect(function()
     if noclip and player.Character then
         for _, part in pairs(player.Character:GetDescendants()) do
@@ -832,34 +815,15 @@ RunService.Stepped:Connect(function()
     end
 end)
 
--- ANTI-AFK AUTOMÁTICO
-local antiAfkConnection
-local function toggleAntiAFK()
-    if antiAfkConnection then
-        antiAfkConnection:Disconnect()
-        antiAfkConnection = nil
-        print("🛡️ Anti-AFK DESATIVADO")
-    else
-        local virtualUser = game:GetService('VirtualUser')
-        antiAfkConnection = RunService.Heartbeat:Connect(function()
-            virtualUser:CaptureController()
-            virtualUser:ClickButton2(Vector2.new())
-        end)
-        print("🛡️ Anti-AFK ATIVADO")
-    end
-end
-
--- ADICIONAR ANTI-AFK NA ABA FUN
-createFunctionalButton(funTab, "Anti-AFK", "🛡️", toggleAntiAFK)
-
--- INICIAR
+-- Iniciar
 main.Visible = true
 openBtn.Visible = false
 
--- MENSAGEM NO CONSOLE
+-- Mensagem no console
 print("=======================================")
 print("🐉 RYUZEN HUB V4.5 CARREGADO 🐉")
 print("CRIADO POR: COFFEE ☕ & FROST ❄️")
 print("PRESSIONE F1 PARA ABRIR/FECHAR")
 print("=======================================")
-print("🎮 CONTROLES FL
+
+return gui
