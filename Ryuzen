@@ -1,0 +1,174 @@
+-- ⛩️ RYUZEN HUB (REFINED)
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+
+-- ================= GUI =================
+local gui = Instance.new("ScreenGui")
+gui.Name = "RYUZEN_HUB"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- ================= FRAME =================
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 450, 0, 260)
+frame.Position = UDim2.new(0.5, -225, -1, 0)
+frame.BackgroundColor3 = Color3.fromRGB(22,22,22)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+
+-- Shadow
+local shadow = Instance.new("ImageLabel", frame)
+shadow.Size = UDim2.new(1, 30, 1, 30)
+shadow.Position = UDim2.new(0, -15, 0, -15)
+shadow.BackgroundTransparency = 1
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageTransparency = 0.6
+shadow.ZIndex = 0
+
+-- Stroke
+local stroke = Instance.new("UIStroke", frame)
+stroke.Color = Color3.fromRGB(80,80,80)
+stroke.Thickness = 1
+
+-- Animate In
+TweenService:Create(
+	frame,
+	TweenInfo.new(0.6, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+	{Position = UDim2.new(0.5, -225, 0.5, -130)}
+):Play()
+
+-- ================= TOP BAR =================
+local topBar = Instance.new("Frame", frame)
+topBar.Size = UDim2.new(1,0,0,40)
+topBar.BackgroundColor3 = Color3.fromRGB(30,30,30)
+topBar.BorderSizePixel = 0
+
+local title = Instance.new("TextLabel", topBar)
+title.Size = UDim2.new(1,0,1,0)
+title.Text = "⛩️ RYUZEN HUB"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.new(1,1,1)
+title.BackgroundTransparency = 1
+
+-- FPS
+local fpsLabel = Instance.new("TextLabel", topBar)
+fpsLabel.Size = UDim2.new(0,80,1,0)
+fpsLabel.Position = UDim2.new(1,-160,0,0)
+fpsLabel.BackgroundTransparency = 1
+fpsLabel.Font = Enum.Font.GothamBold
+fpsLabel.TextSize = 14
+fpsLabel.TextColor3 = Color3.new(1,1,1)
+fpsLabel.TextXAlignment = Right
+fpsLabel.Text = "FPS: 0"
+
+-- ================= CONTENT =================
+local contentFolder = Instance.new("Folder", frame)
+contentFolder.Name = "Content"
+
+local contentFrame = Instance.new("Frame", contentFolder)
+contentFrame.Size = UDim2.new(1,-100,1,-50)
+contentFrame.Position = UDim2.new(0,90,0,45)
+contentFrame.BackgroundTransparency = 1
+
+-- ================= TAB SYSTEM =================
+local tabs = {}
+
+local function registerTab(name, frame)
+	tabs[name] = frame
+end
+
+local function openTab(name)
+	for _,v in pairs(tabs) do
+		v.Visible = false
+	end
+	if tabs[name] then
+		tabs[name].Visible = true
+	end
+end
+
+-- ================= CREDIT TAB =================
+local creditFrame = Instance.new("Frame", contentFrame)
+creditFrame.Size = UDim2.new(1,0,1,0)
+creditFrame.BackgroundTransparency = 1
+
+registerTab("Creditos", creditFrame)
+openTab("Creditos")
+
+local function centerLabel(parent,text,y,size)
+	local l = Instance.new("TextLabel", parent)
+	l.Size = UDim2.new(1,-20,0,size)
+	l.Position = UDim2.new(0,10,0,y)
+	l.Text = text
+	l.Font = Enum.Font.GothamBold
+	l.TextSize = 18
+	l.TextColor3 = Color3.new(1,1,1)
+	l.TextWrapped = true
+	l.BackgroundTransparency = 1
+	l.TextXAlignment = Center
+	return l
+end
+
+centerLabel(creditFrame,"Comunidade ⛩️ RYUZEN",10,30)
+
+local joinBtn = Instance.new("TextButton", creditFrame)
+joinBtn.Size = UDim2.new(0,200,0,40)
+joinBtn.Position = UDim2.new(0.5,-100,0,55)
+joinBtn.Text = "Join"
+joinBtn.Font = Enum.Font.GothamBold
+joinBtn.TextSize = 16
+joinBtn.TextColor3 = Color3.new(1,1,1)
+joinBtn.BackgroundColor3 = Color3.fromRGB(60,200,60)
+joinBtn.BorderSizePixel = 0
+Instance.new("UICorner", joinBtn).CornerRadius = UDim.new(0,10)
+
+joinBtn.MouseButton1Click:Connect(function()
+	setclipboard("https://discord.gg/qrMVFpeM")
+	game.StarterGui:SetCore("SendNotification",{
+		Title="⛩️ RYUZEN HUB",
+		Text="Link copiado!",
+		Duration=4
+	})
+end)
+
+centerLabel(creditFrame,"Créditos",120,25)
+centerLabel(creditFrame,"Coffe | Pedro | Emilly | Ester",145,25)
+
+-- ================= SIDE BUTTONS =================
+local function sideButton(txt,y,tab)
+	local b = Instance.new("TextButton", frame)
+	b.Size = UDim2.new(0,80,0,32)
+	b.Position = UDim2.new(0,5,0,y)
+	b.Text = txt
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 14
+	b.TextColor3 = Color3.new(1,1,1)
+	b.BackgroundColor3 = Color3.fromRGB(45,45,45)
+	b.BorderSizePixel = 0
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0,8)
+	b.MouseButton1Click:Connect(function()
+		openTab(tab)
+	end)
+end
+
+sideButton("Créditos",60,"Creditos")
+
+-- ================= FPS =================
+local last = os.clock()
+local frames = 0
+
+RunService.RenderStepped:Connect(function()
+	frames += 1
+	if os.clock() - last >= 1 then
+		fpsLabel.Text = frames >= 120 and "FPS: +120" or ("FPS: "..frames)
+		frames = 0
+		last = os.clock()
+	end
+end)
+
+print("⛩️ RYUZEN HUB LOADED")
