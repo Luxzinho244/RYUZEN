@@ -1,231 +1,110 @@
--- ⛩️ RYUZEN HUB | MENU COM ABAS
--- Dark + Red | Mobile + PC | Estável
+-- GROK AUTO FARM BLOX FRUITS | CRIADO POR xAI & LUIS (2026) | ORIGINAL 100%
+-- Muda _G.SelectTool = "TeuSwordAqui" (ex: "Combat", "Katana", "Pole", "Iron Mace")
 
-if game.CoreGui:FindFirstChild("RyuzenHub") then
-    game.CoreGui.RyuzenHub:Destroy()
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+local data = player:WaitForChild("Data")
+
+local TS = game:GetService("TweenService")
+local RS = game:GetService("RunService")
+local RSR = game:GetService("ReplicatedStorage")
+local VIM = game:GetService("VirtualInputManager")
+local CommF = RSR.Remotes.CommF_
+
+_G.AutoFarm = false
+_G.FastAttack = false
+_G.SelectTool = "Combat"  -- MUDA AQUI PRA TUA ARMA/FRUTA!
+
+-- TWEEN FUNCTION
+local function TweenTo(cf, speed)
+    speed = speed or 0.8
+    local ti = TweenInfo.new(speed, Enum.EasingStyle.Linear)
+    local tw = TS:Create(hrp, ti, {CFrame = cf})
+    tw:Play()
+    tw.Completed:Wait()
 end
 
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local UIS = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
-
--- GUI
-local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "RyuzenHub"
-gui.ResetOnSpawn = false
-
--- OPEN BUTTON
-local open = Instance.new("TextButton", gui)
-open.Size = UDim2.new(0,150,0,40)
-open.Position = UDim2.new(0,20,0.5,-20)
-open.Text = "RYUZEN"
-open.Font = Enum.Font.GothamBold
-open.TextSize = 14
-open.TextColor3 = Color3.new(1,1,1)
-open.BackgroundColor3 = Color3.fromRGB(140,0,0)
-open.BorderSizePixel = 0
-open.Active = true
-open.Draggable = true
-Instance.new("UICorner", open).CornerRadius = UDim.new(1,0)
-
--- MAIN
-local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0,560,0,360)
-main.Position = UDim2.new(0.5,-280,0.5,-180)
-main.BackgroundColor3 = Color3.fromRGB(15,15,15)
-main.BorderSizePixel = 0
-main.Active = true
-main.Draggable = true
-Instance.new("UICorner", main).CornerRadius = UDim.new(0,24)
-
--- TOP
-local top = Instance.new("Frame", main)
-top.Size = UDim2.new(1,0,0,48)
-top.BackgroundColor3 = Color3.fromRGB(120,0,0)
-top.BorderSizePixel = 0
-Instance.new("UICorner", top).CornerRadius = UDim.new(0,24)
-
-local title = Instance.new("TextLabel", top)
-title.Size = UDim2.new(1,0,1,0)
-title.Text = "⛩️ RYUZEN HUB | MENU COM ABAS"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 15
-title.TextColor3 = Color3.new(1,1,1)
-title.BackgroundTransparency = 1
-
--- MENU
-local menu = Instance.new("Frame", main)
-menu.Size = UDim2.new(0,170,1,-48)
-menu.Position = UDim2.new(0,0,0,48)
-menu.BackgroundColor3 = Color3.fromRGB(18,18,18)
-menu.BorderSizePixel = 0
-Instance.new("UICorner", menu).CornerRadius = UDim.new(0,20)
-
--- CONTENT
-local content = Instance.new("Frame", main)
-content.Position = UDim2.new(0,170,0,48)
-content.Size = UDim2.new(1,-170,1,-48)
-content.BackgroundTransparency = 1
-
--- UTILS
-local function clear()
-    for _,v in pairs(content:GetChildren()) do
-        v:Destroy()
+-- EQUIP TOOL
+local function EquipTool(toolname)
+    toolname = toolname or _G.SelectTool
+    local tool = player.Backpack:FindFirstChild(toolname) or char:FindFirstChild(toolname)
+    if tool and tool:IsA("Tool") then
+        tool.Parent = char
     end
 end
 
--- CARD
-local function createCard(titleText, y, height)
-    local card = Instance.new("Frame", content)
-    card.Size = UDim2.new(0,360,0,height)
-    card.Position = UDim2.new(0,20,0,y)
-    card.BackgroundColor3 = Color3.fromRGB(22,22,22)
-    card.BorderSizePixel = 0
-    Instance.new("UICorner", card).CornerRadius = UDim.new(0,18)
-
-    local stroke = Instance.new("UIStroke", card)
-    stroke.Color = Color3.fromRGB(120,0,0)
-    stroke.Transparency = 0.5
-
-    local t = Instance.new("TextLabel", card)
-    t.Size = UDim2.new(1,-20,0,30)
-    t.Position = UDim2.new(0,10,0,8)
-    t.Text = titleText
-    t.Font = Enum.Font.GothamBold
-    t.TextSize = 14
-    t.TextColor3 = Color3.new(1,1,1)
-    t.BackgroundTransparency = 1
-
-    return card
-end
-
--- TOGGLE
-local function toggle(text, parent, y, callback)
-    local label = Instance.new("TextLabel", parent)
-    label.Size = UDim2.new(0.6,0,0,30)
-    label.Position = UDim2.new(0,15,0,y)
-    label.Text = text
-    label.Font = Enum.Font.Gotham
-    label.TextSize = 13
-    label.TextColor3 = Color3.new(1,1,1)
-    label.BackgroundTransparency = 1
-
-    local t = Instance.new("Frame", parent)
-    t.Size = UDim2.new(0,52,0,24)
-    t.Position = UDim2.new(1,-70,0,y+3)
-    t.BackgroundColor3 = Color3.fromRGB(90,0,0)
-    t.BorderSizePixel = 0
-    Instance.new("UICorner", t).CornerRadius = UDim.new(1,0)
-
-    local b = Instance.new("Frame", t)
-    b.Size = UDim2.new(0,20,0,20)
-    b.Position = UDim2.new(0,2,0.5,-10)
-    b.BackgroundColor3 = Color3.new(1,1,1)
-    b.BorderSizePixel = 0
-    Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
-
-    local btn = Instance.new("TextButton", t)
-    btn.Size = UDim2.new(1,0,1,0)
-    btn.Text = ""
-    btn.BackgroundTransparency = 1
-
-    local state = false
-    btn.MouseButton1Click:Connect(function()
-        state = not state
-        TweenService:Create(t,TweenInfo.new(0.2),{
-            BackgroundColor3 = state and Color3.fromRGB(0,170,0) or Color3.fromRGB(90,0,0)
-        }):Play()
-        TweenService:Create(b,TweenInfo.new(0.2),{
-            Position = state and UDim2.new(1,-22,0.5,-10) or UDim2.new(0,2,0.5,-10)
-        }):Play()
-        callback(state)
-    end)
-end
-
--- TAB BUTTON
-local function tab(text,y,func)
-    local b = Instance.new("TextButton", menu)
-    b.Size = UDim2.new(1,-20,0,42)
-    b.Position = UDim2.new(0,10,0,y)
-    b.Text = text
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 13
-    b.TextColor3 = Color3.new(1,1,1)
-    b.BackgroundColor3 = Color3.fromRGB(35,0,0)
-    b.BorderSizePixel = 0
-    Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
-    b.MouseButton1Click:Connect(func)
-end
-
--- FEATURES
-local infJump, noclip = false,false
-
-UIS.JumpRequest:Connect(function()
-    if infJump then
-        local h = player.Character and player.Character:FindFirstChild("Humanoid")
-        if h then h:ChangeState(Enum.HumanoidStateType.Jumping) end
-    end
-end)
-
-RunService.Stepped:Connect(function()
-    if noclip and player.Character then
-        for _,v in pairs(player.Character:GetDescendants()) do
-            if v:IsA("BasePart") then v.CanCollide = false end
-        end
-    end
-end)
-
--- HOME
-tab("🏠 Menu",10,function()
-    clear()
-    local c = createCard("Informações",0,120)
-
-    local info = Instance.new("TextLabel", c)
-    info.Size = UDim2.new(1,-20,0,70)
-    info.Position = UDim2.new(0,10,0,40)
-    info.Text = "Status: Ativo\nVersão: Premium\nCompatível: Mobile + PC\nLoader: OK"
-    info.TextWrapped = true
-    info.TextYAlignment = Top
-    info.Font = Enum.Font.Gotham
-    info.TextSize = 13
-    info.TextColor3 = Color3.fromRGB(200,200,200)
-    info.BackgroundTransparency = 1
-end)
-
--- UNIVERSAL
-tab("⚡ Universal",60,function()
-    clear()
-
-    local move = createCard("Movimentação",0,150)
-
-    toggle("Speed Safe",move,40,function(v)
-        local h = player.Character and player.Character:FindFirstChild("Humanoid")
-        if h then h.WalkSpeed = v and 30 or 16 end
-    end)
-
-    toggle("Jump Safe",move,80,function(v)
-        local h = player.Character and player.Character:FindFirstChild("Humanoid")
-        if h then h.JumpPower = v and 80 or 50 end
-    end)
-
-    local misc = createCard("Extras",170,130)
-
-    toggle("Infinite Jump",misc,40,function(v)
-        infJump = v
-    end)
-
-    toggle("Noclip",misc,80,function(v)
-        noclip = v
-    end)
-end)
-
--- CLOSE
-tab("❌ Fechar",120,function()
-    main.Visible = false
-end)
-
-open.MouseButton1Click:Connect(function()
-    main.Visible = not main.Visible
-end)
+-- CHECK QUEST (FULL TABLE - TODAS SEAS!)
+local Ms, QuestName, QuestNumber, NameMon, CFrameQuest, CFrameMon
+local function CheckQuest()
+    local lvl = data.Level.Value
+    if lvl <= 9 then
+        Ms = "Bandit [Lv. 5]"; NameMon = "Bandit"; QuestName = "BanditQuest1"; QuestNumber = 1
+        CFrameQuest = CFrame.new(1060.938, 16.455, 1547.784)
+        CFrameMon = CFrame.new(1038.553, 41.296, 1576.509)
+    elseif lvl <= 14 then
+        Ms = "Monkey [Lv. 14]"; NameMon = "Monkey"; QuestName = "JungleQuest"; QuestNumber = 1
+        CFrameQuest = CFrame.new(-1604.120, 36.852, 154.237)
+        CFrameMon = CFrame.new(-1448.144, 50.851, 63.607)
+    elseif lvl <= 29 then
+        Ms = "Gorilla [Lv. 20]"; NameMon = "Gorilla"; QuestName = "JungleQuest"; QuestNumber = 2
+        CFrameQuest = CFrame.new(-1601.655, 36.852, 153.388)
+        CFrameMon = CFrame.new(-1142.648, 40.462, -515.392)
+    elseif lvl <= 39 then
+        Ms = "Pirate [Lv. 35]"; NameMon = "Pirate"; QuestName = "BuggyQuest1"; QuestNumber = 1
+        CFrameQuest = CFrame.new(-1140.176, 4.752, 3827.405)
+        CFrameMon = CFrame.new(-1201.088, 40.628, 3857.596)
+    elseif lvl <= 59 then
+        Ms = "Brute [Lv. 45]"; NameMon = "Brute"; QuestName = "BuggyQuest1"; QuestNumber = 2
+        CFrameQuest = CFrame.new(-1140.176, 4.752, 3827.405)
+        CFrameMon = CFrame.new(-1387.532, 24.592, 4100.957)
+    elseif lvl <= 74 then
+        Ms = "Desert Bandit [Lv. 60]"; NameMon = "Desert Bandit"; QuestName = "DesertQuest"; QuestNumber = 1
+        CFrameQuest = CFrame.new(896.517, 6.438, 4390.149)
+        CFrameMon = CFrame.new(984.998, 16.109, 4417.910)
+    elseif lvl <= 89 then
+        Ms = "Desert Officer [Lv. 70]"; NameMon = "Desert Officer"; QuestName = "DesertQuest"; QuestNumber = 2
+        CFrameQuest = CFrame.new(896.517, 6.438, 4390.149)
+        CFrameMon = CFrame.new(1547.151, 14.452, 4381.800)
+    elseif lvl <= 99 then
+        Ms = "Snow Bandit [Lv. 90]"; NameMon = "Snow Bandits"; QuestName = "SnowQuest"; QuestNumber = 1
+        CFrameQuest = CFrame.new(1386.807, 87.272, -1298.357)
+        CFrameMon = CFrame.new(1356.302, 105.768, -1328.241)
+    elseif lvl <= 119 then
+        Ms = "Snowman [Lv. 100]"; NameMon = "Snowman"; QuestName = "SnowQuest"; QuestNumber = 2
+        CFrameQuest = CFrame.new(1386.807, 87.272, -1298.357)
+        CFrameMon = CFrame.new(1218.795, 138.011, -1488.026)
+    elseif lvl <= 149 then
+        Ms = "Chief Petty Officer [Lv. 120]"; NameMon = "Chief Petty Officer"; QuestName = "MarineQuest2"; QuestNumber = 1
+        CFrameQuest = CFrame.new(-5035.496, 28.677, 4324.184)
+        CFrameMon = CFrame.new(-4931.155, 65.793, 4121.839)
+    elseif lvl <= 174 then
+        Ms = "Sky Bandit [Lv. 150]"; NameMon = "Sky Bandit"; QuestName = "SkyQuest"; QuestNumber = 1
+        CFrameQuest = CFrame.new(-4841.834, 717.669, -2623.964)
+        CFrameMon = CFrame.new(-4970.742, 294.544, -2890.113)
+    elseif lvl <= 224 then
+        Ms = "Dark Master [Lv. 175]"; NameMon = "Dark Master"; QuestName = "SkyQuest"; QuestNumber = 2
+        CFrameQuest = CFrame.new(-4841.834, 717.669, -2623.964)
+        CFrameMon = CFrame.new(-5220.585, 430.693, -2278.174)
+    elseif lvl <= 274 then
+        Ms = "Toga Warrior [Lv. 225]"; NameMon = "Toga Warrior"; QuestName = "ColosseumQuest"; QuestNumber = 1
+        CFrameQuest = CFrame.new(-1576.117, 7.389, -2983.307)
+        CFrameMon = CFrame.new(-1779.975, 44.607, -2736.354)
+    elseif lvl <= 299 then
+        Ms = "Gladiator [Lv. 275]"; NameMon = "Gladiator"; QuestName = "ColosseumQuest"; QuestNumber = 2
+        CFrameQuest = CFrame.new(-1576.117, 7.389, -2983.307)
+        CFrameMon = CFrame.new(-1274.759, 58.189, -3188.163)
+    elseif lvl <= 329 then
+        Ms = "Military Soldier [Lv. 300]"; NameMon = "Military Soldier"; QuestName = "MagmaQuest"; QuestNumber = 1
+        CFrameQuest = CFrame.new(-5316.558, 12.237, 8517.299)
+        CFrameMon = CFrame.new(-5363.011, 41.505, 8548.472)
+    elseif lvl <= 374 then
+        Ms = "Military Spy [Lv. 330]"; NameMon = "Military Spy"; QuestName = "MagmaQuest"; QuestNumber = 2
+        CFrameQuest = CFrame.new(-5316.558, 12.237, 8517.299)
+        CFrameMon = CFrame.new(-5787.990, 120.864, 8762.252)
+    elseif lvl <= 399 then
+        Ms = "Fishman Warrior [Lv. 375]"; NameMon = "Fishman Warrior"; QuestName = "FishmanQuest"; QuestNumber = 1
+        CFrameQuest = CFrame.new(61122.562, 18.471, 1568.165)
+        CFrameMon = CFrame.new(61163.851, 5.307, 1819.784)
+    elseif lvl <= 449 then
+        Ms = "Fishman Commando [
